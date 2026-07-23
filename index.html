@@ -40,6 +40,29 @@
       line-height: 1.6;
     }
 
+    /* ─── ANIMATED BACKGROUND CANVAS ─── */
+    #bg-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    #main-content, nav, #boot-screen {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ─── VIGNETTE ─── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 50%, transparent 50%, rgba(0,0,0,0.6) 100%);
+      pointer-events: none;
+      z-index: 2;
+    }
+
     /* ─── SCANLINE OVERLAY ─── */
     body::after {
       content: '';
@@ -53,7 +76,7 @@
         rgba(5, 217, 232, 0.015) 4px
       );
       pointer-events: none;
-      z-index: 9999;
+      z-index: 3;
     }
 
     /* ─── BOOT SEQUENCE ─── */
@@ -344,14 +367,15 @@
     }
 
     .skill-card {
-      background: var(--void);
+      background: rgba(11, 12, 21, 0.85);
       padding: 1.8rem;
       position: relative;
       transition: background 0.3s;
+      backdrop-filter: blur(4px);
     }
 
     .skill-card:hover {
-      background: var(--surface-alt);
+      background: rgba(18, 19, 42, 0.9);
     }
 
     .skill-card::before {
@@ -411,7 +435,7 @@
     }
 
     .project {
-      background: var(--void);
+      background: rgba(11, 12, 21, 0.85);
       display: grid;
       grid-template-columns: 80px 1fr auto;
       align-items: start;
@@ -424,7 +448,7 @@
     }
 
     .project:hover {
-      background: var(--surface-alt);
+      background: rgba(18, 19, 42, 0.9);
     }
 
     .project-status {
@@ -538,7 +562,7 @@
     }
 
     .contact-link {
-      background: var(--void);
+      background: rgba(11, 12, 21, 0.85);
       padding: 1.5rem 1.8rem;
       text-decoration: none;
       color: var(--text);
@@ -551,7 +575,7 @@
     }
 
     .contact-link:hover {
-      background: var(--surface-alt);
+      background: rgba(18, 19, 42, 0.9);
       color: var(--yellow);
     }
 
@@ -785,6 +809,8 @@
   </style>
 </head>
 <body>
+  <canvas id="bg-canvas" aria-hidden="true"></canvas>
+
   <!-- BOOT SEQUENCE -->
   <div id="boot-screen">
     <div id="boot-lines"></div>
@@ -1009,6 +1035,7 @@
   </div>
 
   <script>
+    /* ─── BOOT SEQUENCE ─── */
     const BOOT_LINES = [
       { text: 'KIROSHI OPTICS v4.2.1 — INITIALIZING...', cls: 'cyan' },
       { text: 'mem_check :: 128TB neural buffer .... OK', cls: 'muted' },
@@ -1027,9 +1054,9 @@
     const bootScreen = document.getElementById('boot-screen');
     const mainContent = document.getElementById('main-content');
 
-    BOOT_LINES.forEach(line => {
+    BOOT_LINES.forEach(function(line) {
       const el = document.createElement('div');
-      el.className = `boot-line ${line.cls}`;
+      el.className = 'boot-line ' + line.cls;
       el.textContent = line.text;
       bootContainer.appendChild(el);
     });
@@ -1040,25 +1067,407 @@
     function showNextLine() {
       if (lineIndex < bootEls.length) {
         bootEls[lineIndex].classList.add('visible');
-        const progress = ((lineIndex + 1) / bootEls.length) * 100;
-        bootFill.style.width = progress + '%';
+        bootFill.style.width = ((lineIndex + 1) / bootEls.length * 100) + '%';
         lineIndex++;
         setTimeout(showNextLine, 120 + Math.random() * 80);
       } else {
-        setTimeout(() => {
-          bootName.classList.add('visible');
-        }, 300);
-        setTimeout(() => {
+        setTimeout(function() { bootName.classList.add('visible'); }, 300);
+        setTimeout(function() {
           bootScreen.classList.add('fade-out');
           mainContent.classList.add('visible');
         }, 1200);
-        setTimeout(() => {
-          bootScreen.classList.add('hidden');
-        }, 1800);
+        setTimeout(function() { bootScreen.classList.add('hidden'); }, 1800);
       }
     }
-
     setTimeout(showNextLine, 400);
+
+    /* ─── ANIMATED BACKGROUND ─── */
+    (function() {
+      var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (prefersReduced) return;
+
+      var canvas = document.getElementById('bg-canvas');
+      var ctx = canvas.getContext('2d');
+      var W, H, dpr;
+
+      function resize() {
+        dpr = Math.min(window.devicePixelRatio || 1, 2);
+        W = window.innerWidth;
+        H = window.innerHeight;
+        canvas.width = W * dpr;
+        canvas.height = H * dpr;
+        canvas.style.width = W + 'px';
+        canvas.style.height = H + 'px';
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        generateBuildings();
+      }
+
+      /* ─── CITYSCAPE SILHOUETTES ─── */
+      var LAYERS = [
+        { count: 8,  minH: 0.15, maxH: 0.45, color: 'rgba(8,10,28,0.95)',  speed: 0.02, yBase: 0.55 },
+        { count: 12, minH: 0.10, maxH: 0.35, color: 'rgba(12,15,40,0.90)', speed: 0.05, yBase: 0.60 },
+        { count: 18, minH: 0.08, maxH: 0.30, color: 'rgba(18,20,55,0.85)', speed: 0.10, yBase: 0.65 },
+      ];
+      var buildingLayers = [];
+      var windowLights = [];
+
+      function generateBuildings() {
+        buildingLayers = [];
+        windowLights = [];
+        LAYERS.forEach(function(layer, li) {
+          var buildings = [];
+          var totalW = W * 2;
+          var x = -W * 0.5;
+          while (x < totalW) {
+            var bw = 20 + Math.random() * 60;
+            var bh = (layer.minH + Math.random() * (layer.maxH - layer.minH)) * H;
+            var by = H * layer.yBase;
+            var hasAntenna = Math.random() > 0.7;
+            buildings.push({ x: x, w: bw, h: bh, y: by, antenna: hasAntenna });
+
+            if (li === 2) {
+              var winCols = Math.floor(bw / 8);
+              var winRows = Math.floor(bh / 12);
+              for (var r = 0; r < winRows; r++) {
+                for (var c = 0; c < winCols; c++) {
+                  if (Math.random() > 0.55) {
+                    var flickerRate = Math.random() * 0.002;
+                    var isOn = Math.random() > 0.3;
+                    var hue = Math.random() > 0.7 ? (Math.random() > 0.5 ? '#FCEE0A' : '#FF2A6D') : '#05D9E8';
+                    windowLights.push({
+                      bIdx: buildings.length - 1,
+                      col: c, row: r,
+                      on: isOn, flickerRate: flickerRate,
+                      color: hue, alpha: 0.3 + Math.random() * 0.5,
+                      layerIdx: li
+                    });
+                  }
+                }
+              }
+            }
+            x += bw + 2 + Math.random() * 8;
+          }
+          buildingLayers.push(buildings);
+        });
+      }
+
+      /* ─── DIGITAL RAIN ─── */
+      var RAIN_CHARS = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEF';
+      var RAIN_COLS = 40;
+      var rainDrops = [];
+
+      function initRain() {
+        rainDrops = [];
+        var colW = W / RAIN_COLS;
+        for (var i = 0; i < RAIN_COLS; i++) {
+          if (Math.random() > 0.6) {
+            rainDrops.push({
+              x: i * colW + colW * 0.5,
+              y: -Math.random() * H,
+              speed: 0.3 + Math.random() * 1.2,
+              length: 8 + Math.floor(Math.random() * 16),
+              chars: [],
+              alpha: 0.08 + Math.random() * 0.12,
+              fontSize: 9 + Math.floor(Math.random() * 4)
+            });
+            var drop = rainDrops[rainDrops.length - 1];
+            for (var j = 0; j < drop.length; j++) {
+              drop.chars.push(RAIN_CHARS[Math.floor(Math.random() * RAIN_CHARS.length)]);
+            }
+          }
+        }
+      }
+
+      /* ─── PARTICLES (dust, embers) ─── */
+      var PARTICLE_COUNT = 60;
+      var particles = [];
+
+      function initParticles() {
+        particles = [];
+        for (var i = 0; i < PARTICLE_COUNT; i++) {
+          particles.push({
+            x: Math.random() * W,
+            y: Math.random() * H,
+            vx: (Math.random() - 0.5) * 0.3,
+            vy: -0.1 - Math.random() * 0.4,
+            size: 0.5 + Math.random() * 1.5,
+            alpha: 0.1 + Math.random() * 0.3,
+            color: Math.random() > 0.8 ? '#FCEE0A' : (Math.random() > 0.5 ? '#05D9E8' : '#FF2A6D'),
+            pulse: Math.random() * Math.PI * 2,
+            pulseSpeed: 0.01 + Math.random() * 0.03
+          });
+        }
+      }
+
+      /* ─── FLYING VEHICLES ─── */
+      var VEHICLE_COUNT = 6;
+      var vehicles = [];
+
+      function initVehicles() {
+        vehicles = [];
+        for (var i = 0; i < VEHICLE_COUNT; i++) {
+          var goingRight = Math.random() > 0.5;
+          vehicles.push({
+            x: goingRight ? -50 - Math.random() * W : W + 50 + Math.random() * W,
+            y: 40 + Math.random() * (H * 0.4),
+            speed: (0.3 + Math.random() * 0.8) * (goingRight ? 1 : -1),
+            size: 1.5 + Math.random() * 2,
+            color: Math.random() > 0.6 ? '#FF4A57' : '#05D9E8',
+            tailLen: 15 + Math.random() * 30,
+            blinkPhase: Math.random() * Math.PI * 2
+          });
+        }
+      }
+
+      /* ─── HORIZONTAL FLICKER LINES ─── */
+      var flickerLines = [];
+      var flickerTimer = 0;
+
+      function spawnFlickerLine() {
+        if (flickerLines.length < 3 && Math.random() > 0.97) {
+          flickerLines.push({
+            y: Math.random() * H,
+            alpha: 0.03 + Math.random() * 0.06,
+            height: 1 + Math.random() * 2,
+            life: 0,
+            maxLife: 10 + Math.random() * 30,
+            color: Math.random() > 0.5 ? '5, 217, 232' : '252, 238, 10'
+          });
+        }
+      }
+
+      /* ─── HORIZON GLOW ─── */
+      function drawHorizonGlow(t) {
+        var glowY = H * 0.62;
+        var pulse = Math.sin(t * 0.0003) * 0.15 + 0.85;
+        var grad = ctx.createRadialGradient(W * 0.5, glowY, 0, W * 0.5, glowY, W * 0.6);
+        grad.addColorStop(0, 'rgba(252, 238, 10, ' + (0.04 * pulse) + ')');
+        grad.addColorStop(0.3, 'rgba(255, 42, 109, ' + (0.02 * pulse) + ')');
+        grad.addColorStop(0.6, 'rgba(119, 0, 166, ' + (0.015 * pulse) + ')');
+        grad.addColorStop(1, 'rgba(11, 12, 21, 0)');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, W, H);
+      }
+
+      /* ─── FOG LAYERS ─── */
+      function drawFog(t) {
+        var fogPositions = [0.56, 0.63, 0.70];
+        fogPositions.forEach(function(yPct, i) {
+          var y = H * yPct;
+          var drift = Math.sin(t * 0.0002 + i * 2) * 20;
+          var grad = ctx.createLinearGradient(0, y - 15, 0, y + 15);
+          grad.addColorStop(0, 'rgba(11, 12, 21, 0)');
+          grad.addColorStop(0.5, 'rgba(26, 27, 46, ' + (0.25 - i * 0.06) + ')');
+          grad.addColorStop(1, 'rgba(11, 12, 21, 0)');
+          ctx.fillStyle = grad;
+          ctx.fillRect(drift, y - 15, W, 30);
+        });
+      }
+
+      /* ─── MAIN DRAW LOOP ─── */
+      var scrollY = 0;
+      window.addEventListener('scroll', function() { scrollY = window.pageYOffset; });
+
+      var lastTime = 0;
+      function draw(timestamp) {
+        if (!lastTime) lastTime = timestamp;
+        var dt = timestamp - lastTime;
+        lastTime = timestamp;
+        if (dt > 100) dt = 16;
+
+        ctx.clearRect(0, 0, W, H);
+
+        /* sky gradient */
+        var skyGrad = ctx.createLinearGradient(0, 0, 0, H);
+        skyGrad.addColorStop(0, '#050610');
+        skyGrad.addColorStop(0.3, '#0a0e1a');
+        skyGrad.addColorStop(0.55, '#12102e');
+        skyGrad.addColorStop(0.7, '#1a1040');
+        skyGrad.addColorStop(0.85, '#2a1545');
+        skyGrad.addColorStop(1, '#0B0C15');
+        ctx.fillStyle = skyGrad;
+        ctx.fillRect(0, 0, W, H);
+
+        drawHorizonGlow(timestamp);
+
+        /* cityscape layers */
+        var parallaxFactor = scrollY * 0.05;
+        buildingLayers.forEach(function(buildings, li) {
+          var layer = LAYERS[li];
+          var offset = (timestamp * layer.speed) % (W * 1.5) - W * 0.25;
+          var pShift = parallaxFactor * (li + 1) * 0.3;
+
+          ctx.fillStyle = layer.color;
+          buildings.forEach(function(b) {
+            var bx = b.x - offset;
+            while (bx > W + 100) bx -= W * 1.5;
+            while (bx < -100) bx += W * 1.5;
+            var by = b.y + pShift;
+
+            ctx.fillRect(bx, by - b.h, b.w, b.h + H);
+
+            if (b.antenna) {
+              ctx.fillRect(bx + b.w * 0.45, by - b.h - 15, 1.5, 15);
+              var blink = Math.sin(timestamp * 0.003 + bx) > 0.7;
+              if (blink) {
+                ctx.fillStyle = '#FF4A57';
+                ctx.beginPath();
+                ctx.arc(bx + b.w * 0.45 + 0.75, by - b.h - 15, 2, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = layer.color;
+              }
+            }
+          });
+        });
+
+        /* window lights on closest layer */
+        windowLights.forEach(function(win) {
+          var layer = LAYERS[win.layerIdx];
+          var buildings = buildingLayers[win.layerIdx];
+          var b = buildings[win.bIdx];
+          if (!b) return;
+
+          var offset = (timestamp * layer.speed) % (W * 1.5) - W * 0.25;
+          var pShift = parallaxFactor * (win.layerIdx + 1) * 0.3;
+          var bx = b.x - offset;
+          while (bx > W + 100) bx -= W * 1.5;
+          while (bx < -100) bx += W * 1.5;
+          var by = b.y + pShift;
+
+          if (Math.random() < win.flickerRate) win.on = !win.on;
+          if (!win.on) return;
+
+          var wx = bx + 3 + win.col * 8;
+          var wy = by - b.h + 4 + win.row * 12;
+          ctx.fillStyle = win.color;
+          ctx.globalAlpha = win.alpha * (0.7 + Math.sin(timestamp * 0.001 + win.col) * 0.3);
+          ctx.fillRect(wx, wy, 4, 6);
+          ctx.globalAlpha = 1;
+        });
+
+        drawFog(timestamp);
+
+        /* digital rain */
+        rainDrops.forEach(function(drop) {
+          drop.y += drop.speed;
+          if (drop.y > H + drop.length * drop.fontSize) {
+            drop.y = -drop.length * drop.fontSize - Math.random() * H * 0.5;
+            for (var j = 0; j < drop.length; j++) {
+              drop.chars[j] = RAIN_CHARS[Math.floor(Math.random() * RAIN_CHARS.length)];
+            }
+          }
+          if (Math.random() > 0.92) {
+            var idx = Math.floor(Math.random() * drop.length);
+            drop.chars[idx] = RAIN_CHARS[Math.floor(Math.random() * RAIN_CHARS.length)];
+          }
+
+          ctx.font = drop.fontSize + 'px monospace';
+          for (var c = 0; c < drop.length; c++) {
+            var cy = drop.y - c * drop.fontSize;
+            if (cy < -drop.fontSize || cy > H + drop.fontSize) continue;
+            var fade = 1 - (c / drop.length);
+            ctx.globalAlpha = drop.alpha * fade;
+            ctx.fillStyle = c === 0 ? '#E8E9F0' : '#05D9E8';
+            ctx.fillText(drop.chars[c], drop.x, cy);
+          }
+          ctx.globalAlpha = 1;
+        });
+
+        /* particles */
+        particles.forEach(function(p) {
+          p.x += p.vx;
+          p.y += p.vy;
+          p.pulse += p.pulseSpeed;
+
+          if (p.y < -10) { p.y = H + 10; p.x = Math.random() * W; }
+          if (p.x < -10) p.x = W + 10;
+          if (p.x > W + 10) p.x = -10;
+
+          var pAlpha = p.alpha * (0.5 + Math.sin(p.pulse) * 0.5);
+          ctx.globalAlpha = pAlpha;
+          ctx.fillStyle = p.color;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.globalAlpha = pAlpha * 0.3;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size * 3, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.globalAlpha = 1;
+        });
+
+        /* flying vehicles */
+        vehicles.forEach(function(v) {
+          v.x += v.speed;
+          var blink = Math.sin(timestamp * 0.005 + v.blinkPhase) > 0;
+
+          if ((v.speed > 0 && v.x > W + 100) || (v.speed < 0 && v.x < -100)) {
+            var goingRight = Math.random() > 0.5;
+            v.x = goingRight ? -50 : W + 50;
+            v.y = 40 + Math.random() * (H * 0.4);
+            v.speed = (0.3 + Math.random() * 0.8) * (goingRight ? 1 : -1);
+          }
+
+          /* tail trail */
+          var tailDir = v.speed > 0 ? -1 : 1;
+          var tailGrad = ctx.createLinearGradient(v.x, v.y, v.x + tailDir * v.tailLen, v.y);
+          tailGrad.addColorStop(0, v.color);
+          tailGrad.addColorStop(1, 'rgba(11,12,21,0)');
+          ctx.strokeStyle = tailGrad;
+          ctx.lineWidth = v.size * 0.5;
+          ctx.globalAlpha = 0.4;
+          ctx.beginPath();
+          ctx.moveTo(v.x, v.y);
+          ctx.lineTo(v.x + tailDir * v.tailLen, v.y);
+          ctx.stroke();
+          ctx.globalAlpha = 1;
+
+          /* main light */
+          ctx.fillStyle = v.color;
+          ctx.globalAlpha = blink ? 0.9 : 0.4;
+          ctx.beginPath();
+          ctx.arc(v.x, v.y, v.size, 0, Math.PI * 2);
+          ctx.fill();
+
+          /* glow */
+          ctx.globalAlpha = blink ? 0.15 : 0.05;
+          ctx.beginPath();
+          ctx.arc(v.x, v.y, v.size * 5, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.globalAlpha = 1;
+        });
+
+        /* flicker lines */
+        spawnFlickerLine();
+        for (var i = flickerLines.length - 1; i >= 0; i--) {
+          var fl = flickerLines[i];
+          fl.life++;
+          if (fl.life > fl.maxLife) {
+            flickerLines.splice(i, 1);
+            continue;
+          }
+          var flAlpha = fl.alpha * (1 - fl.life / fl.maxLife);
+          ctx.fillStyle = 'rgba(' + fl.color + ', ' + flAlpha + ')';
+          ctx.fillRect(0, fl.y, W, fl.height);
+        }
+
+        requestAnimationFrame(draw);
+      }
+
+      resize();
+      initRain();
+      initParticles();
+      initVehicles();
+
+      window.addEventListener('resize', function() {
+        resize();
+        initRain();
+        initParticles();
+      });
+
+      requestAnimationFrame(draw);
+    })();
   </script>
 </body>
 </html>
