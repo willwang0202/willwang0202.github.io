@@ -30,11 +30,12 @@
 
     html {
       scroll-behavior: smooth;
+      background: var(--void);
     }
 
     body {
       font-family: 'Electrolize', sans-serif;
-      background: var(--void);
+      background: transparent;
       color: var(--text);
       overflow-x: hidden;
       line-height: 1.6;
@@ -92,36 +93,37 @@
       position: fixed;
       border-radius: 50%;
       pointer-events: none;
-      z-index: 2;
+      z-index: 9990;
+      mix-blend-mode: screen;
     }
 
     .ambient-orb--1 {
-      width: 700px;
-      height: 700px;
-      background: radial-gradient(circle, rgba(5, 217, 232, 0.15) 0%, rgba(5, 217, 232, 0.05) 40%, transparent 70%);
-      top: -15%;
+      width: 800px;
+      height: 800px;
+      background: radial-gradient(circle, rgba(5, 217, 232, 0.25) 0%, rgba(5, 217, 232, 0.08) 40%, transparent 70%);
+      top: -20%;
       right: -10%;
-      filter: blur(80px);
+      filter: blur(60px);
       animation: orb-float-1 12s ease-in-out infinite;
     }
 
     .ambient-orb--2 {
-      width: 600px;
-      height: 600px;
-      background: radial-gradient(circle, rgba(255, 42, 109, 0.12) 0%, rgba(255, 42, 109, 0.04) 40%, transparent 70%);
-      bottom: 5%;
+      width: 700px;
+      height: 700px;
+      background: radial-gradient(circle, rgba(255, 42, 109, 0.20) 0%, rgba(255, 42, 109, 0.06) 40%, transparent 70%);
+      bottom: 0%;
       left: -15%;
-      filter: blur(80px);
+      filter: blur(60px);
       animation: orb-float-2 15s ease-in-out infinite;
     }
 
     .ambient-orb--3 {
-      width: 500px;
-      height: 500px;
-      background: radial-gradient(circle, rgba(252, 238, 10, 0.10) 0%, rgba(252, 238, 10, 0.03) 40%, transparent 70%);
-      top: 40%;
-      right: 15%;
-      filter: blur(80px);
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(252, 238, 10, 0.15) 0%, rgba(252, 238, 10, 0.05) 40%, transparent 70%);
+      top: 35%;
+      right: 10%;
+      filter: blur(60px);
       animation: orb-float-3 18s ease-in-out infinite;
     }
 
@@ -147,7 +149,7 @@
       position: fixed;
       inset: 0;
       pointer-events: none;
-      z-index: 3;
+      z-index: 9991;
     }
 
     /* ─── BOOT SEQUENCE ─── */
@@ -726,7 +728,7 @@
       position: fixed;
       top: 0;
       right: 0;
-      z-index: 9990;
+      z-index: 9995;
       padding: 1.5rem;
       display: flex;
       gap: 1.5rem;
