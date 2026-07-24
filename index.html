@@ -1000,12 +1000,260 @@
       100% { opacity: 0; clip-path: inset(0 0 0 0); }
     }
 
+    /* ─── SCROLL REVEAL ─── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.revealed {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-left {
+      opacity: 0;
+      transform: translateX(-40px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal-left.revealed {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .reveal-right {
+      opacity: 0;
+      transform: translateX(40px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal-right.revealed {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .reveal-scale {
+      opacity: 0;
+      transform: scale(0.92);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .reveal-scale.revealed {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    /* ─── SCROLL PROGRESS BAR ─── */
+    #scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 2px;
+      height: 0%;
+      background: linear-gradient(180deg, var(--cyan), var(--magenta), var(--yellow));
+      z-index: 9996;
+      box-shadow: 0 0 8px var(--cyan), 0 0 20px rgba(5, 217, 232, 0.2);
+      transition: height 0.05s linear;
+    }
+
+    #scroll-progress::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: -3px;
+      width: 8px;
+      height: 8px;
+      background: var(--cyan);
+      border-radius: 50%;
+      box-shadow: 0 0 12px var(--cyan), 0 0 24px rgba(5, 217, 232, 0.3);
+    }
+
+    /* ─── SECTION DIVIDER WIRES ─── */
+    .section-wire {
+      position: relative;
+      height: 40px;
+      margin: 0 clamp(1.5rem, 6vw, 8rem);
+      overflow: hidden;
+    }
+
+    .section-wire svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .wire-path {
+      stroke: var(--cyan);
+      stroke-width: 1;
+      fill: none;
+      opacity: 0.15;
+    }
+
+    .wire-pulse {
+      stroke: var(--cyan);
+      stroke-width: 1;
+      fill: none;
+      stroke-dasharray: 40 200;
+      stroke-dashoffset: 240;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .wire-pulse.active {
+      opacity: 0.8;
+      animation: wire-flow 2s linear infinite;
+      filter: drop-shadow(0 0 3px var(--cyan));
+    }
+
+    @keyframes wire-flow {
+      to { stroke-dashoffset: -240; }
+    }
+
+    .wire-node {
+      fill: var(--void);
+      stroke: var(--cyan);
+      stroke-width: 1;
+      opacity: 0.3;
+    }
+
+    .wire-node.active {
+      opacity: 1;
+      fill: var(--cyan);
+      filter: drop-shadow(0 0 4px var(--cyan));
+      transition: all 0.4s ease;
+    }
+
+    /* ─── GLITCH HEADER ─── */
+    .section-header.glitch-flash .section-title {
+      animation: header-glitch 0.5s steps(3);
+    }
+
+    @keyframes header-glitch {
+      0%   { text-shadow: 2px 0 var(--cyan), -2px 0 var(--magenta); opacity: 0.8; }
+      20%  { text-shadow: -1px 0 var(--magenta), 1px 0 var(--cyan); opacity: 1; }
+      40%  { text-shadow: 3px 0 var(--yellow), -3px 0 var(--cyan); opacity: 0.6; }
+      60%  { text-shadow: -2px 0 var(--cyan), 2px 0 var(--magenta); opacity: 1; }
+      80%  { text-shadow: 1px 0 var(--magenta), -1px 0 var(--yellow); opacity: 0.9; }
+      100% { text-shadow: none; opacity: 1; }
+    }
+
+    /* ─── DATA STREAM (section-id hex decode) ─── */
+    .section-id.decoding {
+      animation: hex-flicker 0.08s steps(1) infinite;
+    }
+
+    @keyframes hex-flicker {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+
+    /* ─── SKILL CARD SCANLINE ─── */
+    .skill-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+      opacity: 0;
+      transform: translateY(0);
+      transition: opacity 0.2s;
+      pointer-events: none;
+    }
+
+    .skill-card:hover::after {
+      opacity: 0.6;
+      animation: card-scan 0.8s ease-out;
+    }
+
+    @keyframes card-scan {
+      0% { transform: translateY(0); opacity: 0.8; }
+      100% { transform: translateY(120px); opacity: 0; }
+    }
+
+    /* ─── PROJECT HOVER SCANLINE ─── */
+    .project::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 2px;
+      height: 0;
+      background: var(--cyan);
+      box-shadow: 0 0 6px var(--cyan);
+      transition: height 0.4s ease;
+    }
+
+    .project {
+      position: relative;
+    }
+
+    .project:hover::before {
+      height: 100%;
+    }
+
+    /* ─── NAV ACTIVE ─── */
+    nav a.active {
+      color: var(--cyan);
+      text-shadow: 0 0 8px rgba(5, 217, 232, 0.4);
+    }
+
+    nav a.active::after {
+      width: 100%;
+      background: var(--cyan);
+      box-shadow: 0 0 4px var(--cyan);
+    }
+
+    /* ─── HERO TYPING CURSOR ─── */
+    .typing-cursor {
+      display: inline-block;
+      width: 2px;
+      height: 1.1em;
+      background: var(--cyan);
+      margin-left: 2px;
+      vertical-align: text-bottom;
+      animation: cursor-blink 0.7s steps(1) infinite;
+    }
+
+    @keyframes cursor-blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    /* ─── SCROLL-TRIGGERED STAT COUNTERS ─── */
+    .stat-value.counting {
+      animation: stat-glow 0.6s ease;
+    }
+
+    @keyframes stat-glow {
+      0% { text-shadow: 0 0 30px var(--cyan); }
+      100% { text-shadow: 0 0 20px rgba(5, 217, 232, 0.3); }
+    }
+
+    /* ─── HEXAGONAL DECORATIONS ─── */
+    .hex-deco {
+      position: absolute;
+      pointer-events: none;
+      opacity: 0.04;
+    }
+
+    .hex-deco svg {
+      width: 100%;
+      height: 100%;
+    }
+
     /* ─── REDUCED MOTION ─── */
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
+      }
+      .reveal, .reveal-left, .reveal-right, .reveal-scale {
+        opacity: 1;
+        transform: none;
       }
     }
 
@@ -1032,6 +1280,10 @@
       .project-tech {
         text-align: left;
       }
+
+      .section-wire {
+        display: none;
+      }
     }
 
     @media (max-width: 480px) {
@@ -1054,6 +1306,9 @@
   </style>
 </head>
 <body>
+  <!-- SCROLL PROGRESS -->
+  <div id="scroll-progress" aria-hidden="true"></div>
+
   <!-- AMBIENT BACKGROUND -->
   <div class="ambient-orb ambient-orb--1" aria-hidden="true"></div>
   <div class="ambient-orb ambient-orb--2" aria-hidden="true"></div>
@@ -1086,11 +1341,8 @@
         CHEN-AN<br>WANG
         <span class="glitch-layer" aria-hidden="true">CHEN-AN<br>WANG</span>
       </h1>
-      <p class="hero-title">Data Science / Audio-Music Tech / AI Tooling / Creative Code</p>
-      <p class="hero-desc">
-        Building at the intersection of machine learning, audio signal processing,
-        and creative technology. Currently studying Data Science at UC San Diego.
-      </p>
+      <p class="hero-title">Data Science / Audio ML / AI Tooling / Creative Code</p>
+      <p class="hero-desc" id="hero-desc"></p>
       <div class="hero-stats">
         <div class="stat">
           <span class="stat-label">Location</span>
@@ -1113,42 +1365,54 @@
       </div>
     </section>
 
+    <!-- WIRE: Hero → Skills -->
+    <div class="section-wire" aria-hidden="true">
+      <svg viewBox="0 0 1000 40" preserveAspectRatio="none">
+        <path class="wire-path" d="M0,20 H300 L320,8 H500 L520,32 H750 L770,20 H1000"/>
+        <path class="wire-pulse" d="M0,20 H300 L320,8 H500 L520,32 H750 L770,20 H1000"/>
+        <circle class="wire-node" cx="320" cy="8" r="3"/>
+        <circle class="wire-node" cx="520" cy="32" r="3"/>
+        <circle class="wire-node" cx="770" cy="20" r="3"/>
+      </svg>
+    </div>
+
     <!-- SKILLS -->
     <section id="skills">
-      <div class="section-header">
+      <div class="section-header reveal">
         <span class="section-id">SYS.01</span>
         <h2 class="section-title">Core Capabilities</h2>
         <div class="section-line"></div>
       </div>
       <div class="skills-grid">
-        <div class="skill-card">
+        <div class="skill-card reveal-scale" style="transition-delay: 0.05s">
           <div class="skill-name">Machine Learning</div>
           <div class="skill-desc">Neural networks, model training, optimization, and deployment pipelines for production ML systems.</div>
           <div class="skill-tags">
-            <span class="skill-tag">PyTorch</span>
             <span class="skill-tag">TensorFlow</span>
-            <span class="skill-tag">scikit-learn</span>
+            <span class="skill-tag">HuggingFace</span>
+            <span class="skill-tag">sentence-transformers</span>
           </div>
         </div>
-        <div class="skill-card">
+        <div class="skill-card reveal-scale" style="transition-delay: 0.1s">
           <div class="skill-name">Audio & Music Tech</div>
           <div class="skill-desc">Digital signal processing, audio feature extraction, music information retrieval, and real-time audio systems.</div>
           <div class="skill-tags">
-            <span class="skill-tag">DSP</span>
-            <span class="skill-tag">MIR</span>
+            <span class="skill-tag">Essentia</span>
             <span class="skill-tag">librosa</span>
+            <span class="skill-tag">DSP</span>
           </div>
         </div>
-        <div class="skill-card">
+        <div class="skill-card reveal-scale" style="transition-delay: 0.15s">
           <div class="skill-name">Data Science</div>
           <div class="skill-desc">Statistical analysis, data pipelines, visualization, and exploratory analysis for large-scale datasets.</div>
           <div class="skill-tags">
             <span class="skill-tag">Python</span>
-            <span class="skill-tag">Pandas</span>
+            <span class="skill-tag">pandas</span>
+            <span class="skill-tag">NumPy</span>
             <span class="skill-tag">SQL</span>
           </div>
         </div>
-        <div class="skill-card">
+        <div class="skill-card reveal-scale" style="transition-delay: 0.2s">
           <div class="skill-name">AI Tooling</div>
           <div class="skill-desc">Building developer tools and workflows powered by language models, embeddings, and generative AI.</div>
           <div class="skill-tags">
@@ -1157,7 +1421,7 @@
             <span class="skill-tag">Agents</span>
           </div>
         </div>
-        <div class="skill-card">
+        <div class="skill-card reveal-scale" style="transition-delay: 0.25s">
           <div class="skill-name">Creative Coding</div>
           <div class="skill-desc">Generative art, interactive visualizations, and audiovisual experiences built with code.</div>
           <div class="skill-tags">
@@ -1166,99 +1430,152 @@
             <span class="skill-tag">GLSL</span>
           </div>
         </div>
-        <div class="skill-card">
+        <div class="skill-card reveal-scale" style="transition-delay: 0.3s">
           <div class="skill-name">Web Development</div>
           <div class="skill-desc">Full-stack web applications, APIs, and interactive front-end interfaces.</div>
           <div class="skill-tags">
             <span class="skill-tag">React</span>
-            <span class="skill-tag">Node</span>
-            <span class="skill-tag">TypeScript</span>
+            <span class="skill-tag">Vite</span>
+            <span class="skill-tag">Node.js</span>
+            <span class="skill-tag">Supabase</span>
           </div>
         </div>
       </div>
     </section>
 
+    <!-- WIRE: Skills → Projects -->
+    <div class="section-wire" aria-hidden="true">
+      <svg viewBox="0 0 1000 40" preserveAspectRatio="none">
+        <path class="wire-path" d="M0,30 H200 L230,10 H450 L470,25 H600 L630,5 H850 L870,20 H1000"/>
+        <path class="wire-pulse" d="M0,30 H200 L230,10 H450 L470,25 H600 L630,5 H850 L870,20 H1000"/>
+        <circle class="wire-node" cx="230" cy="10" r="3"/>
+        <circle class="wire-node" cx="470" cy="25" r="3"/>
+        <circle class="wire-node" cx="630" cy="5" r="3"/>
+        <circle class="wire-node" cx="870" cy="20" r="3"/>
+      </svg>
+    </div>
+
     <!-- PROJECTS -->
     <section id="projects">
-      <div class="section-header">
+      <div class="section-header reveal">
         <span class="section-id">SYS.02</span>
         <h2 class="section-title">Project Archive</h2>
         <div class="section-line"></div>
       </div>
       <div class="projects-list">
-        <div class="project">
+        <div class="project reveal-left" style="transition-delay: 0.05s">
           <span class="project-status active">ACTIVE</span>
           <div>
-            <div class="project-name">Audio Feature Extraction Pipeline</div>
-            <div class="project-desc">Real-time audio analysis system extracting spectral, temporal, and harmonic features for downstream ML tasks.</div>
+            <div class="project-name">Timbre</div>
+            <div class="project-desc">Audio ML pipeline extracting 3-D affect vectors + emotion scores for 20k+ tracks across 16 languages. Client-side ranking serves results in &lt;200ms with no API calls.</div>
           </div>
-          <span class="project-tech">PYTHON / TORCH</span>
+          <span class="project-tech">PYTHON / ML / REACT</span>
         </div>
-        <div class="project">
+        <div class="project reveal-left" style="transition-delay: 0.12s">
           <span class="project-status active">ACTIVE</span>
           <div>
-            <div class="project-name">AI-Powered Music Generation</div>
-            <div class="project-desc">Generative model for creating music stems and arrangements using transformer architectures.</div>
+            <div class="project-name">CloudSeed</div>
+            <div class="project-desc">Algorithmic reverb VST plugin with real-time spectral processing and modular signal chain architecture.</div>
           </div>
-          <span class="project-tech">ML / AUDIO</span>
+          <span class="project-tech">C++ / DSP / VST</span>
         </div>
-        <div class="project">
+        <div class="project reveal-left" style="transition-delay: 0.19s">
           <span class="project-status active">ACTIVE</span>
           <div>
-            <div class="project-name">Developer Toolchain Automation</div>
-            <div class="project-desc">LLM-powered tools for code generation, analysis, and developer workflow optimization.</div>
+            <div class="project-name">FixRelay</div>
+            <div class="project-desc">Security scanner that detects vulnerabilities and generates contextual fix prompts for LLM-assisted remediation.</div>
           </div>
-          <span class="project-tech">LLM / API</span>
+          <span class="project-tech">SECURITY / LLM</span>
         </div>
-        <div class="project">
-          <span class="project-status archived">ARCHIVE</span>
+        <div class="project reveal-left" style="transition-delay: 0.26s">
+          <span class="project-status active">ACTIVE</span>
           <div>
-            <div class="project-name">Interactive Data Visualization</div>
-            <div class="project-desc">Web-based exploratory data analysis tool with real-time rendering and interactive filtering.</div>
+            <div class="project-name">E-Ink Claude Monitor</div>
+            <div class="project-desc">Ambient display system rendering Claude AI outputs on an e-ink screen for persistent, low-power information surfaces.</div>
           </div>
-          <span class="project-tech">D3 / REACT</span>
+          <span class="project-tech">HARDWARE / API</span>
         </div>
       </div>
     </section>
 
+    <!-- WIRE: Projects → Experience -->
+    <div class="section-wire" aria-hidden="true">
+      <svg viewBox="0 0 1000 40" preserveAspectRatio="none">
+        <path class="wire-path" d="M0,15 H150 L180,35 H400 L420,10 H700 L730,30 H1000"/>
+        <path class="wire-pulse" d="M0,15 H150 L180,35 H400 L420,10 H700 L730,30 H1000"/>
+        <circle class="wire-node" cx="180" cy="35" r="3"/>
+        <circle class="wire-node" cx="420" cy="10" r="3"/>
+        <circle class="wire-node" cx="730" cy="30" r="3"/>
+      </svg>
+    </div>
+
     <!-- EXPERIENCE -->
     <section id="experience">
-      <div class="section-header">
+      <div class="section-header reveal">
         <span class="section-id">SYS.03</span>
         <h2 class="section-title">Experience Log</h2>
         <div class="section-line"></div>
       </div>
       <div class="timeline">
-        <div class="timeline-item">
-          <div class="timeline-date">CURRENT</div>
-          <div class="timeline-role">Data Science Student</div>
+        <div class="timeline-item reveal-left" style="transition-delay: 0.05s">
+          <div class="timeline-date">SEP 2024 – JUN 2028</div>
+          <div class="timeline-role">B.S. Data Science</div>
           <div class="timeline-org">UC San Diego</div>
           <div class="timeline-desc">
-            Pursuing a degree in Data Science with a focus on machine learning,
-            statistical modeling, and audio/music information retrieval.
+            Machine learning, statistical modeling, audio/music information retrieval,
+            and creative coding.
           </div>
         </div>
-        <div class="timeline-item">
-          <div class="timeline-date">ONGOING</div>
-          <div class="timeline-role">Independent Builder</div>
-          <div class="timeline-org">Audio + AI Projects</div>
+        <div class="timeline-item reveal-left" style="transition-delay: 0.12s">
+          <div class="timeline-date">2025 – PRESENT</div>
+          <div class="timeline-role">Founder</div>
+          <div class="timeline-org">Timbre</div>
           <div class="timeline-desc">
-            Developing tools at the intersection of audio signal processing,
-            machine learning, and creative coding. Shipping open-source projects
-            and exploring generative music systems.
+            End-to-end audio ML pipeline for music emotion analysis across 20k+ tracks
+            and 16 languages. Client-side deterministic ranking with no API dependency.
+          </div>
+        </div>
+        <div class="timeline-item reveal-left" style="transition-delay: 0.19s">
+          <div class="timeline-date">JUL – AUG 2024</div>
+          <div class="timeline-role">Automation Engineer</div>
+          <div class="timeline-org">Fortune Medical Instrument Corp.</div>
+          <div class="timeline-desc">
+            Quadrupled production throughput via PLC and SCADA control systems
+            for automated silicone fabrication. Full-cycle implementation from procurement
+            through cleanroom installation and staff training.
+          </div>
+        </div>
+        <div class="timeline-item reveal-left" style="transition-delay: 0.26s">
+          <div class="timeline-date">JUL – AUG 2023</div>
+          <div class="timeline-role">MIS Engineer</div>
+          <div class="timeline-org">Fortune Medical Instrument Corp.</div>
+          <div class="timeline-desc">
+            Built C#/HTML/CSS web application connecting sales team to company database.
+            Self-studied the full stack pre-internship.
           </div>
         </div>
       </div>
     </section>
 
+    <!-- WIRE: Experience → Contributions -->
+    <div class="section-wire" aria-hidden="true">
+      <svg viewBox="0 0 1000 40" preserveAspectRatio="none">
+        <path class="wire-path" d="M0,20 H250 L280,5 H500 L530,35 H800 L820,15 H1000"/>
+        <path class="wire-pulse" d="M0,20 H250 L280,5 H500 L530,35 H800 L820,15 H1000"/>
+        <circle class="wire-node" cx="280" cy="5" r="3"/>
+        <circle class="wire-node" cx="530" cy="35" r="3"/>
+        <circle class="wire-node" cx="820" cy="15" r="3"/>
+      </svg>
+    </div>
+
     <!-- GITHUB CONTRIBUTIONS -->
     <section id="contributions">
-      <div class="section-header">
+      <div class="section-header reveal">
         <span class="section-id">SYS.04</span>
         <h2 class="section-title">Commit Frequency</h2>
         <div class="section-line"></div>
       </div>
-      <div class="contrib-container bracketed">
+      <div class="contrib-container bracketed reveal-scale" style="transition-delay: 0.1s">
         <div class="contrib-stats" id="contrib-stats">
           <div class="stat">
             <span class="contrib-stat-value" id="contrib-total">---</span>
@@ -1291,9 +1608,20 @@
       </div>
     </section>
 
+    <!-- WIRE: Contributions → Contact -->
+    <div class="section-wire" aria-hidden="true">
+      <svg viewBox="0 0 1000 40" preserveAspectRatio="none">
+        <path class="wire-path" d="M0,25 H350 L380,8 H600 L620,30 H900 L930,18 H1000"/>
+        <path class="wire-pulse" d="M0,25 H350 L380,8 H600 L620,30 H900 L930,18 H1000"/>
+        <circle class="wire-node" cx="380" cy="8" r="3"/>
+        <circle class="wire-node" cx="620" cy="30" r="3"/>
+        <circle class="wire-node" cx="930" cy="18" r="3"/>
+      </svg>
+    </div>
+
     <!-- CONTACT -->
     <section id="contact">
-      <div class="section-header">
+      <div class="section-header reveal">
         <span class="section-id">SYS.05</span>
         <h2 class="section-title">Establish Connection</h2>
         <div class="section-line"></div>
@@ -1303,9 +1631,13 @@
           <span class="contact-icon">GIT</span>
           <span class="contact-label">GitHub</span>
         </a>
-        <a href="https://linkedin.com/in/chenanwang" class="contact-link" target="_blank" rel="noopener">
+        <a href="https://linkedin.com/in/chen-an-wang-519603333" class="contact-link" target="_blank" rel="noopener">
           <span class="contact-icon">LNK</span>
           <span class="contact-label">LinkedIn</span>
+        </a>
+        <a href="https://timbrebrief.com" class="contact-link" target="_blank" rel="noopener">
+          <span class="contact-icon">PRJ</span>
+          <span class="contact-label">timbrebrief.com</span>
         </a>
         <a href="mailto:wangchenan2006@gmail.com" class="contact-link">
           <span class="contact-icon">MSG</span>
@@ -1470,6 +1802,153 @@
       window.addEventListener('resize', function() { resize(); init(); });
       requestAnimationFrame(draw);
     })();
+    /* ─── SCROLL PROGRESS BAR ─── */
+    (function() {
+      var bar = document.getElementById('scroll-progress');
+      if (!bar) return;
+      window.addEventListener('scroll', function() {
+        var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        var pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        bar.style.height = pct + '%';
+      }, { passive: true });
+    })();
+
+    /* ─── SCROLL REVEAL (IntersectionObserver) ─── */
+    (function() {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(function(el) {
+          el.classList.add('revealed');
+        });
+        return;
+      }
+
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('revealed');
+
+            var header = entry.target.classList.contains('section-header') ? entry.target : null;
+            if (header) {
+              header.classList.add('glitch-flash');
+              setTimeout(function() { header.classList.remove('glitch-flash'); }, 500);
+
+              var sectionId = header.querySelector('.section-id');
+              if (sectionId) {
+                var original = sectionId.textContent;
+                var chars = '0123456789ABCDEF';
+                var iterations = 0;
+                sectionId.classList.add('decoding');
+                var interval = setInterval(function() {
+                  var hex = '';
+                  for (var i = 0; i < 6; i++) {
+                    hex += chars[Math.floor(Math.random() * chars.length)];
+                  }
+                  sectionId.textContent = '0x' + hex;
+                  iterations++;
+                  if (iterations > 8) {
+                    clearInterval(interval);
+                    sectionId.textContent = original;
+                    sectionId.classList.remove('decoding');
+                  }
+                }, 50);
+              }
+            }
+
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+
+      document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(function(el) {
+        observer.observe(el);
+      });
+    })();
+
+    /* ─── WIRE PULSE ON SCROLL ─── */
+    (function() {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+      var wireObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          var pulses = entry.target.querySelectorAll('.wire-pulse');
+          var nodes = entry.target.querySelectorAll('.wire-node');
+          if (entry.isIntersecting) {
+            pulses.forEach(function(p) { p.classList.add('active'); });
+            nodes.forEach(function(n, i) {
+              setTimeout(function() { n.classList.add('active'); }, 200 + i * 300);
+            });
+          }
+        });
+      }, { threshold: 0.5 });
+
+      document.querySelectorAll('.section-wire').forEach(function(w) {
+        wireObserver.observe(w);
+      });
+    })();
+
+    /* ─── NAV ACTIVE STATE ON SCROLL ─── */
+    (function() {
+      var sections = document.querySelectorAll('section[id]');
+      var navLinks = document.querySelectorAll('nav a');
+
+      var navObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            navLinks.forEach(function(a) { a.classList.remove('active'); });
+            var matching = document.querySelector('nav a[href="#' + entry.target.id + '"]');
+            if (matching) matching.classList.add('active');
+          }
+        });
+      }, { threshold: 0.3, rootMargin: '-10% 0px -60% 0px' });
+
+      sections.forEach(function(s) { navObserver.observe(s); });
+    })();
+
+    /* ─── HERO TYPING EFFECT ─── */
+    (function() {
+      var descEl = document.getElementById('hero-desc');
+      if (!descEl) return;
+      var text = 'Building at the intersection of machine learning, audio signal processing, and creative technology. Currently studying Data Science at UC San Diego.';
+
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        descEl.textContent = text;
+        return;
+      }
+
+      var cursor = document.createElement('span');
+      cursor.className = 'typing-cursor';
+      descEl.appendChild(cursor);
+
+      var charIndex = 0;
+      function typeChar() {
+        if (charIndex < text.length) {
+          descEl.insertBefore(document.createTextNode(text[charIndex]), cursor);
+          charIndex++;
+          setTimeout(typeChar, 18 + Math.random() * 22);
+        } else {
+          setTimeout(function() { cursor.remove(); }, 2000);
+        }
+      }
+
+      setTimeout(typeChar, 2200);
+    })();
+
+    /* ─── PARALLAX HERO GRID ─── */
+    (function() {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      var grid = document.querySelector('.hero-grid');
+      if (!grid) return;
+
+      window.addEventListener('scroll', function() {
+        var scrollY = window.pageYOffset;
+        if (scrollY < window.innerHeight) {
+          grid.style.transform = 'translateY(' + (scrollY * 0.3) + 'px)';
+          grid.style.opacity = Math.max(0, 1 - scrollY / (window.innerHeight * 0.8));
+        }
+      }, { passive: true });
+    })();
+
     /* ─── GITHUB CONTRIBUTIONS GRAPH ─── */
     (function() {
       var API_URL = 'https://github-contributions-api.jogruber.de/v4/willwang0202?y=last';
