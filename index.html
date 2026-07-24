@@ -627,6 +627,177 @@
       max-width: 600px;
     }
 
+    /* ─── GITHUB CONTRIBUTION GRAPH ─── */
+    .contrib-container {
+      position: relative;
+    }
+
+    .contrib-stats {
+      display: flex;
+      gap: 2.5rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .contrib-stat-value {
+      font-family: 'Orbitron', monospace;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--yellow);
+      text-shadow: 0 0 20px rgba(252, 238, 10, 0.3);
+    }
+
+    .contrib-stat-label {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 0.25em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-top: 0.15rem;
+    }
+
+    .contrib-graph-wrapper {
+      overflow-x: auto;
+      padding-bottom: 0.5rem;
+    }
+
+    .contrib-graph-wrapper::-webkit-scrollbar {
+      height: 3px;
+    }
+
+    .contrib-graph-wrapper::-webkit-scrollbar-track {
+      background: var(--surface);
+    }
+
+    .contrib-graph-wrapper::-webkit-scrollbar-thumb {
+      background: var(--cyan);
+      box-shadow: 0 0 4px var(--cyan);
+    }
+
+    .contrib-graph {
+      display: flex;
+      gap: 2px;
+      min-width: max-content;
+    }
+
+    .contrib-week {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .contrib-day {
+      width: 11px;
+      height: 11px;
+      background: var(--surface);
+      border: 1px solid rgba(5, 217, 232, 0.06);
+      position: relative;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .contrib-day:hover {
+      border-color: var(--yellow);
+      box-shadow: 0 0 6px rgba(252, 238, 10, 0.3);
+      z-index: 2;
+    }
+
+    .contrib-day[data-level="1"] {
+      background: rgba(5, 217, 232, 0.15);
+      border-color: rgba(5, 217, 232, 0.15);
+    }
+
+    .contrib-day[data-level="2"] {
+      background: rgba(5, 217, 232, 0.35);
+      border-color: rgba(5, 217, 232, 0.2);
+    }
+
+    .contrib-day[data-level="3"] {
+      background: rgba(5, 217, 232, 0.6);
+      border-color: rgba(5, 217, 232, 0.35);
+      box-shadow: 0 0 4px rgba(5, 217, 232, 0.15);
+    }
+
+    .contrib-day[data-level="4"] {
+      background: var(--cyan);
+      border-color: var(--cyan);
+      box-shadow: 0 0 8px rgba(5, 217, 232, 0.4);
+    }
+
+    .contrib-tooltip {
+      display: none;
+      position: absolute;
+      bottom: calc(100% + 6px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--surface);
+      border: 1px solid rgba(5, 217, 232, 0.2);
+      padding: 0.35rem 0.6rem;
+      font-family: 'Electrolize', sans-serif;
+      font-size: 0.7rem;
+      color: var(--text);
+      white-space: nowrap;
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    .contrib-tooltip::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 4px solid transparent;
+      border-top-color: rgba(5, 217, 232, 0.2);
+    }
+
+    .contrib-day:hover .contrib-tooltip {
+      display: block;
+    }
+
+    .contrib-months {
+      display: flex;
+      gap: 2px;
+      margin-bottom: 0.5rem;
+      padding-left: 0;
+    }
+
+    .contrib-month-label {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.45rem;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      min-width: 11px;
+    }
+
+    .contrib-legend {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 1rem;
+      justify-content: flex-end;
+    }
+
+    .contrib-legend-label {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.45rem;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+    }
+
+    .contrib-legend-swatch {
+      width: 11px;
+      height: 11px;
+      border: 1px solid rgba(5, 217, 232, 0.06);
+    }
+
+    .contrib-loading {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      color: var(--cyan);
+      animation: pulse-dot 2s ease infinite;
+    }
+
     /* ─── CONTACT / LINKS ─── */
     .contact-grid {
       display: grid;
@@ -1080,10 +1251,50 @@
       </div>
     </section>
 
+    <!-- GITHUB CONTRIBUTIONS -->
+    <section id="contributions">
+      <div class="section-header">
+        <span class="section-id">SYS.04</span>
+        <h2 class="section-title">Commit Frequency</h2>
+        <div class="section-line"></div>
+      </div>
+      <div class="contrib-container bracketed">
+        <div class="contrib-stats" id="contrib-stats">
+          <div class="stat">
+            <span class="contrib-stat-value" id="contrib-total">---</span>
+            <span class="contrib-stat-label">Contributions</span>
+          </div>
+          <div class="stat">
+            <span class="contrib-stat-value" id="contrib-streak">---</span>
+            <span class="contrib-stat-label">Current Streak</span>
+          </div>
+          <div class="stat">
+            <span class="contrib-stat-value" id="contrib-peak">---</span>
+            <span class="contrib-stat-label">Peak Day</span>
+          </div>
+        </div>
+        <div class="contrib-graph-wrapper">
+          <div id="contrib-months" class="contrib-months"></div>
+          <div id="contrib-graph" class="contrib-graph">
+            <span class="contrib-loading">FETCHING SIGNAL...</span>
+          </div>
+        </div>
+        <div class="contrib-legend">
+          <span class="contrib-legend-label">LESS</span>
+          <div class="contrib-legend-swatch" style="background: var(--surface);"></div>
+          <div class="contrib-legend-swatch" style="background: rgba(5, 217, 232, 0.15);"></div>
+          <div class="contrib-legend-swatch" style="background: rgba(5, 217, 232, 0.35);"></div>
+          <div class="contrib-legend-swatch" style="background: rgba(5, 217, 232, 0.6);"></div>
+          <div class="contrib-legend-swatch" style="background: var(--cyan); box-shadow: 0 0 8px rgba(5, 217, 232, 0.4);"></div>
+          <span class="contrib-legend-label">MORE</span>
+        </div>
+      </div>
+    </section>
+
     <!-- CONTACT -->
     <section id="contact">
       <div class="section-header">
-        <span class="section-id">SYS.04</span>
+        <span class="section-id">SYS.05</span>
         <h2 class="section-title">Establish Connection</h2>
         <div class="section-line"></div>
       </div>
@@ -1258,6 +1469,120 @@
       init();
       window.addEventListener('resize', function() { resize(); init(); });
       requestAnimationFrame(draw);
+    })();
+    /* ─── GITHUB CONTRIBUTIONS GRAPH ─── */
+    (function() {
+      var API_URL = 'https://github-contributions-api.jogruber.de/v4/willwang0202?y=last';
+      var graphEl = document.getElementById('contrib-graph');
+      var monthsEl = document.getElementById('contrib-months');
+      var totalEl = document.getElementById('contrib-total');
+      var streakEl = document.getElementById('contrib-streak');
+      var peakEl = document.getElementById('contrib-peak');
+      var MONTH_NAMES = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+
+      fetch(API_URL)
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          var contribs = data.contributions || [];
+          if (!contribs.length) {
+            graphEl.innerHTML = '<span class="contrib-loading">NO SIGNAL</span>';
+            return;
+          }
+
+          var total = data.total && data.total.lastYear ? data.total.lastYear : 0;
+          totalEl.textContent = total.toLocaleString();
+
+          var peak = 0;
+          var peakDate = '';
+          var streak = 0;
+          var maxStreak = 0;
+
+          for (var i = contribs.length - 1; i >= 0; i--) {
+            if (contribs[i].count > 0) {
+              streak++;
+            } else {
+              break;
+            }
+          }
+          streakEl.textContent = streak + 'd';
+
+          contribs.forEach(function(d) {
+            if (d.count > peak) {
+              peak = d.count;
+              peakDate = d.date;
+            }
+          });
+          peakEl.textContent = peak;
+
+          var weeks = [];
+          var currentWeek = [];
+          var firstDate = new Date(contribs[0].date + 'T00:00:00');
+          var startDay = firstDate.getDay();
+
+          for (var pad = 0; pad < startDay; pad++) {
+            currentWeek.push(null);
+          }
+
+          contribs.forEach(function(d) {
+            currentWeek.push(d);
+            if (currentWeek.length === 7) {
+              weeks.push(currentWeek);
+              currentWeek = [];
+            }
+          });
+          if (currentWeek.length > 0) {
+            weeks.push(currentWeek);
+          }
+
+          graphEl.innerHTML = '';
+
+          var monthPositions = [];
+          var lastMonth = -1;
+
+          weeks.forEach(function(week, wi) {
+            var weekEl = document.createElement('div');
+            weekEl.className = 'contrib-week';
+
+            week.forEach(function(day) {
+              var cell = document.createElement('div');
+              cell.className = 'contrib-day';
+              if (day === null) {
+                cell.style.visibility = 'hidden';
+              } else {
+                cell.setAttribute('data-level', day.level);
+                var tip = document.createElement('span');
+                tip.className = 'contrib-tooltip';
+                var dt = new Date(day.date + 'T00:00:00');
+                tip.textContent = day.count + ' contributions on ' + MONTH_NAMES[dt.getMonth()] + ' ' + dt.getDate();
+                cell.appendChild(tip);
+
+                if (dt.getMonth() !== lastMonth) {
+                  lastMonth = dt.getMonth();
+                  monthPositions.push({ month: lastMonth, weekIndex: wi });
+                }
+              }
+              weekEl.appendChild(cell);
+            });
+
+            graphEl.appendChild(weekEl);
+          });
+
+          monthsEl.innerHTML = '';
+          var cellSize = 13;
+          monthPositions.forEach(function(mp, idx) {
+            var span = document.createElement('span');
+            span.className = 'contrib-month-label';
+            span.textContent = MONTH_NAMES[mp.month];
+            span.style.position = 'absolute';
+            span.style.left = (mp.weekIndex * cellSize) + 'px';
+            monthsEl.appendChild(span);
+          });
+          monthsEl.style.position = 'relative';
+          monthsEl.style.height = '14px';
+        })
+        .catch(function() {
+          graphEl.innerHTML = '<span class="contrib-loading">SIGNAL LOST</span>';
+        });
     })();
   </script>
 </body>
