@@ -7,7 +7,7 @@
   <meta name="description" content="Chen-An Wang — Data Science, Audio/Music Tech, AI Tooling, Creative Coding">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Electrolize&family=Orbitron:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
     :root {
       --void: #0B0C15;
@@ -33,7 +33,7 @@
     }
 
     body {
-      font-family: 'Rajdhani', sans-serif;
+      font-family: 'Electrolize', sans-serif;
       background: var(--void);
       color: var(--text);
       overflow-x: hidden;
@@ -48,7 +48,7 @@
       height: 200%;
       pointer-events: none;
       z-index: 9998;
-      opacity: 0.04;
+      opacity: 0.06;
       animation: grain-drift 0.5s steps(1) infinite;
     }
 
@@ -91,54 +91,55 @@
     .ambient-orb {
       position: fixed;
       border-radius: 50%;
-      filter: blur(100px);
       pointer-events: none;
-      z-index: 0;
-      opacity: 0;
+      z-index: 2;
     }
 
     .ambient-orb--1 {
-      width: 600px;
-      height: 600px;
-      background: radial-gradient(circle, rgba(5, 217, 232, 0.08), transparent 70%);
-      top: -10%;
+      width: 700px;
+      height: 700px;
+      background: radial-gradient(circle, rgba(5, 217, 232, 0.15) 0%, rgba(5, 217, 232, 0.05) 40%, transparent 70%);
+      top: -15%;
       right: -10%;
+      filter: blur(80px);
       animation: orb-float-1 12s ease-in-out infinite;
     }
 
     .ambient-orb--2 {
-      width: 500px;
-      height: 500px;
-      background: radial-gradient(circle, rgba(255, 42, 109, 0.06), transparent 70%);
-      bottom: 10%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(255, 42, 109, 0.12) 0%, rgba(255, 42, 109, 0.04) 40%, transparent 70%);
+      bottom: 5%;
       left: -15%;
+      filter: blur(80px);
       animation: orb-float-2 15s ease-in-out infinite;
     }
 
     .ambient-orb--3 {
-      width: 400px;
-      height: 400px;
-      background: radial-gradient(circle, rgba(252, 238, 10, 0.04), transparent 70%);
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(252, 238, 10, 0.10) 0%, rgba(252, 238, 10, 0.03) 40%, transparent 70%);
       top: 40%;
-      right: 20%;
+      right: 15%;
+      filter: blur(80px);
       animation: orb-float-3 18s ease-in-out infinite;
     }
 
     @keyframes orb-float-1 {
-      0%, 100% { transform: translate(0, 0); opacity: 0.6; }
-      33%      { transform: translate(-40px, 30px); opacity: 1; }
-      66%      { transform: translate(20px, -20px); opacity: 0.7; }
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33%      { transform: translate(-50px, 40px) scale(1.05); }
+      66%      { transform: translate(30px, -25px) scale(0.95); }
     }
 
     @keyframes orb-float-2 {
-      0%, 100% { transform: translate(0, 0); opacity: 0.5; }
-      40%      { transform: translate(50px, -30px); opacity: 0.9; }
-      70%      { transform: translate(-20px, 20px); opacity: 0.6; }
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      40%      { transform: translate(60px, -40px) scale(1.08); }
+      70%      { transform: translate(-25px, 30px) scale(0.96); }
     }
 
     @keyframes orb-float-3 {
-      0%, 100% { transform: translate(0, 0); opacity: 0.4; }
-      50%      { transform: translate(-30px, -40px); opacity: 0.8; }
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50%      { transform: translate(-40px, -50px) scale(1.1); }
     }
 
     /* ─── PARTICLE CANVAS ─── */
@@ -146,7 +147,7 @@
       position: fixed;
       inset: 0;
       pointer-events: none;
-      z-index: 1;
+      z-index: 3;
     }
 
     /* ─── BOOT SEQUENCE ─── */
@@ -159,7 +160,7 @@
       flex-direction: column;
       justify-content: center;
       padding: 2rem;
-      font-family: 'Rajdhani', monospace;
+      font-family: 'Electrolize', monospace;
       transition: opacity 0.6s ease;
     }
 
@@ -229,7 +230,7 @@
       opacity: 0;
       transition: opacity 0.8s ease 0.3s;
       position: relative;
-      z-index: 2;
+      z-index: 10;
     }
 
     #main-content.visible {
@@ -333,7 +334,7 @@
     }
 
     .hero-title {
-      font-family: 'Rajdhani', sans-serif;
+      font-family: 'Electrolize', sans-serif;
       font-size: clamp(1rem, 2.5vw, 1.6rem);
       font-weight: 500;
       color: var(--yellow);
@@ -416,7 +417,7 @@
     }
 
     .section-title {
-      font-family: 'Rajdhani', sans-serif;
+      font-family: 'Electrolize', sans-serif;
       font-size: clamp(1.5rem, 3vw, 2rem);
       font-weight: 700;
       color: var(--white);
@@ -465,7 +466,7 @@
     }
 
     .skill-name {
-      font-family: 'Rajdhani', sans-serif;
+      font-family: 'Electrolize', sans-serif;
       font-size: 1.15rem;
       font-weight: 600;
       color: var(--yellow);
@@ -538,7 +539,7 @@
     }
 
     .project-name {
-      font-family: 'Rajdhani', sans-serif;
+      font-family: 'Electrolize', sans-serif;
       font-size: 1.2rem;
       font-weight: 600;
       color: var(--white);
@@ -602,7 +603,7 @@
     }
 
     .timeline-role {
-      font-family: 'Rajdhani', sans-serif;
+      font-family: 'Electrolize', sans-serif;
       font-size: 1.2rem;
       font-weight: 600;
       color: var(--white);
@@ -673,7 +674,7 @@
     }
 
     .contact-label {
-      font-family: 'Rajdhani', sans-serif;
+      font-family: 'Electrolize', sans-serif;
       font-size: 1.05rem;
       font-weight: 500;
       letter-spacing: 0.04em;
@@ -786,7 +787,7 @@
 
     /* ─── CLIP BUTTONS ─── */
     .cp-btn {
-      font-family: 'Rajdhani', sans-serif;
+      font-family: 'Electrolize', sans-serif;
       font-size: 0.85rem;
       font-weight: 600;
       letter-spacing: 0.1em;
@@ -1193,7 +1194,7 @@
             vx: (Math.random() - 0.5) * 0.15,
             vy: -0.05 - Math.random() * 0.2,
             size: 0.4 + Math.random() * 1.2,
-            alpha: 0.08 + Math.random() * 0.2,
+            alpha: 0.15 + Math.random() * 0.35,
             pulse: Math.random() * Math.PI * 2,
             pulseSpeed: 0.005 + Math.random() * 0.015
           });
