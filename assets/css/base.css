@@ -1,0 +1,246 @@
+/* ============================================================
+   BASE — reset, typography, page frame
+   ============================================================ */
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  background: var(--black);
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--face-body);
+  font-size: var(--t-body);
+  line-height: 1.65;
+  color: var(--bone-dim);
+  background: var(--black);
+  overflow-x: hidden;
+  font-feature-settings: 'ss01';
+}
+
+img, svg { max-width: 100%; display: block; }
+
+a { color: inherit; text-decoration: none; }
+
+::selection { background: var(--yellow); color: var(--black); }
+
+/* Keyboard focus is loud on purpose — this is targeting reticle logic. */
+:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 3px;
+}
+
+/* ── Atmosphere ─────────────────────────────────────────────
+   One effect, not eight. A fixed scanline wash at very low
+   opacity plus a vignette. Everything else was removed. */
+.atmosphere {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 100;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.07) 0px,
+      rgba(0, 0, 0, 0.07) 1px,
+      transparent 1px,
+      transparent 4px
+    ),
+    radial-gradient(ellipse at 50% 40%, transparent 58%, rgba(0, 0, 0, 0.5) 100%);
+}
+
+/* ── Typography roles ──────────────────────────────────────── */
+
+.display {
+  font-family: var(--face-display);
+  font-weight: 700;
+  line-height: 0.88;
+  letter-spacing: -0.01em;
+  color: var(--bone);
+  text-transform: uppercase;
+}
+
+.label {
+  font-family: var(--face-data);
+  font-size: var(--t-micro);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--bone-faint);
+}
+
+.data {
+  font-family: var(--face-data);
+  letter-spacing: var(--track-data);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Page frame ─────────────────────────────────────────────
+   Content is inset from a persistent left rail, the way a HUD
+   anchors to the edge of the screen and leaves the middle free. */
+
+.shell {
+  max-width: var(--measure);
+  margin-inline: auto;
+  padding-inline: clamp(1.25rem, 5vw, 3rem);
+}
+
+.rail {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: var(--rail-w);
+  border-right: 1px solid var(--steel);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding-block: 1.5rem;
+  z-index: 50;
+  background: var(--black);
+}
+
+.rail-mark {
+  font-family: var(--face-display);
+  font-weight: 700;
+  font-size: 1.125rem;
+  color: var(--yellow);
+  letter-spacing: 0.02em;
+}
+
+/* Section index — vertical, mirrors a HUD's edge-anchored nav.
+   The rotation lives on the links, not the container: rotating the
+   flex container would flip its main axis and lay them out sideways. */
+.rail-nav {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.75rem;
+}
+
+.rail-nav a {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  font-family: var(--face-data);
+  font-size: var(--t-micro);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--bone-faint);
+  transition: color var(--dur-fast) var(--ease-hard);
+}
+
+.rail-nav a:hover,
+.rail-nav a[aria-current='true'] { color: var(--yellow); }
+
+.rail-status {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.rail-status .label {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+}
+
+.pip {
+  width: 6px;
+  height: 6px;
+  background: var(--yellow);
+  animation: pip-pulse 2.4s var(--ease-hard) infinite;
+}
+
+@keyframes pip-pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.25; }
+}
+
+.page { margin-left: var(--rail-w); }
+
+@media (max-width: 720px) {
+  .rail {
+    inset: auto 0 0 0;
+    top: auto;
+    width: 100%;
+    height: 3rem;
+    flex-direction: row;
+    border-right: 0;
+    border-top: 1px solid var(--steel);
+    padding-inline: 1.25rem;
+  }
+  .rail-nav { flex-direction: row; gap: 1.125rem; }
+  /* The bar is horizontal here, so the rotation has to come back off. */
+  .rail-nav a,
+  .rail-status .label { writing-mode: horizontal-tb; }
+  .rail-status { flex-direction: row; }
+  .page { margin-left: 0; padding-bottom: 3rem; }
+}
+
+/* ── Section header ─────────────────────────────────────────
+   The eyebrow is a typed system tag, not a sequence number.
+   The sections are not steps, so they are not numbered. */
+
+/* Only the leading edge is padded, so the gap between two sections
+   is one rhythm unit rather than two stacked on top of each other. */
+section { padding-block: var(--section-y) 0; }
+
+.section-head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--gap-sm);
+  margin-bottom: var(--gap-md);
+  border-bottom: 1px solid var(--steel);
+  padding-bottom: var(--gap-sm);
+}
+
+.section-tag {
+  font-family: var(--face-data);
+  font-size: var(--t-micro);
+  letter-spacing: var(--track-label);
+  color: var(--yellow);
+  white-space: nowrap;
+}
+
+.section-title {
+  font-family: var(--face-display);
+  font-weight: 600;
+  font-size: var(--t-h2);
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  color: var(--bone);
+  line-height: 1;
+}
+
+.section-count {
+  margin-left: auto;
+  font-family: var(--face-data);
+  font-size: var(--t-micro);
+  letter-spacing: var(--track-data);
+  color: var(--bone-faint);
+  white-space: nowrap;
+}
+
+/* ── Scroll reveal ──────────────────────────────────────────
+   A short, hard translate. No fade-up drift. */
+.reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity var(--dur-slow) var(--ease-snap),
+    transform var(--dur-slow) var(--ease-snap);
+}
+
+.reveal.is-in { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .reveal { opacity: 1; transform: none; }
+}

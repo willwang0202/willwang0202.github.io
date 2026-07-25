@@ -3,2357 +3,328 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CHEN-AN WANG // SYSTEM ONLINE</title>
-  <meta name="description" content="Chen-An Wang — Data Science, Audio/Music Tech, AI Tooling, Creative Coding">
+  <title>Chen-An Wang — Data Science, Audio ML, AI Tooling</title>
+  <meta name="description" content="Chen-An Wang builds audio machine learning pipelines, developer tooling on language models, and interactive systems. Data Science at UC San Diego.">
+  <meta name="color-scheme" content="dark">
+
+  <meta property="og:title" content="Chen-An Wang — Data Science, Audio ML, AI Tooling">
+  <meta property="og:description" content="Audio ML pipelines, developer tooling on language models, and interactive systems.">
+  <meta property="og:type" content="profile">
+
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Electrolize&family=Orbitron:wght@400;500;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --void: #0B0C15;
-      --surface: #1A1B2E;
-      --surface-alt: #12132a;
-      --yellow: #FCEE0A;
-      --cyan: #05D9E8;
-      --magenta: #FF2A6D;
-      --red: #FF4A57;
-      --muted: #8A8BA3;
-      --text: #C8C9D8;
-      --white: #E8E9F0;
-    }
-
-    *, *::before, *::after {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-      background: var(--void);
-    }
-
-    body {
-      font-family: 'Electrolize', sans-serif;
-      background: transparent;
-      color: var(--text);
-      overflow-x: hidden;
-      line-height: 1.6;
-    }
-
-    /* ─── FILM GRAIN OVERLAY ─── */
-    #grain {
-      position: fixed;
-      inset: -50%;
-      width: 200%;
-      height: 200%;
-      pointer-events: none;
-      z-index: 9998;
-      opacity: 0.06;
-      animation: grain-drift 0.5s steps(1) infinite;
-    }
-
-    @keyframes grain-drift {
-      0%   { transform: translate(0, 0); }
-      20%  { transform: translate(-2%, -3%); }
-      40%  { transform: translate(3%, 1%); }
-      60%  { transform: translate(-1%, 2%); }
-      80%  { transform: translate(2%, -1%); }
-      100% { transform: translate(0, 0); }
-    }
-
-    /* ─── SCANLINE OVERLAY ─── */
-    body::after {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 2px,
-        rgba(5, 217, 232, 0.012) 2px,
-        rgba(5, 217, 232, 0.012) 4px
-      );
-      pointer-events: none;
-      z-index: 9999;
-    }
-
-    /* ─── VIGNETTE ─── */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background: radial-gradient(ellipse at 50% 50%, transparent 40%, rgba(0,0,0,0.5) 100%);
-      pointer-events: none;
-      z-index: 9997;
-    }
-
-    /* ─── AMBIENT GLOW ORBS ─── */
-    .ambient-orb {
-      position: fixed;
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 9990;
-      mix-blend-mode: screen;
-    }
-
-    .ambient-orb--1 {
-      width: 800px;
-      height: 800px;
-      background: radial-gradient(circle, rgba(5, 217, 232, 0.25) 0%, rgba(5, 217, 232, 0.08) 40%, transparent 70%);
-      top: -20%;
-      right: -10%;
-      filter: blur(60px);
-      animation: orb-float-1 12s ease-in-out infinite;
-    }
-
-    .ambient-orb--2 {
-      width: 700px;
-      height: 700px;
-      background: radial-gradient(circle, rgba(255, 42, 109, 0.20) 0%, rgba(255, 42, 109, 0.06) 40%, transparent 70%);
-      bottom: 0%;
-      left: -15%;
-      filter: blur(60px);
-      animation: orb-float-2 15s ease-in-out infinite;
-    }
-
-    .ambient-orb--3 {
-      width: 600px;
-      height: 600px;
-      background: radial-gradient(circle, rgba(252, 238, 10, 0.15) 0%, rgba(252, 238, 10, 0.05) 40%, transparent 70%);
-      top: 35%;
-      right: 10%;
-      filter: blur(60px);
-      animation: orb-float-3 18s ease-in-out infinite;
-    }
-
-    @keyframes orb-float-1 {
-      0%, 100% { transform: translate(0, 0) scale(1); }
-      33%      { transform: translate(-50px, 40px) scale(1.05); }
-      66%      { transform: translate(30px, -25px) scale(0.95); }
-    }
-
-    @keyframes orb-float-2 {
-      0%, 100% { transform: translate(0, 0) scale(1); }
-      40%      { transform: translate(60px, -40px) scale(1.08); }
-      70%      { transform: translate(-25px, 30px) scale(0.96); }
-    }
-
-    @keyframes orb-float-3 {
-      0%, 100% { transform: translate(0, 0) scale(1); }
-      50%      { transform: translate(-40px, -50px) scale(1.1); }
-    }
-
-    /* ─── PARTICLE CANVAS ─── */
-    #particles {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 9991;
-    }
-
-    /* ─── BOOT SEQUENCE ─── */
-    #boot-screen {
-      position: fixed;
-      inset: 0;
-      background: var(--void);
-      z-index: 10000;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 2rem;
-      font-family: 'Electrolize', monospace;
-      transition: opacity 0.6s ease;
-    }
-
-    #boot-screen.fade-out {
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    #boot-screen.hidden {
-      display: none;
-    }
-
-    .boot-line {
-      font-size: 0.85rem;
-      letter-spacing: 0.08em;
-      color: var(--cyan);
-      opacity: 0;
-      transform: translateX(-10px);
-      white-space: nowrap;
-      overflow: hidden;
-    }
-
-    .boot-line.visible {
-      opacity: 1;
-      transform: translateX(0);
-      transition: opacity 0.15s, transform 0.15s;
-    }
-
-    .boot-line.yellow { color: var(--yellow); }
-    .boot-line.magenta { color: var(--magenta); }
-    .boot-line.muted { color: var(--muted); font-size: 0.75rem; }
-
-    .boot-progress {
-      margin-top: 1rem;
-      height: 2px;
-      background: var(--surface);
-      position: relative;
-      max-width: 400px;
-    }
-
-    .boot-progress-fill {
-      height: 100%;
-      background: var(--yellow);
-      width: 0%;
-      transition: width 0.4s ease;
-      box-shadow: 0 0 10px var(--yellow);
-    }
-
-    .boot-name {
-      font-family: 'Orbitron', monospace;
-      font-size: clamp(1.5rem, 4vw, 2.5rem);
-      font-weight: 700;
-      color: var(--yellow);
-      letter-spacing: 0.15em;
-      margin-top: 1.5rem;
-      opacity: 0;
-    }
-
-    .boot-name.visible {
-      opacity: 1;
-      transition: opacity 0.5s;
-      text-shadow: 0 0 30px rgba(252, 238, 10, 0.4);
-    }
-
-    /* ─── MAIN CONTENT ─── */
-    #main-content {
-      opacity: 0;
-      transition: opacity 0.8s ease 0.3s;
-      position: relative;
-      z-index: 10;
-    }
-
-    #main-content.visible {
-      opacity: 1;
-    }
-
-    /* ─── CORNER BRACKETS ─── */
-    .bracketed {
-      position: relative;
-      padding: 2rem;
-    }
-
-    .bracketed::before,
-    .bracketed::after {
-      content: '';
-      position: absolute;
-      width: 20px;
-      height: 20px;
-      border-color: var(--cyan);
-      border-style: solid;
-      opacity: 0.4;
-    }
-
-    .bracketed::before {
-      top: 0;
-      left: 0;
-      border-width: 1px 0 0 1px;
-    }
-
-    .bracketed::after {
-      bottom: 0;
-      right: 0;
-      border-width: 0 1px 1px 0;
-    }
-
-    /* ─── HERO ─── */
-    .hero {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 2rem clamp(1.5rem, 6vw, 8rem);
-      position: relative;
-    }
-
-    .hero-grid {
-      position: absolute;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(5, 217, 232, 0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(5, 217, 232, 0.03) 1px, transparent 1px);
-      background-size: 60px 60px;
-      mask-image: radial-gradient(ellipse at 30% 50%, black 20%, transparent 70%);
-    }
-
-    .hero-tag {
-      font-family: 'Orbitron', monospace;
-      font-size: 0.7rem;
-      letter-spacing: 0.3em;
-      color: var(--cyan);
-      margin-bottom: 1rem;
-      text-transform: uppercase;
-    }
-
-    .hero-tag::before {
-      content: '// ';
-      color: var(--muted);
-    }
-
-    .hero-name {
-      font-family: 'Orbitron', monospace;
-      font-size: clamp(2.5rem, 8vw, 6rem);
-      font-weight: 700;
-      color: var(--white);
-      line-height: 1;
-      letter-spacing: 0.05em;
-      position: relative;
-    }
-
-    .hero-name .glitch-layer {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      color: var(--cyan);
-      opacity: 0;
-      clip-path: inset(0 0 0 0);
-    }
-
-    .hero-name:hover .glitch-layer {
-      animation: glitch 0.4s steps(2) infinite;
-    }
-
-    @keyframes glitch {
-      0%   { opacity: 0.7; transform: translate(2px, -1px); clip-path: inset(20% 0 60% 0); }
-      25%  { opacity: 0.5; transform: translate(-3px, 1px); clip-path: inset(50% 0 10% 0); }
-      50%  { opacity: 0.8; transform: translate(1px, 2px); clip-path: inset(10% 0 70% 0); }
-      75%  { opacity: 0.4; transform: translate(-2px, -2px); clip-path: inset(60% 0 5% 0); }
-      100% { opacity: 0.6; transform: translate(3px, 0); clip-path: inset(30% 0 40% 0); }
-    }
-
-    .hero-title {
-      font-family: 'Electrolize', sans-serif;
-      font-size: clamp(1rem, 2.5vw, 1.6rem);
-      font-weight: 500;
-      color: var(--yellow);
-      margin-top: 0.75rem;
-      letter-spacing: 0.1em;
-    }
-
-    .hero-desc {
-      max-width: 550px;
-      margin-top: 1.5rem;
-      font-size: 1.05rem;
-      color: var(--muted);
-      font-weight: 400;
-      line-height: 1.7;
-    }
-
-    .hero-stats {
-      display: flex;
-      gap: 2.5rem;
-      margin-top: 2.5rem;
-      flex-wrap: wrap;
-    }
-
-    .stat {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .stat-label {
-      font-family: 'Orbitron', monospace;
-      font-size: 0.55rem;
-      letter-spacing: 0.25em;
-      color: var(--muted);
-      text-transform: uppercase;
-    }
-
-    .stat-value {
-      font-family: 'Orbitron', monospace;
-      font-size: 1.4rem;
-      font-weight: 700;
-      color: var(--cyan);
-      margin-top: 0.15rem;
-    }
-
-    .stat-bar {
-      width: 80px;
-      height: 2px;
-      background: var(--surface);
-      margin-top: 0.4rem;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .stat-bar-fill {
-      height: 100%;
-      background: var(--cyan);
-      box-shadow: 0 0 6px var(--cyan);
-      transition: width 1.5s ease;
-    }
-
-    /* ─── SECTION LAYOUT ─── */
-    section {
-      padding: 5rem clamp(1.5rem, 6vw, 8rem);
-      position: relative;
-    }
-
-    .section-header {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      margin-bottom: 3rem;
-    }
-
-    .section-id {
-      font-family: 'Orbitron', monospace;
-      font-size: 0.6rem;
-      letter-spacing: 0.2em;
-      color: var(--magenta);
-      min-width: 80px;
-    }
-
-    .section-title {
-      font-family: 'Electrolize', sans-serif;
-      font-size: clamp(1.5rem, 3vw, 2rem);
-      font-weight: 700;
-      color: var(--white);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-    }
-
-    .section-line {
-      flex: 1;
-      height: 1px;
-      background: linear-gradient(90deg, var(--surface), transparent);
-    }
-
-    /* ─── SKILLS GRID ─── */
-    .skills-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1px;
-      background: rgba(5, 217, 232, 0.08);
-    }
-
-    .skill-card {
-      background: var(--void);
-      padding: 1.8rem;
-      position: relative;
-      transition: background 0.3s;
-    }
-
-    .skill-card:hover {
-      background: var(--surface-alt);
-    }
-
-    .skill-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 0;
-      height: 1px;
-      background: var(--yellow);
-      transition: width 0.4s ease;
-    }
-
-    .skill-card:hover::before {
-      width: 100%;
-    }
-
-    .skill-name {
-      font-family: 'Electrolize', sans-serif;
-      font-size: 1.15rem;
-      font-weight: 600;
-      color: var(--yellow);
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-    }
-
-    .skill-desc {
-      font-size: 0.9rem;
-      color: var(--muted);
-      margin-top: 0.5rem;
-      line-height: 1.6;
-    }
-
-    .skill-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.4rem;
-      margin-top: 1rem;
-    }
-
-    .skill-tag {
-      font-family: 'Orbitron', monospace;
-      font-size: 0.55rem;
-      letter-spacing: 0.12em;
-      color: var(--cyan);
-      border: 1px solid rgba(5, 217, 232, 0.2);
-      padding: 0.2rem 0.5rem;
-      clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%);
-    }
-
-    /* ─── PROJECTS ─── */
-    .projects-list {
-      display: flex;
-      flex-direction: column;
-      gap: 1px;
-      background: rgba(5, 217, 232, 0.05);
-    }
-
-    .project {
-      background: var(--void);
-      display: grid;
-      grid-template-columns: 80px 1fr auto;
-      align-items: start;
-      padding: 1.5rem 1.8rem;
-      gap: 1.5rem;
-      transition: background 0.3s;
-      text-decoration: none;
-      color: inherit;
-      cursor: default;
-    }
-
-    .project:hover {
-      background: var(--surface-alt);
-    }
-
-    .project-status {
-      font-family: 'Orbitron', monospace;
-      font-size: 0.55rem;
-      letter-spacing: 0.15em;
-      padding-top: 0.25rem;
-    }
-
-    .project-status.active {
-      color: var(--cyan);
-    }
-
-    .project-status.archived {
-      color: var(--muted);
-    }
-
-    .project-name {
-      font-family: 'Electrolize', sans-serif;
-      font-size: 1.2rem;
-      font-weight: 600;
-      color: var(--white);
-      letter-spacing: 0.04em;
-    }
-
-    .project-desc {
-      font-size: 0.88rem;
-      color: var(--muted);
-      margin-top: 0.3rem;
-      line-height: 1.5;
-    }
-
-    .project-tech {
-      font-family: 'Orbitron', monospace;
-      font-size: 0.5rem;
-      letter-spacing: 0.1em;
-      color: var(--yellow);
-      padding-top: 0.35rem;
-      text-align: right;
-      white-space: nowrap;
-    }
-
-    /* ─── EXPERIENCE ─── */
-    .timeline {
-      position: relative;
-      padding-left: 2rem;
-    }
-
-    .timeline::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      width: 1px;
-      background: linear-gradient(180deg, var(--cyan), var(--magenta), transparent);
-    }
-
-    .timeline-item {
-      position: relative;
-      padding-bottom: 3rem;
-    }
-
-    .timeline-item::before {
-      content: '';
-      position: absolute;
-      left: -2rem;
-      top: 0.4rem;
-      width: 7px;
-      height: 7px;
-      background: var(--yellow);
-      clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
-    }
-
-    .timeline-date {
-      font-family: 'Orbitron', monospace;
-      font-size: 0.55rem;
-      letter-spacing: 0.2em;
-      color: var(--magenta);
-    }
-
-    .timeline-role {
-      font-family: 'Electrolize', sans-serif;
-      font-size: 1.2rem;
-      font-weight: 600;
-      color: var(--white);
-      margin-top: 0.3rem;
-      letter-spacing: 0.03em;
-    }
-
-    .timeline-org {
-      font-size: 0.95rem;
-      color: var(--yellow);
-      font-weight: 500;
-    }
-
-    .timeline-desc {
-      font-size: 0.88rem;
-      color: var(--muted);
-      margin-top: 0.5rem;
-      line-height: 1.6;
-      max-width: 600px;
-    }
-
-    /* ─── GITHUB CONTRIBUTION GRAPH ─── */
-    .contrib-container {
-      position: relative;
-    }
-
-    .contrib-stats {
-      display: flex;
-      gap: 2.5rem;
-      margin-bottom: 2rem;
-      flex-wrap: wrap;
-    }
-
-    .contrib-stat-value {
-      font-family: 'Orbitron', monospace;
-      font-size: 1.8rem;
-      font-weight: 700;
-      color: var(--yellow);
-      text-shadow: 0 0 20px rgba(252, 238, 10, 0.3);
-    }
-
-    .contrib-stat-label {
-      font-family: 'Orbitron', monospace;
-      font-size: 0.55rem;
-      letter-spacing: 0.25em;
-      color: var(--muted);
-      text-transform: uppercase;
-      margin-top: 0.15rem;
-    }
-
-    .contrib-graph-wrapper {
-      overflow-x: auto;
-      padding-bottom: 0.5rem;
-    }
-
-    .contrib-graph-wrapper::-webkit-scrollbar {
-      height: 3px;
-    }
-
-    .contrib-graph-wrapper::-webkit-scrollbar-track {
-      background: var(--surface);
-    }
-
-    .contrib-graph-wrapper::-webkit-scrollbar-thumb {
-      background: var(--cyan);
-      box-shadow: 0 0 4px var(--cyan);
-    }
-
-    .contrib-graph {
-      display: flex;
-      gap: 2px;
-      min-width: max-content;
-    }
-
-    .contrib-week {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .contrib-day {
-      width: 11px;
-      height: 11px;
-      background: var(--surface);
-      border: 1px solid rgba(5, 217, 232, 0.06);
-      position: relative;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-
-    .contrib-day:hover {
-      border-color: var(--yellow);
-      box-shadow: 0 0 6px rgba(252, 238, 10, 0.3);
-      z-index: 2;
-    }
-
-    .contrib-day[data-level="1"] {
-      background: rgba(5, 217, 232, 0.15);
-      border-color: rgba(5, 217, 232, 0.15);
-    }
-
-    .contrib-day[data-level="2"] {
-      background: rgba(5, 217, 232, 0.35);
-      border-color: rgba(5, 217, 232, 0.2);
-    }
-
-    .contrib-day[data-level="3"] {
-      background: rgba(5, 217, 232, 0.6);
-      border-color: rgba(5, 217, 232, 0.35);
-      box-shadow: 0 0 4px rgba(5, 217, 232, 0.15);
-    }
-
-    .contrib-day[data-level="4"] {
-      background: var(--cyan);
-      border-color: var(--cyan);
-      box-shadow: 0 0 8px rgba(5, 217, 232, 0.4);
-    }
-
-    .contrib-tooltip {
-      display: none;
-      position: absolute;
-      bottom: calc(100% + 6px);
-      left: 50%;
-      transform: translateX(-50%);
-      background: var(--surface);
-      border: 1px solid rgba(5, 217, 232, 0.2);
-      padding: 0.35rem 0.6rem;
-      font-family: 'Electrolize', sans-serif;
-      font-size: 0.7rem;
-      color: var(--text);
-      white-space: nowrap;
-      pointer-events: none;
-      z-index: 100;
-    }
-
-    .contrib-tooltip::after {
-      content: '';
-      position: absolute;
-      top: 100%;
-      left: 50%;
-      transform: translateX(-50%);
-      border: 4px solid transparent;
-      border-top-color: rgba(5, 217, 232, 0.2);
-    }
-
-    .contrib-day:hover .contrib-tooltip {
-      display: block;
-    }
-
-    .contrib-months {
-      display: flex;
-      gap: 2px;
-      margin-bottom: 0.5rem;
-      padding-left: 0;
-    }
-
-    .contrib-month-label {
-      font-family: 'Orbitron', monospace;
-      font-size: 0.45rem;
-      letter-spacing: 0.1em;
-      color: var(--muted);
-      min-width: 11px;
-    }
-
-    .contrib-legend {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-top: 1rem;
-      justify-content: flex-end;
-    }
-
-    .contrib-legend-label {
-      font-family: 'Orbitron', monospace;
-      font-size: 0.45rem;
-      letter-spacing: 0.1em;
-      color: var(--muted);
-    }
-
-    .contrib-legend-swatch {
-      width: 11px;
-      height: 11px;
-      border: 1px solid rgba(5, 217, 232, 0.06);
-    }
-
-    .contrib-loading {
-      font-family: 'Orbitron', monospace;
-      font-size: 0.7rem;
-      letter-spacing: 0.15em;
-      color: var(--cyan);
-      animation: pulse-dot 2s ease infinite;
-    }
-
-    /* ─── CONTACT / LINKS ─── */
-    .contact-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1px;
-      background: rgba(5, 217, 232, 0.08);
-    }
-
-    .contact-link {
-      background: var(--void);
-      padding: 1.5rem 1.8rem;
-      text-decoration: none;
-      color: var(--text);
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      transition: background 0.3s, color 0.3s;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .contact-link:hover {
-      background: var(--surface-alt);
-      color: var(--yellow);
-    }
-
-    .contact-link::after {
-      content: '→';
-      font-family: 'Orbitron', monospace;
-      font-size: 0.7rem;
-      color: var(--muted);
-      margin-left: auto;
-      transition: transform 0.3s, color 0.3s;
-    }
-
-    .contact-link:hover::after {
-      transform: translateX(4px);
-      color: var(--yellow);
-    }
-
-    .contact-icon {
-      font-family: 'Orbitron', monospace;
-      font-size: 0.5rem;
-      letter-spacing: 0.15em;
-      color: var(--cyan);
-      min-width: 50px;
-    }
-
-    .contact-label {
-      font-family: 'Electrolize', sans-serif;
-      font-size: 1.05rem;
-      font-weight: 500;
-      letter-spacing: 0.04em;
-    }
-
-    /* ─── FOOTER ─── */
-    footer {
-      padding: 3rem clamp(1.5rem, 6vw, 8rem);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-top: 1px solid rgba(5, 217, 232, 0.06);
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-
-    .footer-sig {
-      font-family: 'Orbitron', monospace;
-      font-size: 0.5rem;
-      letter-spacing: 0.2em;
-      color: var(--muted);
-    }
-
-    .footer-status {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-family: 'Orbitron', monospace;
-      font-size: 0.5rem;
-      letter-spacing: 0.15em;
-      color: var(--cyan);
-    }
-
-    .status-dot {
-      width: 6px;
-      height: 6px;
-      background: var(--cyan);
-      border-radius: 50%;
-      animation: pulse-dot 2s ease infinite;
-    }
-
-    @keyframes pulse-dot {
-      0%, 100% { opacity: 1; box-shadow: 0 0 4px var(--cyan); }
-      50% { opacity: 0.4; box-shadow: none; }
-    }
-
-    /* ─── NAV ─── */
-    nav {
-      position: fixed;
-      top: 0;
-      right: 0;
-      z-index: 9995;
-      padding: 1.5rem;
-      display: flex;
-      gap: 1.5rem;
-    }
-
-    nav a {
-      font-family: 'Orbitron', monospace;
-      font-size: 0.55rem;
-      letter-spacing: 0.15em;
-      color: var(--muted);
-      text-decoration: none;
-      text-transform: uppercase;
-      transition: color 0.3s;
-      position: relative;
-    }
-
-    nav a:hover {
-      color: var(--yellow);
-    }
-
-    nav a::after {
-      content: '';
-      position: absolute;
-      bottom: -4px;
-      left: 0;
-      width: 0;
-      height: 1px;
-      background: var(--yellow);
-      transition: width 0.3s;
-    }
-
-    nav a:hover::after {
-      width: 100%;
-    }
-
-    /* ─── CRT FLICKER ─── */
-    @keyframes flicker {
-      0%, 100% { opacity: 1; }
-      92% { opacity: 1; }
-      93% { opacity: 0.8; }
-      94% { opacity: 1; }
-      96% { opacity: 0.9; }
-      97% { opacity: 1; }
-    }
-
-    .flicker {
-      animation: flicker 4s infinite;
-    }
-
-    /* ─── AMBIENT GLOW ─── */
-    .glow-yellow {
-      text-shadow: 0 0 20px rgba(252, 238, 10, 0.3);
-    }
-
-    .glow-cyan {
-      text-shadow: 0 0 20px rgba(5, 217, 232, 0.3);
-    }
-
-    /* ─── CLIP BUTTONS ─── */
-    .cp-btn {
-      font-family: 'Electrolize', sans-serif;
-      font-size: 0.85rem;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      padding: 0.6rem 1.8rem;
-      background: var(--yellow);
-      color: var(--void);
-      border: none;
-      cursor: pointer;
-      clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
-      text-decoration: none;
-      display: inline-block;
-      transition: background 0.3s;
-      position: relative;
-    }
-
-    .cp-btn:hover {
-      background: var(--white);
-    }
-
-    .cp-btn::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: var(--cyan);
-      clip-path: inset(0 0 0 0);
-      opacity: 0;
-    }
-
-    .cp-btn:hover::before {
-      animation: btn-glitch 0.3s steps(2);
-    }
-
-    @keyframes btn-glitch {
-      0%   { opacity: 0.6; clip-path: inset(30% 0 50% 0); }
-      50%  { opacity: 0.4; clip-path: inset(60% 0 10% 0); }
-      100% { opacity: 0; clip-path: inset(0 0 0 0); }
-    }
-
-    /* ─── SCROLL REVEAL ─── */
-    .reveal {
-      opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 0.7s ease, transform 0.7s ease;
-    }
-
-    .reveal.revealed {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .reveal-left {
-      opacity: 0;
-      transform: translateX(-40px);
-      transition: opacity 0.7s ease, transform 0.7s ease;
-    }
-
-    .reveal-left.revealed {
-      opacity: 1;
-      transform: translateX(0);
-    }
-
-    .reveal-right {
-      opacity: 0;
-      transform: translateX(40px);
-      transition: opacity 0.7s ease, transform 0.7s ease;
-    }
-
-    .reveal-right.revealed {
-      opacity: 1;
-      transform: translateX(0);
-    }
-
-    .reveal-scale {
-      opacity: 0;
-      transform: scale(0.92);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-
-    .reveal-scale.revealed {
-      opacity: 1;
-      transform: scale(1);
-    }
-
-    /* ─── SCROLL PROGRESS BAR ─── */
-    #scroll-progress {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 2px;
-      height: 0%;
-      background: linear-gradient(180deg, var(--cyan), var(--magenta), var(--yellow));
-      z-index: 9996;
-      box-shadow: 0 0 8px var(--cyan), 0 0 20px rgba(5, 217, 232, 0.2);
-      transition: height 0.05s linear;
-    }
-
-    #scroll-progress::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: -3px;
-      width: 8px;
-      height: 8px;
-      background: var(--cyan);
-      border-radius: 50%;
-      box-shadow: 0 0 12px var(--cyan), 0 0 24px rgba(5, 217, 232, 0.3);
-    }
-
-    /* ─── SECTION DIVIDER WIRES ─── */
-    .section-wire {
-      position: relative;
-      height: 40px;
-      margin: 0 clamp(1.5rem, 6vw, 8rem);
-      overflow: hidden;
-    }
-
-    .section-wire svg {
-      width: 100%;
-      height: 100%;
-    }
-
-    .wire-path {
-      stroke: var(--cyan);
-      stroke-width: 1;
-      fill: none;
-      opacity: 0.15;
-    }
-
-    .wire-pulse {
-      stroke: var(--cyan);
-      stroke-width: 1;
-      fill: none;
-      stroke-dasharray: 40 200;
-      stroke-dashoffset: 240;
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
-
-    .wire-pulse.active {
-      opacity: 0.8;
-      animation: wire-flow 2s linear infinite;
-      filter: drop-shadow(0 0 3px var(--cyan));
-    }
-
-    @keyframes wire-flow {
-      to { stroke-dashoffset: -240; }
-    }
-
-    .wire-node {
-      fill: var(--void);
-      stroke: var(--cyan);
-      stroke-width: 1;
-      opacity: 0.3;
-    }
-
-    .wire-node.active {
-      opacity: 1;
-      fill: var(--cyan);
-      filter: drop-shadow(0 0 4px var(--cyan));
-      transition: all 0.4s ease;
-    }
-
-    /* ─── GLITCH HEADER ─── */
-    .section-header.glitch-flash .section-title {
-      animation: header-glitch 0.5s steps(3);
-    }
-
-    @keyframes header-glitch {
-      0%   { text-shadow: 2px 0 var(--cyan), -2px 0 var(--magenta); opacity: 0.8; }
-      20%  { text-shadow: -1px 0 var(--magenta), 1px 0 var(--cyan); opacity: 1; }
-      40%  { text-shadow: 3px 0 var(--yellow), -3px 0 var(--cyan); opacity: 0.6; }
-      60%  { text-shadow: -2px 0 var(--cyan), 2px 0 var(--magenta); opacity: 1; }
-      80%  { text-shadow: 1px 0 var(--magenta), -1px 0 var(--yellow); opacity: 0.9; }
-      100% { text-shadow: none; opacity: 1; }
-    }
-
-    /* ─── DATA STREAM (section-id hex decode) ─── */
-    .section-id.decoding {
-      animation: hex-flicker 0.08s steps(1) infinite;
-    }
-
-    @keyframes hex-flicker {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.6; }
-    }
-
-    /* ─── SKILL CARD SCANLINE ─── */
-    .skill-card::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, var(--cyan), transparent);
-      opacity: 0;
-      transform: translateY(0);
-      transition: opacity 0.2s;
-      pointer-events: none;
-    }
-
-    .skill-card:hover::after {
-      opacity: 0.6;
-      animation: card-scan 0.8s ease-out;
-    }
-
-    @keyframes card-scan {
-      0% { transform: translateY(0); opacity: 0.8; }
-      100% { transform: translateY(120px); opacity: 0; }
-    }
-
-    /* ─── PROJECT HOVER SCANLINE ─── */
-    .project::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 2px;
-      height: 0;
-      background: var(--cyan);
-      box-shadow: 0 0 6px var(--cyan);
-      transition: height 0.4s ease;
-    }
-
-    .project {
-      position: relative;
-    }
-
-    .project:hover::before {
-      height: 100%;
-    }
-
-    /* ─── FEATURED PROJECT ─── */
-    .featured-project {
-      border: 1px solid rgba(5, 217, 232, 0.12);
-      padding: 2.5rem;
-      position: relative;
-      background: linear-gradient(135deg, rgba(5, 217, 232, 0.03) 0%, transparent 60%);
-      margin-bottom: 2.5rem;
-    }
-
-    .featured-project::before,
-    .featured-project::after {
-      content: '';
-      position: absolute;
-      width: 24px;
-      height: 24px;
-      border-color: var(--yellow);
-      border-style: solid;
-      opacity: 0.5;
-    }
-
-    .featured-project::before {
-      top: -1px;
-      left: -1px;
-      border-width: 2px 0 0 2px;
-    }
-
-    .featured-project::after {
-      bottom: -1px;
-      right: -1px;
-      border-width: 0 2px 2px 0;
-    }
-
-    .featured-badge {
-      font-family: 'Orbitron', monospace;
-      font-size: 0.5rem;
-      letter-spacing: 0.3em;
-      color: var(--void);
-      background: var(--yellow);
-      padding: 0.2rem 0.7rem;
-      display: inline-block;
-      margin-bottom: 1rem;
-      clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%);
-    }
-
-    .featured-name {
-      font-family: 'Orbitron', monospace;
-      font-size: clamp(1.5rem, 3vw, 2.2rem);
-      font-weight: 700;
-      color: var(--white);
-      letter-spacing: 0.06em;
-    }
-
-    .featured-subtitle {
-      font-family: 'Electrolize', sans-serif;
-      font-size: 1rem;
-      color: var(--cyan);
-      margin-top: 0.25rem;
-      letter-spacing: 0.04em;
-    }
-
-    .featured-desc {
-      font-size: 0.95rem;
-      color: var(--muted);
-      margin-top: 1rem;
-      line-height: 1.7;
-      max-width: 700px;
-    }
-
-    .featured-metrics {
-      display: flex;
-      gap: 2.5rem;
-      margin-top: 1.5rem;
-      flex-wrap: wrap;
-    }
-
-    .featured-metric {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .featured-metric-value {
-      font-family: 'Orbitron', monospace;
-      font-size: 1.3rem;
-      font-weight: 700;
-      color: var(--cyan);
-      text-shadow: 0 0 12px rgba(5, 217, 232, 0.3);
-    }
-
-    .featured-metric-label {
-      font-family: 'Orbitron', monospace;
-      font-size: 0.45rem;
-      letter-spacing: 0.25em;
-      color: var(--muted);
-      text-transform: uppercase;
-      margin-top: 0.1rem;
-    }
-
-    .featured-stack {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin-top: 1.5rem;
-    }
-
-    .featured-stack-tag {
-      font-family: 'Orbitron', monospace;
-      font-size: 0.55rem;
-      letter-spacing: 0.1em;
-      color: var(--cyan);
-      border: 1px solid rgba(5, 217, 232, 0.2);
-      padding: 0.25rem 0.6rem;
-      clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%);
-      transition: background 0.3s, color 0.3s;
-    }
-
-    .featured-stack-tag:hover {
-      background: rgba(5, 217, 232, 0.1);
-    }
-
-    .featured-links {
-      display: flex;
-      gap: 1rem;
-      margin-top: 1.5rem;
-    }
-
-    .featured-link {
-      font-family: 'Electrolize', sans-serif;
-      font-size: 0.8rem;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      text-decoration: none;
-      padding: 0.5rem 1.4rem;
-      clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
-      transition: background 0.3s, color 0.3s;
-      display: inline-block;
-    }
-
-    .featured-link--primary {
-      background: var(--yellow);
-      color: var(--void);
-    }
-
-    .featured-link--primary:hover {
-      background: var(--white);
-    }
-
-    .featured-link--secondary {
-      background: transparent;
-      color: var(--cyan);
-      border: 1px solid rgba(5, 217, 232, 0.3);
-    }
-
-    .featured-link--secondary:hover {
-      background: rgba(5, 217, 232, 0.08);
-    }
-
-    .featured-scanline {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 1px;
-      background: linear-gradient(90deg, transparent 0%, var(--cyan) 20%, var(--cyan) 80%, transparent 100%);
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .featured-project:hover .featured-scanline {
-      animation: featured-scan 1.2s ease-out;
-    }
-
-    @keyframes featured-scan {
-      0% { opacity: 0.6; transform: translateY(0); }
-      100% { opacity: 0; transform: translateY(200px); }
-    }
-
-    .featured-features {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1px;
-      margin-top: 1.5rem;
-      background: rgba(5, 217, 232, 0.06);
-    }
-
-    .featured-feature {
-      background: var(--void);
-      padding: 1rem 1.2rem;
-      display: flex;
-      align-items: flex-start;
-      gap: 0.7rem;
-    }
-
-    .featured-feature-icon {
-      font-family: 'Orbitron', monospace;
-      font-size: 0.5rem;
-      color: var(--yellow);
-      margin-top: 0.15rem;
-      min-width: 16px;
-    }
-
-    .featured-feature-text {
-      font-size: 0.82rem;
-      color: var(--text);
-      line-height: 1.5;
-    }
-
-    /* ─── NAV ACTIVE ─── */
-    nav a.active {
-      color: var(--cyan);
-      text-shadow: 0 0 8px rgba(5, 217, 232, 0.4);
-    }
-
-    nav a.active::after {
-      width: 100%;
-      background: var(--cyan);
-      box-shadow: 0 0 4px var(--cyan);
-    }
-
-    /* ─── HERO TYPING CURSOR ─── */
-    .typing-cursor {
-      display: inline-block;
-      width: 2px;
-      height: 1.1em;
-      background: var(--cyan);
-      margin-left: 2px;
-      vertical-align: text-bottom;
-      animation: cursor-blink 0.7s steps(1) infinite;
-    }
-
-    @keyframes cursor-blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0; }
-    }
-
-    /* ─── SCROLL-TRIGGERED STAT COUNTERS ─── */
-    .stat-value.counting {
-      animation: stat-glow 0.6s ease;
-    }
-
-    @keyframes stat-glow {
-      0% { text-shadow: 0 0 30px var(--cyan); }
-      100% { text-shadow: 0 0 20px rgba(5, 217, 232, 0.3); }
-    }
-
-    /* ─── HEXAGONAL DECORATIONS ─── */
-    .hex-deco {
-      position: absolute;
-      pointer-events: none;
-      opacity: 0.04;
-    }
-
-    .hex-deco svg {
-      width: 100%;
-      height: 100%;
-    }
-
-    /* ─── REDUCED MOTION ─── */
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-      }
-      .reveal, .reveal-left, .reveal-right, .reveal-scale {
-        opacity: 1;
-        transform: none;
-      }
-    }
-
-    /* ─── MOBILE ─── */
-    @media (max-width: 768px) {
-      nav {
-        padding: 1rem;
-        gap: 1rem;
-      }
-
-      .hero-stats {
-        gap: 1.5rem;
-      }
-
-      .project {
-        grid-template-columns: 1fr;
-        gap: 0.5rem;
-      }
-
-      .project-status {
-        order: -1;
-      }
-
-      .project-tech {
-        text-align: left;
-      }
-
-      .section-wire {
-        display: none;
-      }
-    }
-
-    @media (max-width: 480px) {
-      nav {
-        display: none;
-      }
-    }
-
-    /* ─── FOCUS ─── */
-    :focus-visible {
-      outline: 1px solid var(--yellow);
-      outline-offset: 2px;
-    }
-
-    /* ─── SELECTION ─── */
-    ::selection {
-      background: rgba(252, 238, 10, 0.25);
-      color: var(--white);
-    }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Chakra+Petch:wght@400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/css/tokens.css">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/components.css">
 </head>
 <body>
-  <!-- SCROLL PROGRESS -->
-  <div id="scroll-progress" aria-hidden="true"></div>
 
-  <!-- AMBIENT BACKGROUND -->
-  <div class="ambient-orb ambient-orb--1" aria-hidden="true"></div>
-  <div class="ambient-orb ambient-orb--2" aria-hidden="true"></div>
-  <div class="ambient-orb ambient-orb--3" aria-hidden="true"></div>
-  <canvas id="particles" aria-hidden="true"></canvas>
-  <svg id="grain" aria-hidden="true"><filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(#noiseFilter)"/></svg>
+<div class="atmosphere" aria-hidden="true"></div>
 
-  <!-- BOOT SEQUENCE -->
-  <div id="boot-screen">
-    <div id="boot-lines"></div>
-    <div class="boot-progress"><div class="boot-progress-fill" id="boot-fill"></div></div>
-    <div class="boot-name" id="boot-name">CHEN-AN WANG</div>
+<!-- Boot sequence. Skippable, once per session, skipped under reduced motion. -->
+<div class="boot" id="boot" hidden>
+  <div id="boot-lines"></div>
+  <div class="boot-bar"><div class="boot-fill" id="boot-fill"></div></div>
+  <p class="boot-skip">Press any key to skip</p>
+</div>
+
+<nav class="rail" aria-label="Section index">
+  <span class="rail-mark">CW</span>
+  <div class="rail-nav">
+    <a href="#capabilities">Cap</a>
+    <a href="#archive">Arc</a>
+    <a href="#record">Log</a>
+    <a href="#telemetry">Tlm</a>
+    <a href="#channels">Net</a>
   </div>
-
-  <!-- NAV -->
-  <nav>
-    <a href="#skills">Skills</a>
-    <a href="#projects">Projects</a>
-    <a href="#experience">Experience</a>
-    <a href="#contact">Contact</a>
-  </nav>
-
-  <!-- MAIN -->
-  <div id="main-content">
-    <!-- HERO -->
-    <section class="hero">
-      <div class="hero-grid"></div>
-      <div class="hero-tag">System Initialized</div>
-      <h1 class="hero-name flicker">
-        CHEN-AN<br>WANG
-        <span class="glitch-layer" aria-hidden="true">CHEN-AN<br>WANG</span>
-      </h1>
-      <p class="hero-title">Data Science / Audio ML / AI Tooling / Creative Code</p>
-      <p class="hero-desc" id="hero-desc"></p>
-      <div class="hero-stats">
-        <div class="stat">
-          <span class="stat-label">Location</span>
-          <span class="stat-value glow-cyan">UCSD</span>
-          <div class="stat-bar"><div class="stat-bar-fill" style="width: 100%"></div></div>
-        </div>
-        <div class="stat">
-          <span class="stat-label">Focus</span>
-          <span class="stat-value glow-cyan">ML+AUDIO</span>
-          <div class="stat-bar"><div class="stat-bar-fill" style="width: 85%"></div></div>
-        </div>
-        <div class="stat">
-          <span class="stat-label">Status</span>
-          <span class="stat-value glow-cyan">ONLINE</span>
-          <div class="stat-bar"><div class="stat-bar-fill" style="width: 100%"></div></div>
-        </div>
-      </div>
-      <div style="margin-top: 2.5rem;">
-        <a href="#contact" class="cp-btn">Establish Connection</a>
-      </div>
-    </section>
-
-    <!-- WIRE: Hero → Skills -->
-    <div class="section-wire" aria-hidden="true">
-      <svg viewBox="0 0 1000 40" preserveAspectRatio="none">
-        <path class="wire-path" d="M0,20 H300 L320,8 H500 L520,32 H750 L770,20 H1000"/>
-        <path class="wire-pulse" d="M0,20 H300 L320,8 H500 L520,32 H750 L770,20 H1000"/>
-        <circle class="wire-node" cx="320" cy="8" r="3"/>
-        <circle class="wire-node" cx="520" cy="32" r="3"/>
-        <circle class="wire-node" cx="770" cy="20" r="3"/>
-      </svg>
-    </div>
-
-    <!-- SKILLS -->
-    <section id="skills">
-      <div class="section-header reveal">
-        <span class="section-id">SYS.01</span>
-        <h2 class="section-title">Core Capabilities</h2>
-        <div class="section-line"></div>
-      </div>
-      <div class="skills-grid">
-        <div class="skill-card reveal-scale" style="transition-delay: 0.05s">
-          <div class="skill-name">Machine Learning</div>
-          <div class="skill-desc">Neural networks, model training, optimization, and deployment pipelines for production ML systems.</div>
-          <div class="skill-tags">
-            <span class="skill-tag">TensorFlow</span>
-            <span class="skill-tag">HuggingFace</span>
-            <span class="skill-tag">sentence-transformers</span>
-          </div>
-        </div>
-        <div class="skill-card reveal-scale" style="transition-delay: 0.1s">
-          <div class="skill-name">Audio & Music Tech</div>
-          <div class="skill-desc">Digital signal processing, audio feature extraction, music information retrieval, and real-time audio systems.</div>
-          <div class="skill-tags">
-            <span class="skill-tag">Essentia</span>
-            <span class="skill-tag">librosa</span>
-            <span class="skill-tag">DSP</span>
-          </div>
-        </div>
-        <div class="skill-card reveal-scale" style="transition-delay: 0.15s">
-          <div class="skill-name">Data Science</div>
-          <div class="skill-desc">Statistical analysis, data pipelines, visualization, and exploratory analysis for large-scale datasets.</div>
-          <div class="skill-tags">
-            <span class="skill-tag">Python</span>
-            <span class="skill-tag">pandas</span>
-            <span class="skill-tag">NumPy</span>
-            <span class="skill-tag">SQL</span>
-          </div>
-        </div>
-        <div class="skill-card reveal-scale" style="transition-delay: 0.2s">
-          <div class="skill-name">AI Tooling</div>
-          <div class="skill-desc">Building developer tools and workflows powered by language models, embeddings, and generative AI.</div>
-          <div class="skill-tags">
-            <span class="skill-tag">LLMs</span>
-            <span class="skill-tag">RAG</span>
-            <span class="skill-tag">Agents</span>
-          </div>
-        </div>
-        <div class="skill-card reveal-scale" style="transition-delay: 0.25s">
-          <div class="skill-name">Creative Coding</div>
-          <div class="skill-desc">Generative art, interactive visualizations, and audiovisual experiences built with code.</div>
-          <div class="skill-tags">
-            <span class="skill-tag">p5.js</span>
-            <span class="skill-tag">WebAudio</span>
-            <span class="skill-tag">GLSL</span>
-          </div>
-        </div>
-        <div class="skill-card reveal-scale" style="transition-delay: 0.3s">
-          <div class="skill-name">Web Development</div>
-          <div class="skill-desc">Full-stack web applications, APIs, and interactive front-end interfaces.</div>
-          <div class="skill-tags">
-            <span class="skill-tag">React</span>
-            <span class="skill-tag">Vite</span>
-            <span class="skill-tag">Node.js</span>
-            <span class="skill-tag">Supabase</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- WIRE: Skills → Projects -->
-    <div class="section-wire" aria-hidden="true">
-      <svg viewBox="0 0 1000 40" preserveAspectRatio="none">
-        <path class="wire-path" d="M0,30 H200 L230,10 H450 L470,25 H600 L630,5 H850 L870,20 H1000"/>
-        <path class="wire-pulse" d="M0,30 H200 L230,10 H450 L470,25 H600 L630,5 H850 L870,20 H1000"/>
-        <circle class="wire-node" cx="230" cy="10" r="3"/>
-        <circle class="wire-node" cx="470" cy="25" r="3"/>
-        <circle class="wire-node" cx="630" cy="5" r="3"/>
-        <circle class="wire-node" cx="870" cy="20" r="3"/>
-      </svg>
-    </div>
-
-    <!-- PROJECTS -->
-    <section id="projects">
-      <div class="section-header reveal">
-        <span class="section-id">SYS.02</span>
-        <h2 class="section-title">Project Archive</h2>
-        <div class="section-line"></div>
-      </div>
-
-      <!-- FEATURED: iM System -->
-      <div class="featured-project reveal-scale" style="transition-delay: 0.05s">
-        <div class="featured-scanline" aria-hidden="true"></div>
-        <span class="featured-badge">FEATURED PROJECT</span>
-        <div class="featured-name">iM System</div>
-        <div class="featured-subtitle">Fan re-creation of the social network from Rayark's Cytus II</div>
-        <div class="featured-desc">
-          Full-stack social platform rebuilt from the ground up — a 2026 re-engineering of the original
-          2019 PHP project into a modern Next.js + Supabase architecture. Features real-time messaging,
-          moderation tools, sticker packs, Web Push notifications, ambient video backgrounds with
-          game-accurate SFX, and localization across 5 languages.
-        </div>
-
-        <div class="featured-metrics">
-          <div class="featured-metric">
-            <span class="featured-metric-value">70+</span>
-            <span class="featured-metric-label">Components</span>
-          </div>
-          <div class="featured-metric">
-            <span class="featured-metric-value">5</span>
-            <span class="featured-metric-label">Languages</span>
-          </div>
-          <div class="featured-metric">
-            <span class="featured-metric-value">24</span>
-            <span class="featured-metric-label">Migrations</span>
-          </div>
-          <div class="featured-metric">
-            <span class="featured-metric-value">12</span>
-            <span class="featured-metric-label">Characters</span>
-          </div>
-        </div>
-
-        <div class="featured-features">
-          <div class="featured-feature">
-            <span class="featured-feature-icon">&#9670;</span>
-            <span class="featured-feature-text">Real-time private messaging with Supabase Realtime + image attachments</span>
-          </div>
-          <div class="featured-feature">
-            <span class="featured-feature-icon">&#9670;</span>
-            <span class="featured-feature-text">Archive login intro with asterisk masking &amp; MFA flow</span>
-          </div>
-          <div class="featured-feature">
-            <span class="featured-feature-icon">&#9670;</span>
-            <span class="featured-feature-text">Sticker packs, @mentions, hashtags, inline URL parsing</span>
-          </div>
-          <div class="featured-feature">
-            <span class="featured-feature-icon">&#9670;</span>
-            <span class="featured-feature-text">Admin moderation queue, user bans, audit log, TOTP enrollment</span>
-          </div>
-          <div class="featured-feature">
-            <span class="featured-feature-icon">&#9670;</span>
-            <span class="featured-feature-text">Web Push notifications, ambient video with game-accurate SFX</span>
-          </div>
-          <div class="featured-feature">
-            <span class="featured-feature-icon">&#9670;</span>
-            <span class="featured-feature-text">CI pipeline: lint, typecheck, unit tests, build, migrations, e2e</span>
-          </div>
-        </div>
-
-        <div class="featured-stack">
-          <span class="featured-stack-tag">Next.js</span>
-          <span class="featured-stack-tag">React</span>
-          <span class="featured-stack-tag">TypeScript</span>
-          <span class="featured-stack-tag">Supabase</span>
-          <span class="featured-stack-tag">Postgres</span>
-          <span class="featured-stack-tag">Drizzle ORM</span>
-          <span class="featured-stack-tag">Auth.js</span>
-          <span class="featured-stack-tag">Vercel</span>
-          <span class="featured-stack-tag">Tailwind</span>
-          <span class="featured-stack-tag">Playwright</span>
-        </div>
-
-        <div class="featured-links">
-          <a href="https://imsystem.app" target="_blank" rel="noopener" class="featured-link featured-link--primary">Launch App</a>
-          <a href="https://github.com/willwang0202/imsystem.app" target="_blank" rel="noopener" class="featured-link featured-link--secondary">Source</a>
-        </div>
-      </div>
-
-      <!-- OTHER PROJECTS -->
-      <div class="projects-list">
-        <div class="project reveal-left" style="transition-delay: 0.05s">
-          <span class="project-status active">ACTIVE</span>
-          <div>
-            <div class="project-name">Timbre</div>
-            <div class="project-desc">Audio ML pipeline extracting 3-D affect vectors + emotion scores for 20k+ tracks across 16 languages. Client-side ranking serves results in &lt;200ms with no API calls.</div>
-          </div>
-          <span class="project-tech">PYTHON / ML / REACT</span>
-        </div>
-        <div class="project reveal-left" style="transition-delay: 0.12s">
-          <span class="project-status active">ACTIVE</span>
-          <div>
-            <div class="project-name">CloudSeed</div>
-            <div class="project-desc">Algorithmic reverb VST plugin with real-time spectral processing and modular signal chain architecture.</div>
-          </div>
-          <span class="project-tech">C++ / DSP / VST</span>
-        </div>
-        <div class="project reveal-left" style="transition-delay: 0.19s">
-          <span class="project-status active">ACTIVE</span>
-          <div>
-            <div class="project-name">FixRelay</div>
-            <div class="project-desc">Security scanner that detects vulnerabilities and generates contextual fix prompts for LLM-assisted remediation.</div>
-          </div>
-          <span class="project-tech">SECURITY / LLM</span>
-        </div>
-        <div class="project reveal-left" style="transition-delay: 0.26s">
-          <span class="project-status active">ACTIVE</span>
-          <div>
-            <div class="project-name">E-Ink Claude Monitor</div>
-            <div class="project-desc">Ambient display system rendering Claude AI outputs on an e-ink screen for persistent, low-power information surfaces.</div>
-          </div>
-          <span class="project-tech">HARDWARE / API</span>
-        </div>
-      </div>
-    </section>
-
-    <!-- WIRE: Projects → Experience -->
-    <div class="section-wire" aria-hidden="true">
-      <svg viewBox="0 0 1000 40" preserveAspectRatio="none">
-        <path class="wire-path" d="M0,15 H150 L180,35 H400 L420,10 H700 L730,30 H1000"/>
-        <path class="wire-pulse" d="M0,15 H150 L180,35 H400 L420,10 H700 L730,30 H1000"/>
-        <circle class="wire-node" cx="180" cy="35" r="3"/>
-        <circle class="wire-node" cx="420" cy="10" r="3"/>
-        <circle class="wire-node" cx="730" cy="30" r="3"/>
-      </svg>
-    </div>
-
-    <!-- EXPERIENCE -->
-    <section id="experience">
-      <div class="section-header reveal">
-        <span class="section-id">SYS.03</span>
-        <h2 class="section-title">Experience Log</h2>
-        <div class="section-line"></div>
-      </div>
-      <div class="timeline">
-        <div class="timeline-item reveal-left" style="transition-delay: 0.05s">
-          <div class="timeline-date">SEP 2024 – JUN 2028</div>
-          <div class="timeline-role">B.S. Data Science</div>
-          <div class="timeline-org">UC San Diego</div>
-          <div class="timeline-desc">
-            Machine learning, statistical modeling, audio/music information retrieval,
-            and creative coding.
-          </div>
-        </div>
-        <div class="timeline-item reveal-left" style="transition-delay: 0.12s">
-          <div class="timeline-date">2025 – PRESENT</div>
-          <div class="timeline-role">Founder</div>
-          <div class="timeline-org">Timbre</div>
-          <div class="timeline-desc">
-            End-to-end audio ML pipeline for music emotion analysis across 20k+ tracks
-            and 16 languages. Client-side deterministic ranking with no API dependency.
-          </div>
-        </div>
-        <div class="timeline-item reveal-left" style="transition-delay: 0.19s">
-          <div class="timeline-date">JUL – AUG 2024</div>
-          <div class="timeline-role">Automation Engineer</div>
-          <div class="timeline-org">Fortune Medical Instrument Corp.</div>
-          <div class="timeline-desc">
-            Quadrupled production throughput via PLC and SCADA control systems
-            for automated silicone fabrication. Full-cycle implementation from procurement
-            through cleanroom installation and staff training.
-          </div>
-        </div>
-        <div class="timeline-item reveal-left" style="transition-delay: 0.26s">
-          <div class="timeline-date">JUL – AUG 2023</div>
-          <div class="timeline-role">MIS Engineer</div>
-          <div class="timeline-org">Fortune Medical Instrument Corp.</div>
-          <div class="timeline-desc">
-            Built C#/HTML/CSS web application connecting sales team to company database.
-            Self-studied the full stack pre-internship.
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- WIRE: Experience → Contributions -->
-    <div class="section-wire" aria-hidden="true">
-      <svg viewBox="0 0 1000 40" preserveAspectRatio="none">
-        <path class="wire-path" d="M0,20 H250 L280,5 H500 L530,35 H800 L820,15 H1000"/>
-        <path class="wire-pulse" d="M0,20 H250 L280,5 H500 L530,35 H800 L820,15 H1000"/>
-        <circle class="wire-node" cx="280" cy="5" r="3"/>
-        <circle class="wire-node" cx="530" cy="35" r="3"/>
-        <circle class="wire-node" cx="820" cy="15" r="3"/>
-      </svg>
-    </div>
-
-    <!-- GITHUB CONTRIBUTIONS -->
-    <section id="contributions">
-      <div class="section-header reveal">
-        <span class="section-id">SYS.04</span>
-        <h2 class="section-title">Commit Frequency</h2>
-        <div class="section-line"></div>
-      </div>
-      <div class="contrib-container bracketed reveal-scale" style="transition-delay: 0.1s">
-        <div class="contrib-stats" id="contrib-stats">
-          <div class="stat">
-            <span class="contrib-stat-value" id="contrib-total">---</span>
-            <span class="contrib-stat-label">Contributions</span>
-          </div>
-          <div class="stat">
-            <span class="contrib-stat-value" id="contrib-streak">---</span>
-            <span class="contrib-stat-label">Current Streak</span>
-          </div>
-          <div class="stat">
-            <span class="contrib-stat-value" id="contrib-peak">---</span>
-            <span class="contrib-stat-label">Peak Day</span>
-          </div>
-        </div>
-        <div class="contrib-graph-wrapper">
-          <div id="contrib-months" class="contrib-months"></div>
-          <div id="contrib-graph" class="contrib-graph">
-            <span class="contrib-loading">FETCHING SIGNAL...</span>
-          </div>
-        </div>
-        <div class="contrib-legend">
-          <span class="contrib-legend-label">LESS</span>
-          <div class="contrib-legend-swatch" style="background: var(--surface);"></div>
-          <div class="contrib-legend-swatch" style="background: rgba(5, 217, 232, 0.15);"></div>
-          <div class="contrib-legend-swatch" style="background: rgba(5, 217, 232, 0.35);"></div>
-          <div class="contrib-legend-swatch" style="background: rgba(5, 217, 232, 0.6);"></div>
-          <div class="contrib-legend-swatch" style="background: var(--cyan); box-shadow: 0 0 8px rgba(5, 217, 232, 0.4);"></div>
-          <span class="contrib-legend-label">MORE</span>
-        </div>
-      </div>
-    </section>
-
-    <!-- WIRE: Contributions → Contact -->
-    <div class="section-wire" aria-hidden="true">
-      <svg viewBox="0 0 1000 40" preserveAspectRatio="none">
-        <path class="wire-path" d="M0,25 H350 L380,8 H600 L620,30 H900 L930,18 H1000"/>
-        <path class="wire-pulse" d="M0,25 H350 L380,8 H600 L620,30 H900 L930,18 H1000"/>
-        <circle class="wire-node" cx="380" cy="8" r="3"/>
-        <circle class="wire-node" cx="620" cy="30" r="3"/>
-        <circle class="wire-node" cx="930" cy="18" r="3"/>
-      </svg>
-    </div>
-
-    <!-- CONTACT -->
-    <section id="contact">
-      <div class="section-header reveal">
-        <span class="section-id">SYS.05</span>
-        <h2 class="section-title">Establish Connection</h2>
-        <div class="section-line"></div>
-      </div>
-      <div class="contact-grid">
-        <a href="https://github.com/willwang0202" class="contact-link" target="_blank" rel="noopener">
-          <span class="contact-icon">GIT</span>
-          <span class="contact-label">GitHub</span>
-        </a>
-        <a href="https://linkedin.com/in/chen-an-wang-519603333" class="contact-link" target="_blank" rel="noopener">
-          <span class="contact-icon">LNK</span>
-          <span class="contact-label">LinkedIn</span>
-        </a>
-        <a href="https://imsystem.app" class="contact-link" target="_blank" rel="noopener">
-          <span class="contact-icon">APP</span>
-          <span class="contact-label">imsystem.app</span>
-        </a>
-        <a href="https://timbrebrief.com" class="contact-link" target="_blank" rel="noopener">
-          <span class="contact-icon">PRJ</span>
-          <span class="contact-label">timbrebrief.com</span>
-        </a>
-        <a href="mailto:wangchenan2006@gmail.com" class="contact-link">
-          <span class="contact-icon">MSG</span>
-          <span class="contact-label">wangchenan2006@gmail.com</span>
-        </a>
-      </div>
-    </section>
-
-    <!-- FOOTER -->
-    <footer>
-      <div class="footer-sig">CHEN-AN WANG // 2025</div>
-      <div class="footer-status">
-        <div class="status-dot"></div>
-        SYSTEM NOMINAL
-      </div>
-    </footer>
+  <div class="rail-status">
+    <span class="pip" aria-hidden="true"></span>
+    <span class="label">Online</span>
   </div>
+</nav>
 
-  <script>
-    const BOOT_LINES = [
-      { text: 'KIROSHI OPTICS v4.2.1 — INITIALIZING...', cls: 'cyan' },
-      { text: 'mem_check :: 128TB neural buffer .... OK', cls: 'muted' },
-      { text: 'net_link :: establishing uplink .... OK', cls: 'muted' },
-      { text: 'cyberware :: optic calibration .... OK', cls: 'muted' },
-      { text: 'LOADING PROFILE DATABASE...', cls: 'yellow' },
-      { text: 'usr/CHEN-AN.WANG :: credentials verified', cls: 'cyan' },
-      { text: 'THREAT LEVEL: MINIMAL // FIREWALL: ACTIVE', cls: 'magenta' },
-      { text: 'interface rendering .... COMPLETE', cls: 'muted' },
-      { text: 'WELCOME BACK, V.', cls: 'yellow' },
-    ];
+<div class="page">
+<main class="shell">
 
-    const bootContainer = document.getElementById('boot-lines');
-    const bootFill = document.getElementById('boot-fill');
-    const bootName = document.getElementById('boot-name');
-    const bootScreen = document.getElementById('boot-screen');
-    const mainContent = document.getElementById('main-content');
+  <!-- ── HERO ─────────────────────────────────────────────
+       Opens the way the game opens on a target: a name at
+       scale, and a bracket-framed readout of who it belongs to. -->
+  <section class="hero" aria-labelledby="hero-name">
+    <div class="hero-eyebrow">
+      <span class="pip" aria-hidden="true"></span>
+      <span class="label">Target acquired</span>
+    </div>
 
-    BOOT_LINES.forEach(line => {
-      const el = document.createElement('div');
-      el.className = `boot-line ${line.cls}`;
-      el.textContent = line.text;
-      bootContainer.appendChild(el);
-    });
+    <h1 class="hero-name" id="hero-name" data-glitch="Chen-An Wang">Chen-An&nbsp;Wang</h1>
+    <p class="hero-role">Data Science &middot; Audio ML &middot; AI Tooling</p>
 
-    const bootEls = bootContainer.querySelectorAll('.boot-line');
-    let lineIndex = 0;
+    <div class="hero-body">
+      <div>
+        <p class="hero-desc">
+          I build audio machine learning pipelines, developer tooling on top of
+          language models, and software that makes noise. Currently reading Data
+          Science at UC San Diego.
+        </p>
+        <a href="#channels" class="btn">Open a channel</a>
+      </div>
 
-    function showNextLine() {
-      if (lineIndex < bootEls.length) {
-        bootEls[lineIndex].classList.add('visible');
-        const progress = ((lineIndex + 1) / bootEls.length) * 100;
-        bootFill.style.width = progress + '%';
-        lineIndex++;
-        setTimeout(showNextLine, 120 + Math.random() * 80);
-      } else {
-        setTimeout(() => {
-          bootName.classList.add('visible');
-        }, 300);
-        setTimeout(() => {
-          bootScreen.classList.add('fade-out');
-          mainContent.classList.add('visible');
-        }, 1200);
-        setTimeout(() => {
-          bootScreen.classList.add('hidden');
-        }, 1800);
-      }
-    }
+      <div class="panel scan-target">
+        <span class="scan" aria-hidden="true"></span>
+        <p class="label" style="margin-bottom: 1rem;">Identity readout</p>
+        <dl class="vitals">
+          <div class="vital"><dt class="vital-key">Base</dt><dd class="vital-val">San Diego, CA</dd></div>
+          <div class="vital"><dt class="vital-key">Affil</dt><dd class="vital-val">UC San Diego</dd></div>
+          <div class="vital"><dt class="vital-key">Field</dt><dd class="vital-val">Audio&nbsp;/&nbsp;ML</dd></div>
+          <div class="vital"><dt class="vital-key">Local</dt><dd class="vital-val vital-val--live" id="local-time">--:--:--</dd></div>
+          <div class="vital"><dt class="vital-key">Status</dt><dd class="vital-val vital-val--live">Open to work</dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
 
-    setTimeout(showNextLine, 400);
+  <!-- ── CAPABILITIES ─────────────────────────────────────── -->
+  <section id="capabilities" aria-labelledby="capabilities-title">
+    <header class="section-head reveal">
+      <span class="section-tag">CAP //</span>
+      <h2 class="section-title" id="capabilities-title">Capabilities</h2>
+      <span class="section-count">06 domains</span>
+    </header>
 
-    /* ─── FLOATING DUST PARTICLES ─── */
-    (function() {
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    <div class="grid-cap reveal">
+      <article class="cap">
+        <h3 class="cap-name">Machine Learning</h3>
+        <p class="cap-desc">Neural networks, model training, optimisation, and deployment pipelines for production systems.</p>
+        <div class="tags"><span class="tag">PyTorch</span><span class="tag">HuggingFace</span><span class="tag">sentence-transformers</span></div>
+      </article>
+      <article class="cap">
+        <h3 class="cap-name">Audio &amp; Music Tech</h3>
+        <p class="cap-desc">Signal processing, feature extraction, music information retrieval, and real-time audio.</p>
+        <div class="tags"><span class="tag">Essentia</span><span class="tag">librosa</span><span class="tag">DSP</span></div>
+      </article>
+      <article class="cap">
+        <h3 class="cap-name">Data Science</h3>
+        <p class="cap-desc">Statistical modelling, data pipelines, and exploratory analysis over large datasets.</p>
+        <div class="tags"><span class="tag">Python</span><span class="tag">pandas</span><span class="tag">NumPy</span><span class="tag">SQL</span></div>
+      </article>
+      <article class="cap">
+        <h3 class="cap-name">AI Tooling</h3>
+        <p class="cap-desc">Developer tools and workflows built on language models, embeddings, and agents.</p>
+        <div class="tags"><span class="tag">LLMs</span><span class="tag">RAG</span><span class="tag">Agents</span></div>
+      </article>
+      <article class="cap">
+        <h3 class="cap-name">Creative Coding</h3>
+        <p class="cap-desc">Generative art, interactive visualisation, and audiovisual work built in code.</p>
+        <div class="tags"><span class="tag">p5.js</span><span class="tag">WebAudio</span><span class="tag">GLSL</span></div>
+      </article>
+      <article class="cap">
+        <h3 class="cap-name">Web Development</h3>
+        <p class="cap-desc">Full-stack applications, APIs, and front-end interfaces that hold up in production.</p>
+        <div class="tags"><span class="tag">React</span><span class="tag">Next.js</span><span class="tag">Node.js</span><span class="tag">Supabase</span></div>
+      </article>
+    </div>
+  </section>
 
-      var canvas = document.getElementById('particles');
-      var ctx = canvas.getContext('2d');
-      var W, H, dpr;
-      var PARTICLE_COUNT = 35;
-      var particles = [];
-      var glitchLines = [];
+  <!-- ── ARCHIVE ──────────────────────────────────────────── -->
+  <section id="archive" aria-labelledby="archive-title">
+    <header class="section-head reveal">
+      <span class="section-tag">ARC //</span>
+      <h2 class="section-title" id="archive-title">Project archive</h2>
+      <span class="section-count">05 records</span>
+    </header>
 
-      function resize() {
-        dpr = Math.min(window.devicePixelRatio || 1, 2);
-        W = window.innerWidth;
-        H = window.innerHeight;
-        canvas.width = W * dpr;
-        canvas.height = H * dpr;
-        canvas.style.width = W + 'px';
-        canvas.style.height = H + 'px';
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      }
+    <article class="panel feature scan-target reveal">
+      <span class="scan" aria-hidden="true"></span>
+      <span class="feature-flag">Featured</span>
+      <h3 class="feature-name">iM System</h3>
+      <p class="feature-sub">Fan re-creation of the social network from Rayark's Cytus II</p>
+      <p class="feature-desc">
+        A 2019 PHP project re-engineered into a modern Next.js and Supabase stack:
+        real-time messaging, moderation tooling, Web Push, ambient video with
+        game-accurate SFX, and localisation across five languages.
+      </p>
 
-      function init() {
-        particles = [];
-        for (var i = 0; i < PARTICLE_COUNT; i++) {
-          particles.push({
-            x: Math.random() * W,
-            y: Math.random() * H,
-            vx: (Math.random() - 0.5) * 0.15,
-            vy: -0.05 - Math.random() * 0.2,
-            size: 0.4 + Math.random() * 1.2,
-            alpha: 0.15 + Math.random() * 0.35,
-            pulse: Math.random() * Math.PI * 2,
-            pulseSpeed: 0.005 + Math.random() * 0.015
-          });
-        }
-      }
+      <div class="feature-cols">
+        <ul class="feature-list">
+          <li>Real-time private messaging on Supabase Realtime with image attachments</li>
+          <li>Archive login intro with asterisk masking and an MFA flow</li>
+          <li>Sticker packs, mentions, hashtags, and inline URL parsing</li>
+          <li>Admin moderation queue, bans, audit log, and TOTP enrolment</li>
+          <li>CI running lint, typecheck, unit tests, migrations, and end-to-end</li>
+        </ul>
 
-      function draw(t) {
-        ctx.clearRect(0, 0, W, H);
+        <div>
+          <div class="metrics">
+            <div><span class="metric-val">70+</span><span class="metric-key">Components</span></div>
+            <div><span class="metric-val">5</span><span class="metric-key">Languages</span></div>
+            <div><span class="metric-val">24</span><span class="metric-key">Migrations</span></div>
+            <div><span class="metric-val">12</span><span class="metric-key">Characters</span></div>
+          </div>
+          <div class="feature-actions">
+            <a href="https://imsystem.app" target="_blank" rel="noopener" class="btn" style="margin-top:0;">Launch app</a>
+            <a href="https://github.com/willwang0202/imsystem.app" target="_blank" rel="noopener" class="btn btn--ghost">Read source</a>
+          </div>
+        </div>
+      </div>
 
-        particles.forEach(function(p) {
-          p.x += p.vx;
-          p.y += p.vy;
-          p.pulse += p.pulseSpeed;
+      <div class="telemetry">
+        <span><span class="telemetry-key">STACK</span><span class="telemetry-val">Next.js / Postgres / Drizzle</span></span>
+        <span><span class="telemetry-key">HOST</span><span class="telemetry-val">Vercel</span></span>
+        <span><span class="telemetry-key">STATE</span><span class="telemetry-val">Live</span></span>
+      </div>
+    </article>
 
-          if (p.y < -10) { p.y = H + 10; p.x = Math.random() * W; }
-          if (p.x < -10) p.x = W + 10;
-          if (p.x > W + 10) p.x = -10;
+    <div class="ledger reveal">
+      <article class="record scan-target">
+        <span class="scan" aria-hidden="true"></span>
+        <span class="status status--live">Active</span>
+        <div>
+          <h3 class="record-name">Timbre</h3>
+          <p class="record-desc">Audio ML pipeline extracting three-dimensional affect vectors and emotion scores for 20,000+ tracks across 16 languages. Client-side ranking returns results in under 200&nbsp;ms with no API call.</p>
+        </div>
+        <span class="record-tech">Python / ML / React</span>
+      </article>
 
-          var a = p.alpha * (0.5 + Math.sin(p.pulse) * 0.5);
+      <article class="record scan-target">
+        <span class="scan" aria-hidden="true"></span>
+        <span class="status status--live">Active</span>
+        <div>
+          <h3 class="record-name">CloudSeed</h3>
+          <p class="record-desc">Algorithmic reverb plugin with real-time spectral processing and a modular signal chain.</p>
+        </div>
+        <span class="record-tech">C++ / DSP / VST</span>
+      </article>
 
-          ctx.globalAlpha = a;
-          ctx.fillStyle = '#E8E9F0';
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-          ctx.fill();
+      <article class="record scan-target">
+        <span class="scan" aria-hidden="true"></span>
+        <span class="status status--live">Active</span>
+        <div>
+          <h3 class="record-name">FixRelay</h3>
+          <p class="record-desc">Security scanner that detects vulnerabilities and generates contextual fix prompts for model-assisted remediation.</p>
+        </div>
+        <span class="record-tech">Security / LLM</span>
+      </article>
 
-          ctx.globalAlpha = a * 0.25;
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.size * 3, 0, Math.PI * 2);
-          ctx.fill();
-        });
+      <article class="record scan-target">
+        <span class="scan" aria-hidden="true"></span>
+        <span class="status status--live">Active</span>
+        <div>
+          <h3 class="record-name">E-Ink Claude Monitor</h3>
+          <p class="record-desc">Ambient display rendering model output to an e-ink screen for persistent, low-power information surfaces.</p>
+        </div>
+        <span class="record-tech">Hardware / API</span>
+      </article>
+    </div>
+  </section>
 
-        /* occasional horizontal glitch line */
-        if (Math.random() > 0.993) {
-          glitchLines.push({
-            y: Math.random() * H,
-            alpha: 0.03 + Math.random() * 0.05,
-            h: 1 + Math.random() * 2,
-            life: 0,
-            maxLife: 6 + Math.random() * 18,
-            color: Math.random() > 0.5 ? '5, 217, 232' : '252, 238, 10'
-          });
-        }
+  <!-- ── SERVICE RECORD ───────────────────────────────────── -->
+  <section id="record" aria-labelledby="record-title">
+    <header class="section-head reveal">
+      <span class="section-tag">LOG //</span>
+      <h2 class="section-title" id="record-title">Service record</h2>
+      <span class="section-count">2023 &rarr; present</span>
+    </header>
 
-        for (var i = glitchLines.length - 1; i >= 0; i--) {
-          var gl = glitchLines[i];
-          gl.life++;
-          if (gl.life > gl.maxLife) { glitchLines.splice(i, 1); continue; }
-          ctx.globalAlpha = gl.alpha * (1 - gl.life / gl.maxLife);
-          ctx.fillStyle = 'rgba(' + gl.color + ', 1)';
-          ctx.fillRect(0, gl.y, W, gl.h);
-        }
+    <div class="log reveal">
+      <article class="entry">
+        <p class="entry-date">Sep 2024 &rarr; Jun 2028</p>
+        <h3 class="entry-role">B.S. Data Science</h3>
+        <p class="entry-org">UC San Diego</p>
+        <p class="entry-desc">Machine learning, statistical modelling, music information retrieval, and creative coding.</p>
+      </article>
+      <article class="entry">
+        <p class="entry-date">2025 &rarr; present</p>
+        <h3 class="entry-role">Founder</h3>
+        <p class="entry-org">Timbre</p>
+        <p class="entry-desc">End-to-end audio ML pipeline for music emotion analysis across 20,000+ tracks and 16 languages, with deterministic client-side ranking and no API dependency.</p>
+      </article>
+      <article class="entry">
+        <p class="entry-date">Jul &rarr; Aug 2024</p>
+        <h3 class="entry-role">Automation Engineer</h3>
+        <p class="entry-org">Fortune Medical Instrument Corp.</p>
+        <p class="entry-desc">Quadrupled production throughput with PLC and SCADA control for automated silicone fabrication, from procurement through cleanroom installation and staff training.</p>
+      </article>
+      <article class="entry">
+        <p class="entry-date">Jul &rarr; Aug 2023</p>
+        <h3 class="entry-role">MIS Engineer</h3>
+        <p class="entry-org">Fortune Medical Instrument Corp.</p>
+        <p class="entry-desc">Built a C# web application connecting the sales team to the company database, having self-taught the stack before the internship began.</p>
+      </article>
+    </div>
+  </section>
 
-        ctx.globalAlpha = 1;
-        requestAnimationFrame(draw);
-      }
+  <!-- ── COMMIT TELEMETRY ─────────────────────────────────── -->
+  <section id="telemetry" aria-labelledby="telemetry-title">
+    <header class="section-head reveal">
+      <span class="section-tag">TLM //</span>
+      <h2 class="section-title" id="telemetry-title">Commit telemetry</h2>
+      <span class="section-count">Trailing 12 months</span>
+    </header>
 
-      resize();
-      init();
-      window.addEventListener('resize', function() { resize(); init(); });
-      requestAnimationFrame(draw);
-    })();
-    /* ─── SCROLL PROGRESS BAR ─── */
-    (function() {
-      var bar = document.getElementById('scroll-progress');
-      if (!bar) return;
-      window.addEventListener('scroll', function() {
-        var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        var docHeight = document.documentElement.scrollHeight - window.innerHeight;
-        var pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
-        bar.style.height = pct + '%';
-      }, { passive: true });
-    })();
+    <div class="reveal">
+      <div class="tlm-stats">
+        <div class="tlm-stat">
+          <span class="label">Total commits</span>
+          <span class="metric-val" id="tlm-total">&mdash;</span>
+        </div>
+        <div class="tlm-stat">
+          <span class="label">Current streak</span>
+          <span class="metric-val" id="tlm-streak">&mdash;</span>
+        </div>
+        <div class="tlm-stat">
+          <span class="label">Busiest day</span>
+          <span class="metric-val" id="tlm-peak">&mdash;</span>
+        </div>
+      </div>
 
-    /* ─── SCROLL REVEAL (IntersectionObserver) ─── */
-    (function() {
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(function(el) {
-          el.classList.add('revealed');
-        });
-        return;
-      }
+      <div class="graph-wrap">
+        <div class="months" id="tlm-months"></div>
+        <div class="graph" id="tlm-graph"></div>
+      </div>
+      <p class="graph-note" id="tlm-note">Reading contribution feed&hellip;</p>
+    </div>
+  </section>
 
-      var observer = new IntersectionObserver(function(entries) {
-        entries.forEach(function(entry) {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('revealed');
+  <!-- ── CHANNELS ─────────────────────────────────────────── -->
+  <section id="channels" aria-labelledby="channels-title">
+    <header class="section-head reveal">
+      <span class="section-tag">NET //</span>
+      <h2 class="section-title" id="channels-title">Open a channel</h2>
+      <span class="section-count">05 endpoints</span>
+    </header>
 
-            var header = entry.target.classList.contains('section-header') ? entry.target : null;
-            if (header) {
-              header.classList.add('glitch-flash');
-              setTimeout(function() { header.classList.remove('glitch-flash'); }, 500);
+    <div class="channels reveal">
+      <a class="channel" href="https://github.com/willwang0202" target="_blank" rel="noopener">
+        <span class="channel-key">GIT</span><span class="channel-val">willwang0202</span>
+      </a>
+      <a class="channel" href="https://linkedin.com/in/chen-an-wang-519603333" target="_blank" rel="noopener">
+        <span class="channel-key">LNK</span><span class="channel-val">Chen-An Wang</span>
+      </a>
+      <a class="channel" href="https://imsystem.app" target="_blank" rel="noopener">
+        <span class="channel-key">APP</span><span class="channel-val">imsystem.app</span>
+      </a>
+      <a class="channel" href="https://timbrebrief.com" target="_blank" rel="noopener">
+        <span class="channel-key">PRJ</span><span class="channel-val">timbrebrief.com</span>
+      </a>
+      <a class="channel" href="mailto:wangchenan2006@gmail.com">
+        <span class="channel-key">MSG</span><span class="channel-val">wangchenan2006@gmail.com</span>
+      </a>
+    </div>
+  </section>
 
-              var sectionId = header.querySelector('.section-id');
-              if (sectionId) {
-                var original = sectionId.textContent;
-                var chars = '0123456789ABCDEF';
-                var iterations = 0;
-                sectionId.classList.add('decoding');
-                var interval = setInterval(function() {
-                  var hex = '';
-                  for (var i = 0; i < 6; i++) {
-                    hex += chars[Math.floor(Math.random() * chars.length)];
-                  }
-                  sectionId.textContent = '0x' + hex;
-                  iterations++;
-                  if (iterations > 8) {
-                    clearInterval(interval);
-                    sectionId.textContent = original;
-                    sectionId.classList.remove('decoding');
-                  }
-                }, 50);
-              }
-            }
+  <footer class="foot">
+    <span>Chen-An Wang</span>
+    <span>Built by hand &middot; No tracking</span>
+  </footer>
 
-            observer.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+</main>
+</div>
 
-      document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(function(el) {
-        observer.observe(el);
-      });
-    })();
-
-    /* ─── WIRE PULSE ON SCROLL ─── */
-    (function() {
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-      var wireObserver = new IntersectionObserver(function(entries) {
-        entries.forEach(function(entry) {
-          var pulses = entry.target.querySelectorAll('.wire-pulse');
-          var nodes = entry.target.querySelectorAll('.wire-node');
-          if (entry.isIntersecting) {
-            pulses.forEach(function(p) { p.classList.add('active'); });
-            nodes.forEach(function(n, i) {
-              setTimeout(function() { n.classList.add('active'); }, 200 + i * 300);
-            });
-          }
-        });
-      }, { threshold: 0.5 });
-
-      document.querySelectorAll('.section-wire').forEach(function(w) {
-        wireObserver.observe(w);
-      });
-    })();
-
-    /* ─── NAV ACTIVE STATE ON SCROLL ─── */
-    (function() {
-      var sections = document.querySelectorAll('section[id]');
-      var navLinks = document.querySelectorAll('nav a');
-
-      var navObserver = new IntersectionObserver(function(entries) {
-        entries.forEach(function(entry) {
-          if (entry.isIntersecting) {
-            navLinks.forEach(function(a) { a.classList.remove('active'); });
-            var matching = document.querySelector('nav a[href="#' + entry.target.id + '"]');
-            if (matching) matching.classList.add('active');
-          }
-        });
-      }, { threshold: 0.3, rootMargin: '-10% 0px -60% 0px' });
-
-      sections.forEach(function(s) { navObserver.observe(s); });
-    })();
-
-    /* ─── HERO TYPING EFFECT ─── */
-    (function() {
-      var descEl = document.getElementById('hero-desc');
-      if (!descEl) return;
-      var text = 'Building at the intersection of machine learning, audio signal processing, and creative technology. Currently studying Data Science at UC San Diego.';
-
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        descEl.textContent = text;
-        return;
-      }
-
-      var cursor = document.createElement('span');
-      cursor.className = 'typing-cursor';
-      descEl.appendChild(cursor);
-
-      var charIndex = 0;
-      function typeChar() {
-        if (charIndex < text.length) {
-          descEl.insertBefore(document.createTextNode(text[charIndex]), cursor);
-          charIndex++;
-          setTimeout(typeChar, 18 + Math.random() * 22);
-        } else {
-          setTimeout(function() { cursor.remove(); }, 2000);
-        }
-      }
-
-      setTimeout(typeChar, 2200);
-    })();
-
-    /* ─── PARALLAX HERO GRID ─── */
-    (function() {
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      var grid = document.querySelector('.hero-grid');
-      if (!grid) return;
-
-      window.addEventListener('scroll', function() {
-        var scrollY = window.pageYOffset;
-        if (scrollY < window.innerHeight) {
-          grid.style.transform = 'translateY(' + (scrollY * 0.3) + 'px)';
-          grid.style.opacity = Math.max(0, 1 - scrollY / (window.innerHeight * 0.8));
-        }
-      }, { passive: true });
-    })();
-
-    /* ─── GITHUB CONTRIBUTIONS GRAPH ─── */
-    (function() {
-      var API_URL = 'https://github-contributions-api.jogruber.de/v4/willwang0202?y=last';
-      var graphEl = document.getElementById('contrib-graph');
-      var monthsEl = document.getElementById('contrib-months');
-      var totalEl = document.getElementById('contrib-total');
-      var streakEl = document.getElementById('contrib-streak');
-      var peakEl = document.getElementById('contrib-peak');
-      var MONTH_NAMES = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
-
-      fetch(API_URL)
-        .then(function(r) { return r.json(); })
-        .then(function(data) {
-          var contribs = data.contributions || [];
-          if (!contribs.length) {
-            graphEl.innerHTML = '<span class="contrib-loading">NO SIGNAL</span>';
-            return;
-          }
-
-          var total = data.total && data.total.lastYear ? data.total.lastYear : 0;
-          totalEl.textContent = total.toLocaleString();
-
-          var peak = 0;
-          var peakDate = '';
-          var streak = 0;
-          var maxStreak = 0;
-
-          for (var i = contribs.length - 1; i >= 0; i--) {
-            if (contribs[i].count > 0) {
-              streak++;
-            } else {
-              break;
-            }
-          }
-          streakEl.textContent = streak + 'd';
-
-          contribs.forEach(function(d) {
-            if (d.count > peak) {
-              peak = d.count;
-              peakDate = d.date;
-            }
-          });
-          peakEl.textContent = peak;
-
-          var weeks = [];
-          var currentWeek = [];
-          var firstDate = new Date(contribs[0].date + 'T00:00:00');
-          var startDay = firstDate.getDay();
-
-          for (var pad = 0; pad < startDay; pad++) {
-            currentWeek.push(null);
-          }
-
-          contribs.forEach(function(d) {
-            currentWeek.push(d);
-            if (currentWeek.length === 7) {
-              weeks.push(currentWeek);
-              currentWeek = [];
-            }
-          });
-          if (currentWeek.length > 0) {
-            weeks.push(currentWeek);
-          }
-
-          graphEl.innerHTML = '';
-
-          var monthPositions = [];
-          var lastMonth = -1;
-
-          weeks.forEach(function(week, wi) {
-            var weekEl = document.createElement('div');
-            weekEl.className = 'contrib-week';
-
-            week.forEach(function(day) {
-              var cell = document.createElement('div');
-              cell.className = 'contrib-day';
-              if (day === null) {
-                cell.style.visibility = 'hidden';
-              } else {
-                cell.setAttribute('data-level', day.level);
-                var tip = document.createElement('span');
-                tip.className = 'contrib-tooltip';
-                var dt = new Date(day.date + 'T00:00:00');
-                tip.textContent = day.count + ' contributions on ' + MONTH_NAMES[dt.getMonth()] + ' ' + dt.getDate();
-                cell.appendChild(tip);
-
-                if (dt.getMonth() !== lastMonth) {
-                  lastMonth = dt.getMonth();
-                  monthPositions.push({ month: lastMonth, weekIndex: wi });
-                }
-              }
-              weekEl.appendChild(cell);
-            });
-
-            graphEl.appendChild(weekEl);
-          });
-
-          monthsEl.innerHTML = '';
-          var cellSize = 13;
-          monthPositions.forEach(function(mp, idx) {
-            var span = document.createElement('span');
-            span.className = 'contrib-month-label';
-            span.textContent = MONTH_NAMES[mp.month];
-            span.style.position = 'absolute';
-            span.style.left = (mp.weekIndex * cellSize) + 'px';
-            monthsEl.appendChild(span);
-          });
-          monthsEl.style.position = 'relative';
-          monthsEl.style.height = '14px';
-        })
-        .catch(function() {
-          graphEl.innerHTML = '<span class="contrib-loading">SIGNAL LOST</span>';
-        });
-    })();
-  </script>
+<script src="assets/js/boot.js"></script>
+<script src="assets/js/hud.js"></script>
+<script src="assets/js/telemetry.js"></script>
 </body>
 </html>

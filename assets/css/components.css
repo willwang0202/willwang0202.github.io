@@ -1,0 +1,715 @@
+/* ============================================================
+   COMPONENTS
+   ============================================================ */
+
+/* ── Panel ──────────────────────────────────────────────────
+   Milled plate: chamfered top-right and bottom-left, hairline
+   gunmetal edge. Two stacked pseudo-elements draw edge + face
+   so the 1px rule follows the chamfer instead of being cut by it. */
+
+.panel {
+  position: relative;
+  padding: 1.5rem;
+}
+
+.panel::before,
+.panel::after {
+  content: '';
+  position: absolute;
+  clip-path: var(--chamfer);
+  transition: background var(--dur-mid) var(--ease-hard);
+}
+
+.panel::before { inset: 0;   background: var(--steel); }
+.panel::after  { inset: 1px; background: var(--panel); }
+
+.panel > * { position: relative; z-index: 1; }
+
+.panel:hover::before,
+.panel:focus-within::before { background: var(--steel-lit); }
+
+/* ── Scan ───────────────────────────────────────────────────
+   THE SIGNATURE. Cyberpunk's most distinctive interaction is the
+   scanner: brackets snap to a target and its properties stream in.
+   Cyan exists nowhere else on this page, so every scan reads as a
+   spike — Edgerunners' rule that neon is pressure, not decoration.
+
+   Four corner brackets are drawn as eight gradient slices on one
+   element, so no extra markup is needed. */
+
+.scan {
+  position: absolute;
+  inset: -2px;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0;
+  transform: scale(1.025);
+  transition:
+    opacity var(--dur-fast) var(--ease-hard),
+    transform var(--dur-mid) var(--ease-snap);
+  background-repeat: no-repeat;
+  background-image:
+    linear-gradient(var(--cyan), var(--cyan)), linear-gradient(var(--cyan), var(--cyan)),
+    linear-gradient(var(--cyan), var(--cyan)), linear-gradient(var(--cyan), var(--cyan)),
+    linear-gradient(var(--cyan), var(--cyan)), linear-gradient(var(--cyan), var(--cyan)),
+    linear-gradient(var(--cyan), var(--cyan)), linear-gradient(var(--cyan), var(--cyan));
+  background-size:
+    1px 20px, 20px 1px,
+    1px 20px, 20px 1px,
+    1px 20px, 20px 1px,
+    1px 20px, 20px 1px;
+  background-position:
+    0 0,        0 0,
+    100% 0,     100% 0,
+    0 100%,     0 100%,
+    100% 100%,  100% 100%;
+}
+
+.scan-target:hover > .scan,
+.scan-target:focus-within > .scan,
+.scan-target.is-scanned > .scan {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Sweep line — one pass, top to bottom, on acquisition. */
+.scan::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+  box-shadow: 0 0 10px 1px rgba(43, 217, 232, 0.55);
+  opacity: 0;
+}
+
+.scan-target:hover > .scan::after,
+.scan-target:focus-within > .scan::after {
+  animation: sweep 620ms var(--ease-hard);
+}
+
+@keyframes sweep {
+  0%   { opacity: 0; top: 0; }
+  12%  { opacity: 1; }
+  88%  { opacity: 1; }
+  100% { opacity: 0; top: 100%; }
+}
+
+/* Telemetry stays in place at rest and resolves to cyan when
+   scanned. Nothing moves, so hovering never shifts the layout. */
+.telemetry {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem 1rem;
+  margin-top: 1.125rem;
+  padding-top: 0.875rem;
+  border-top: 1px solid var(--steel);
+  font-family: var(--face-data);
+  font-size: var(--t-micro);
+  letter-spacing: var(--track-data);
+  color: var(--bone-faint);
+  transition: color var(--dur-mid) var(--ease-hard);
+}
+
+.scan-target:hover .telemetry,
+.scan-target:focus-within .telemetry { color: var(--cyan); }
+
+.telemetry-key::after {
+  content: ' ';
+  white-space: pre;
+}
+
+.telemetry-val { color: var(--bone-dim); transition: color var(--dur-mid) var(--ease-hard); }
+
+.scan-target:hover .telemetry-val,
+.scan-target:focus-within .telemetry-val { color: var(--cyan); }
+
+/* ── Hero ───────────────────────────────────────────────────
+   The page opens the way the game opens on a target: a name at
+   scale, and a bracket-framed readout of who it belongs to. */
+
+.hero {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-block: var(--gap-lg);
+}
+
+.hero-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  margin-bottom: 1.5rem;
+}
+
+.hero-eyebrow .pip { background: var(--rust); }
+
+.hero-name {
+  font-family: var(--face-display);
+  font-weight: 700;
+  font-size: var(--t-hero);
+  line-height: 0.82;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--bone);
+  position: relative;
+}
+
+/* Glitch runs once on load, then rests. Ambient glitch reads as
+   broken rather than deliberate. */
+.hero-name[data-glitch]::before,
+.hero-name[data-glitch]::after {
+  content: attr(data-glitch);
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.hero-name.is-glitching::before {
+  color: var(--rust);
+  animation: glitch-a 420ms steps(2) 2;
+}
+
+.hero-name.is-glitching::after {
+  color: var(--cyan);
+  animation: glitch-b 420ms steps(2) 2;
+}
+
+@keyframes glitch-a {
+  0%, 100% { opacity: 0; transform: none; }
+  20% { opacity: 0.9; transform: translate(-3px, 1px); clip-path: inset(15% 0 62% 0); }
+  60% { opacity: 0.9; transform: translate(2px, -1px); clip-path: inset(70% 0 12% 0); }
+}
+
+@keyframes glitch-b {
+  0%, 100% { opacity: 0; transform: none; }
+  35% { opacity: 0.8; transform: translate(3px, -1px); clip-path: inset(45% 0 38% 0); }
+  75% { opacity: 0.8; transform: translate(-2px, 1px); clip-path: inset(8% 0 78% 0); }
+}
+
+.hero-role {
+  font-family: var(--face-data);
+  font-size: clamp(0.8125rem, 1.6vw, 1rem);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--yellow);
+  margin-top: 1.75rem;
+}
+
+.hero-desc {
+  max-width: 46ch;
+  font-size: 1.0625rem;
+  color: var(--bone-dim);
+}
+
+.hero-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 20rem);
+  gap: clamp(2rem, 6vw, 4rem);
+  align-items: start;
+  margin-top: 2.25rem;
+}
+
+@media (max-width: 900px) {
+  .hero-body { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* Identity readout — the "scanned NPC" card. */
+.vitals { display: grid; gap: 0.875rem; }
+
+.vital {
+  display: grid;
+  grid-template-columns: 5.5rem 1fr;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: var(--face-data);
+  font-size: var(--t-small);
+}
+
+.vital-key { color: var(--bone-faint); letter-spacing: var(--track-data); }
+.vital-val { color: var(--bone); }
+.vital-val--live { color: var(--yellow); }
+
+/* ── Button ─────────────────────────────────────────────────── */
+
+.btn {
+  display: inline-block;
+  position: relative;
+  padding: 0.75rem 1.75rem;
+  font-family: var(--face-data);
+  font-size: var(--t-small);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--black);
+  background: var(--yellow);
+  clip-path: var(--chamfer-sm);
+  transition: background var(--dur-fast) var(--ease-hard);
+  margin-top: var(--gap-md);
+}
+
+.btn:hover, .btn:focus-visible { background: var(--bone); }
+
+.btn--ghost {
+  background: transparent;
+  color: var(--bone);
+  box-shadow: inset 0 0 0 1px var(--steel-lit);
+  margin-top: 0;
+}
+
+.btn--ghost:hover, .btn--ghost:focus-visible {
+  background: transparent;
+  color: var(--cyan);
+  box-shadow: inset 0 0 0 1px var(--cyan);
+}
+
+/* ── Capability grid ────────────────────────────────────────── */
+
+.grid-cap {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+  gap: 1px;
+  background: var(--steel);
+  border: 1px solid var(--steel);
+}
+
+/* Cells share hairlines, so the grid reads as one milled sheet
+   rather than a row of floating cards. */
+.cap {
+  position: relative;
+  background: var(--panel);
+  padding: 1.5rem;
+  transition: background var(--dur-mid) var(--ease-hard);
+}
+
+.cap:hover, .cap:focus-within { background: var(--panel-raised); }
+
+.cap-name {
+  font-family: var(--face-display);
+  font-weight: 600;
+  font-size: var(--t-h3);
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  color: var(--bone);
+  margin-bottom: 0.5rem;
+}
+
+.cap-desc { font-size: var(--t-small); margin-bottom: 1rem; }
+
+.tags { display: flex; flex-wrap: wrap; gap: 0.375rem; }
+
+.tag {
+  font-family: var(--face-data);
+  font-size: var(--t-micro);
+  letter-spacing: var(--track-data);
+  color: var(--bone-dim);
+  padding: 0.1875rem 0.5rem;
+  box-shadow: inset 0 0 0 1px var(--steel-lit);
+}
+
+/* ── Featured project ───────────────────────────────────────── */
+
+.feature { padding: clamp(1.5rem, 4vw, 2.5rem); }
+
+.feature-flag {
+  display: inline-block;
+  font-family: var(--face-data);
+  font-size: var(--t-micro);
+  letter-spacing: var(--track-label);
+  color: var(--black);
+  background: var(--yellow);
+  padding: 0.1875rem 0.625rem;
+  margin-bottom: 1.25rem;
+}
+
+/* Product names keep their given casing — iM System, CloudSeed and
+   FixRelay carry meaning in the capitals. Only generic categories
+   and structural labels get the uppercase HUD treatment. */
+.feature-name {
+  font-family: var(--face-display);
+  font-weight: 700;
+  font-size: clamp(2.25rem, 5vw, 3.5rem);
+  line-height: 0.95;
+  letter-spacing: -0.01em;
+  color: var(--bone);
+}
+
+.feature-sub {
+  font-family: var(--face-data);
+  font-size: var(--t-small);
+  letter-spacing: var(--track-data);
+  color: var(--yellow);
+  margin-top: 0.5rem;
+}
+
+.feature-desc { max-width: 62ch; margin-top: 1.125rem; }
+
+.feature-cols {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--gap-md);
+  margin-top: 1.75rem;
+}
+
+@media (max-width: 780px) {
+  .feature-cols { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* Metrics read as instrument gauges: value large, unit small. */
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  padding-block: 1.25rem;
+  border-block: 1px solid var(--steel);
+}
+
+.metric-val {
+  display: block;
+  font-family: var(--face-display);
+  font-weight: 700;
+  font-size: 1.875rem;
+  line-height: 1;
+  color: var(--yellow);
+}
+
+.metric-key {
+  display: block;
+  font-family: var(--face-data);
+  font-size: var(--t-micro);
+  letter-spacing: var(--track-data);
+  color: var(--bone-faint);
+  margin-top: 0.25rem;
+}
+
+.feature-list { display: grid; gap: 0.5rem; list-style: none; }
+
+.feature-list li {
+  display: grid;
+  grid-template-columns: 1rem 1fr;
+  gap: 0.5rem;
+  font-size: var(--t-small);
+}
+
+.feature-list li::before {
+  content: '\203A';
+  color: var(--yellow);
+  font-family: var(--face-data);
+}
+
+.feature-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.75rem; }
+
+/* ── Project rows ───────────────────────────────────────────
+   A ledger, not cards. Each row is a record with a status flag. */
+
+.ledger { margin-top: var(--gap-md); border-top: 1px solid var(--steel); }
+
+.record {
+  position: relative;
+  display: grid;
+  grid-template-columns: 7rem minmax(0, 1fr) auto;
+  gap: var(--gap-sm);
+  align-items: baseline;
+  padding: 1.375rem 1rem;
+  border-bottom: 1px solid var(--steel);
+  transition: background var(--dur-mid) var(--ease-hard);
+}
+
+.record:hover, .record:focus-within { background: var(--panel); }
+
+@media (max-width: 780px) {
+  .record { grid-template-columns: minmax(0, 1fr); gap: 0.5rem; }
+}
+
+.status {
+  font-family: var(--face-data);
+  font-size: var(--t-micro);
+  letter-spacing: var(--track-label);
+  color: var(--rust);
+  display: flex;
+  align-items: center;
+  gap: 0.4375rem;
+}
+
+.status::before {
+  content: '';
+  width: 5px;
+  height: 5px;
+  background: currentColor;
+  flex: none;
+}
+
+.status--live { color: var(--yellow); }
+
+.record-name {
+  font-family: var(--face-display);
+  font-weight: 600;
+  font-size: 1.5rem;
+  color: var(--bone);
+  line-height: 1.1;
+}
+
+.record-desc { font-size: var(--t-small); margin-top: 0.25rem; max-width: 62ch; }
+
+.record-tech {
+  font-family: var(--face-data);
+  font-size: var(--t-micro);
+  letter-spacing: var(--track-data);
+  color: var(--bone-faint);
+  white-space: nowrap;
+}
+
+/* ── Service record (timeline) ──────────────────────────────
+   These entries genuinely are a sequence, so the dates carry the
+   ordering and a continuous rule makes the span legible. */
+
+.log { display: grid; gap: 0; border-left: 1px solid var(--steel); margin-left: 0.5rem; }
+
+/* Dates take their own column so the span is scannable down the
+   page and the entry uses the full measure instead of hugging left. */
+.entry {
+  position: relative;
+  display: grid;
+  grid-template-columns: 11rem minmax(0, 1fr);
+  column-gap: var(--gap-md);
+  padding: 0 0 var(--gap-md) 2rem;
+}
+
+.entry-date { grid-column: 1; grid-row: 1 / span 3; }
+.entry-role,
+.entry-org,
+.entry-desc { grid-column: 2; }
+
+@media (max-width: 780px) {
+  .entry { grid-template-columns: minmax(0, 1fr); }
+  .entry-date { grid-column: 1; grid-row: auto; }
+  .entry-role,
+  .entry-org,
+  .entry-desc { grid-column: 1; }
+}
+
+.entry:last-child { padding-bottom: 0; }
+
+.entry::before {
+  content: '';
+  position: absolute;
+  left: -4px;
+  top: 0.55rem;
+  width: 7px;
+  height: 7px;
+  background: var(--steel-lit);
+  transition: background var(--dur-fast) var(--ease-hard);
+}
+
+.entry:hover::before { background: var(--yellow); }
+
+.entry-date {
+  font-family: var(--face-data);
+  font-size: var(--t-micro);
+  letter-spacing: var(--track-label);
+  color: var(--yellow);
+}
+
+.entry-role {
+  font-family: var(--face-display);
+  font-weight: 600;
+  font-size: 1.375rem;
+  text-transform: uppercase;
+  color: var(--bone);
+  line-height: 1.2;
+}
+
+.entry-org {
+  font-family: var(--face-data);
+  font-size: var(--t-small);
+  color: var(--bone-dim);
+}
+
+.entry-desc { font-size: var(--t-small); margin-top: 0.5rem; max-width: 60ch; }
+
+/* ── Commit telemetry ───────────────────────────────────────── */
+
+.tlm-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  gap: 1px;
+  background: var(--steel);
+  border: 1px solid var(--steel);
+  margin-bottom: var(--gap-sm);
+}
+
+.tlm-stat { background: var(--panel); padding: 1rem 1.25rem; }
+
+.graph-wrap { overflow-x: auto; padding-bottom: 0.5rem; }
+
+.months {
+  display: flex;
+  gap: var(--cell-gap);
+  font-family: var(--face-data);
+  font-size: var(--t-micro);
+  color: var(--bone-faint);
+  margin-bottom: 0.5rem;
+  min-width: max-content;
+}
+
+.months span {
+  width: var(--cell);
+  flex: none;
+  white-space: nowrap;
+}
+
+.graph { display: flex; gap: var(--cell-gap); min-width: max-content; }
+
+.week { display: grid; grid-template-rows: repeat(7, var(--cell)); gap: var(--cell-gap); }
+
+.day {
+  width: var(--cell);
+  height: var(--cell);
+  background: var(--steel);
+  position: relative;
+}
+
+/* Contribution density steps toward the signal yellow. */
+.day[data-level='1'] { background: #4A4409; }
+.day[data-level='2'] { background: #877C0A; }
+.day[data-level='3'] { background: #C4B408; }
+.day[data-level='4'] { background: var(--yellow); }
+
+.day:hover { outline: 1px solid var(--cyan); outline-offset: 1px; }
+
+.day-tip {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bone);
+  color: var(--black);
+  font-family: var(--face-data);
+  font-size: var(--t-micro);
+  padding: 0.25rem 0.5rem;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 10;
+  transition: opacity var(--dur-fast) var(--ease-hard);
+}
+
+.day:hover .day-tip { opacity: 1; }
+
+.graph-note {
+  font-family: var(--face-data);
+  font-size: var(--t-micro);
+  letter-spacing: var(--track-data);
+  color: var(--bone-faint);
+  margin-top: 0.75rem;
+}
+
+.graph-note[data-state='error'] { color: var(--rust); }
+
+/* ── Contact ────────────────────────────────────────────────── */
+
+.channels {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 1px;
+  background: var(--steel);
+  border: 1px solid var(--steel);
+}
+
+.channel {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  background: var(--panel);
+  padding: 1.25rem;
+  transition: background var(--dur-mid) var(--ease-hard);
+}
+
+.channel:hover, .channel:focus-visible { background: var(--panel-raised); }
+
+/* Email is the primary channel and an odd count would otherwise
+   leave a dead cell, so it takes the whole trailing row. */
+.channel:last-child { grid-column: 1 / -1; }
+
+.channel-key {
+  font-family: var(--face-data);
+  font-size: var(--t-micro);
+  letter-spacing: var(--track-data);
+  color: var(--yellow);
+  flex: none;
+  width: 2.25rem;
+}
+
+.channel-val {
+  font-family: var(--face-body);
+  font-size: var(--t-small);
+  color: var(--bone);
+  overflow-wrap: anywhere;
+}
+
+.channel::after {
+  content: '\2197';
+  margin-left: auto;
+  font-family: var(--face-data);
+  color: var(--bone-faint);
+  transition: color var(--dur-fast) var(--ease-hard);
+}
+
+.channel:hover::after { color: var(--cyan); }
+
+/* ── Footer ─────────────────────────────────────────────────── */
+
+.foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-sm);
+  justify-content: space-between;
+  align-items: center;
+  margin-top: var(--section-y);
+  padding-block: var(--gap-md);
+  border-top: 1px solid var(--steel);
+  font-family: var(--face-data);
+  font-size: var(--t-micro);
+  letter-spacing: var(--track-label);
+  color: var(--bone-faint);
+}
+
+/* ── Boot ───────────────────────────────────────────────────
+   Kept because the source material leans on reboot sequences,
+   but short, skippable, and shown once per session. */
+
+.boot {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: var(--black);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(1.5rem, 6vw, 5rem);
+  font-family: var(--face-data);
+  font-size: var(--t-small);
+  transition: opacity 320ms var(--ease-hard);
+}
+
+.boot[hidden] { display: none; }
+.boot.is-done { opacity: 0; pointer-events: none; }
+
+.boot-line { color: var(--bone-faint); opacity: 0; }
+.boot-line.is-on { opacity: 1; }
+.boot-line[data-tone='warn'] { color: var(--yellow); }
+.boot-line[data-tone='alert'] { color: var(--rust); }
+
+.boot-bar { height: 1px; background: var(--steel); margin-top: 1.5rem; max-width: 32rem; }
+.boot-fill { height: 100%; width: 0; background: var(--yellow); transition: width 90ms linear; }
+
+.boot-skip {
+  margin-top: 1rem;
+  color: var(--bone-faint);
+  letter-spacing: var(--track-label);
+  font-size: var(--t-micro);
+}

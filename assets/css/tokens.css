@@ -1,0 +1,101 @@
+/* ============================================================
+   DESIGN TOKENS — Neomilitarism
+   "Substance over style." Forceful, functional, high quality.
+   Palette is bone-on-black with a single authoritative yellow.
+   Cyan is reserved: it appears only during a scan.
+   ============================================================ */
+
+:root {
+  /* ── Surface ──────────────────────────────────────────────
+     Warm-neutral black, not the blue-tinted void of synthwave. */
+  --black:        #08090B;
+  --panel:        #101215;
+  --panel-raised: #16191D;
+
+  /* ── Ink ──────────────────────────────────────────────────
+     Eggshell, never pure white. The game's menus use a slightly
+     beige cast so the software reads as issued, not consumer.
+     Every tier clears 4.5:1 on both --black and --panel: the faint
+     tier carries labels and telemetry, which is real content at
+     small sizes, so it cannot be decorative grey. */
+  --bone:         #E4E0D4;
+  --bone-dim:     #B3AFA4;
+  --bone-faint:   #8D8A80;
+
+  /* ── Structure ────────────────────────────────────────────
+     Gunmetal for rules, chamfers and inactive states. */
+  --steel:        #2A2E33;
+  --steel-lit:    #3E444B;
+
+  /* ── Signal ───────────────────────────────────────────────
+     Yellow is the only decorative accent and carries authority.
+     Rust is the low-fi off-red the HUD uses for status.
+     Cyan is the scan colour and appears nowhere at rest. */
+  --yellow:       #FCEE0A;
+  --rust:         #E4593C;
+  --cyan:         #2BD9E8;
+
+  /* ── Type ─────────────────────────────────────────────────
+     Rajdhani carries the game's UI; it is condensed, square and
+     built for dense readouts. Chakra Petch has clipped terminals
+     that echo the chamfer. Share Tech Mono is the data layer. */
+  --face-display: 'Rajdhani', system-ui, sans-serif;
+  --face-body:    'Chakra Petch', system-ui, sans-serif;
+  --face-data:    'Share Tech Mono', ui-monospace, monospace;
+
+  /* Type scale — 1.333 (perfect fourth), clamped for viewport. */
+  --t-hero:  clamp(3.5rem, 11vw, 9rem);
+  --t-h2:    clamp(1.75rem, 3.4vw, 2.75rem);
+  --t-h3:    1.375rem;
+  --t-body:  1rem;
+  --t-small: 0.8125rem;
+  --t-micro: 0.6875rem;
+
+  --track-label: 0.22em;  /* eyebrows, system labels */
+  --track-data:  0.08em;
+
+  /* ── Geometry ─────────────────────────────────────────────
+     One chamfer size, applied consistently. Zero radius: this
+     interface is milled, not moulded. */
+  --notch: 14px;
+  --notch-sm: 8px;
+  --chamfer: polygon(
+    0 0,
+    calc(100% - var(--notch)) 0,
+    100% var(--notch),
+    100% 100%,
+    var(--notch) 100%,
+    0 calc(100% - var(--notch))
+  );
+  --chamfer-sm: polygon(
+    0 0,
+    calc(100% - var(--notch-sm)) 0,
+    100% var(--notch-sm),
+    100% 100%,
+    var(--notch-sm) 100%,
+    0 calc(100% - var(--notch-sm))
+  );
+
+  /* ── Rhythm ───────────────────────────────────────────────── */
+  --gap-xs: 0.5rem;
+  --gap-sm: 1rem;
+  --gap-md: 2rem;
+  --gap-lg: 4rem;
+  --section-y: clamp(5rem, 12vh, 9rem);
+  --rail-w: 4.5rem;
+  --measure: 1180px;
+
+  /* Contribution cell geometry. Sized so 53 weeks fill the measure;
+     the month labels derive their width from these, so the header
+     stays locked to the columns without JS measuring anything. */
+  --cell: 15px;
+  --cell-gap: 4px;
+
+  /* ── Motion ───────────────────────────────────────────────
+     Mechanical easing. Hardware snaps; it does not bounce. */
+  --ease-snap: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-hard: cubic-bezier(0.7, 0, 0.3, 1);
+  --dur-fast: 120ms;
+  --dur-mid:  260ms;
+  --dur-slow: 620ms;
+}
