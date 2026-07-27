@@ -13,8 +13,6 @@
     var targets = document.querySelectorAll('.reveal');
     if (!targets.length) return;
 
-    // Without IntersectionObserver, show everything rather than
-    // leaving the page permanently blank.
     if (!('IntersectionObserver' in window) || prefersReducedMotion) {
       targets.forEach(function (el) { el.classList.add('is-in'); });
       return;
@@ -23,12 +21,25 @@
     var observer = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         if (!entry.isIntersecting) return;
-        entry.target.classList.add('is-in');
-        observer.unobserve(entry.target);
+
+        var el = entry.target;
+        el.classList.add('is-in');
+        observer.unobserve(el);
+
+        if (el.classList.contains('reveal-stagger')) {
+          var children = el.querySelectorAll('.reveal');
+          children.forEach(function (child, i) {
+            child.style.setProperty('--reveal-i', i);
+            child.classList.add('is-in');
+          });
+        }
       });
     }, { rootMargin: '0px 0px -12% 0px', threshold: 0.05 });
 
-    targets.forEach(function (el) { observer.observe(el); });
+    targets.forEach(function (el) {
+      if (el.parentElement && el.parentElement.classList.contains('reveal-stagger')) return;
+      observer.observe(el);
+    });
   }
 
   /* ── Section tracking ──────────────────────────────────────
@@ -77,8 +88,6 @@
         hour12: false
       });
     } catch (err) {
-      // Environment lacks the IANA tz database — drop the row's
-      // live claim rather than showing a wrong time.
       el.textContent = 'Pacific';
       return;
     }
@@ -106,8 +115,6 @@
     initHeroGlitch();
   }
 
-  /* boot.js may have finished before this file executed, so check
-     the flag as well as listening for the event. */
   if (document.documentElement.dataset.bootState === 'done') {
     onReady();
   } else {

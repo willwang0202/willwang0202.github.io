@@ -92,10 +92,22 @@
   --cell-gap: 4px;
 
   /* ── Motion ───────────────────────────────────────────────
-     Mechanical easing. Hardware snaps; it does not bounce. */
+     Mechanical easing. Hardware snaps; it does not bounce.
+     Scale inspired by transitions.dev's semantic duration ladder. */
   --ease-snap: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-hard: cubic-bezier(0.7, 0, 0.3, 1);
-  --dur-fast: 120ms;
-  --dur-mid:  260ms;
-  --dur-slow: 620ms;
+  --ease-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-bounce: cubic-bezier(0.34, 1.36, 0.64, 1);
+
+  --dur-micro: 80ms;
+  --dur-fast:  120ms;
+  --dur-mid:   260ms;
+  --dur-slow:  420ms;
+  --dur-reveal: 560ms;
+
+  --stagger: 50ms;
+  --blur-sm: 2px;
+  --blur-md: 4px;
+  --dist-sm: 8px;
+  --dist-md: 14px;
 }

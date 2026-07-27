@@ -128,7 +128,7 @@ a { color: inherit; text-decoration: none; }
   letter-spacing: var(--track-label);
   text-transform: uppercase;
   color: var(--bone-faint);
-  transition: color var(--dur-fast) var(--ease-hard);
+  transition: color var(--dur-mid) var(--ease-smooth);
 }
 
 .rail-nav a:hover,
@@ -224,16 +224,29 @@ section { padding-block: var(--section-y) 0; }
 }
 
 /* ── Scroll reveal ──────────────────────────────────────────
-   A short, hard translate. No fade-up drift. */
+   Blur-rise entrance: elements translate up, deblur, and fade
+   in on a smooth-out curve. Stagger children via --reveal-i. */
 .reveal {
   opacity: 0;
-  transform: translateY(14px);
+  transform: translateY(var(--dist-md));
+  filter: blur(var(--blur-sm));
   transition:
-    opacity var(--dur-slow) var(--ease-snap),
-    transform var(--dur-slow) var(--ease-snap);
+    opacity var(--dur-reveal) var(--ease-smooth),
+    transform var(--dur-reveal) var(--ease-smooth),
+    filter var(--dur-reveal) var(--ease-smooth);
+  will-change: transform, opacity, filter;
 }
 
-.reveal.is-in { opacity: 1; transform: none; }
+.reveal.is-in {
+  opacity: 1;
+  transform: none;
+  filter: blur(0);
+}
+
+/* Staggered children inside a reveal container rise in sequence. */
+.reveal-stagger > .reveal {
+  transition-delay: calc(var(--reveal-i, 0) * var(--stagger));
+}
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
@@ -242,5 +255,13 @@ section { padding-block: var(--section-y) 0; }
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-  .reveal { opacity: 1; transform: none; }
+  .reveal { opacity: 1; transform: none; filter: none; }
+
+  .hero-eyebrow,
+  .hero-name,
+  .hero-role,
+  .hero-body { opacity: 1; transform: none; filter: none; }
+
+  .grid-cap > .cap.reveal > *,
+  .channels > .channel.reveal > * { opacity: 1; transform: none; filter: none; }
 }
