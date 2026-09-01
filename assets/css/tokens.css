@@ -71,27 +71,40 @@
   --text-body:    0.9375rem;
   --text-sm:      0.875rem;
   --text-xs:      0.8125rem;
-  --text-label:   0.6875rem;  /* uppercase eyebrows */
+  --text-label:   0.6875rem;  /* uppercase micro-labels */
+  --text-mono:    0.75rem;    /* mono UI text: buttons, footer */
+  --text-micro:   0.625rem;   /* chart axis labels */
 
   --track-tight: -0.03em;   /* display sizes only */
   --track-label:  0.08em;   /* uppercase labels only */
 
   /* ── Geometry ─────────────────────────────────────────────
-     Radius scales with the element's footprint so curvature
-     stays visually constant: a 24px chip and a 600px card
-     cannot share a radius and look like the same material. */
-  --r-xs:   4px;   /* chart cells */
-  --r-sm:   6px;   /* tags, badges, icon tiles */
-  --r-md:   8px;   /* buttons, inputs */
-  --r-lg:  12px;   /* cards */
-  --r-xl:  16px;   /* the feature card */
-  --r-full: 999px; /* pills and dots */
+     Near-square. Curvature this small reads as a machined edge
+     rather than a moulded one, which is the difference between
+     an instrument and an appliance. The scale still steps, so
+     a chip and a panel do not share a value — they just both
+     sit close to zero.
+
+     --r-full is reserved for the one thing that is actually
+     round: the live dot. */
+  --r-xs:   0;     /* chart cells, focus ring */
+  --r-sm:   1px;   /* tags, badges, icon frames */
+  --r-md:   2px;   /* buttons, nav items */
+  --r-lg:   3px;   /* cards */
+  --r-xl:   4px;   /* the feature and status panels */
+  --r-full: 999px; /* the live dot */
+
+  /* Arm length of the corner registration marks. Long enough
+     to read as a bracket at panel scale, short enough that it
+     never becomes a second border. */
+  --tick: 9px;
 
   /* ── Elevation ────────────────────────────────────────────
-     Two shadows. --shadow-sm is a hairline's worth of depth
-     for a resting card; --shadow-md is the same card lifted
-     under the cursor. Both are near-black at low alpha, never
-     a coloured or blurred glow. */
+     Depth is reserved for things that genuinely sit above the
+     page. --shadow-sm is the hairline of lift a card gets
+     under the cursor; --shadow-md is for the chart tooltip,
+     which really does overlay its surroundings. Nothing at
+     rest is raised. */
   --shadow-sm: 0 1px 2px rgba(9, 9, 11, 0.04);
   --shadow-md: 0 1px 2px rgba(9, 9, 11, 0.04),
                0 8px 24px -12px rgba(9, 9, 11, 0.12);

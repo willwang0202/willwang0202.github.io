@@ -78,14 +78,17 @@
   <div class="header-inner">
     <a class="brand" href="#top">
       <span class="brand-mark" aria-hidden="true">CW</span>
-      Chen-An Wang
+      <span class="brand-name">Chen-An Wang</span>
     </a>
 
+    <!-- The index on each link is the number printed on the
+         section it points at, so the nav and the section heads
+         are two halves of one scheme. -->
     <nav class="site-nav" aria-label="Sections">
-      <a href="#expertise">Expertise</a>
-      <a href="#work">Work</a>
-      <a href="#experience">Experience</a>
-      <a href="#activity">Activity</a>
+      <a href="#expertise"><span aria-hidden="true">01</span>Expertise</a>
+      <a href="#work"><span aria-hidden="true">02</span>Work</a>
+      <a href="#experience"><span aria-hidden="true">03</span>Experience</a>
+      <a href="#activity"><span aria-hidden="true">04</span>Activity</a>
     </nav>
 
     <a class="btn btn--primary header-cta" href="#contact">
@@ -128,8 +131,9 @@
       </div>
     </div>
 
-    <!-- Status card. Every row is live or computed: the clock
-         ticks, and the bar is derived from the two dates below. -->
+    <!-- Status panel. Every row is live or computed: the clock
+         ticks, and the meter is derived from the two dates
+         carried on the track itself. -->
     <div class="status hero-card" data-reveal>
       <div class="status-head">
         <span class="label">Status</span>
@@ -142,32 +146,39 @@
       <div class="status-rows">
         <div class="status-row">
           <svg class="icon" aria-hidden="true"><use href="#i-clock"></use></svg>
-          <span>Local time</span>
+          <span class="label leads">Local time</span>
           <span class="status-val"><span class="readout" id="local-time">&mdash;</span></span>
         </div>
 
         <div class="status-row">
           <svg class="icon" aria-hidden="true"><use href="#i-pin"></use></svg>
-          <span>Based in</span>
+          <span class="label leads">Based in</span>
           <span class="status-val">San Diego, CA</span>
         </div>
 
         <div class="status-row">
           <svg class="icon" aria-hidden="true"><use href="#i-cap"></use></svg>
-          <span>Studying</span>
+          <span class="label leads">Studying</span>
           <span class="status-val">B.S. Data Science</span>
         </div>
 
         <div class="status-progress">
+          <div class="progress-head">
+            <span class="label">Degree progress</span>
+            <span class="readout" id="progress-value">&mdash;</span>
+          </div>
+
           <div class="progress-track" data-progress
                data-start="2024-09-01" data-end="2028-06-15"
                role="progressbar" aria-label="Degree progress"
                aria-valuemin="0" aria-valuemax="100">
             <span class="progress-fill" aria-hidden="true"></span>
           </div>
-          <div class="progress-meta">
-            <span>UC San Diego &middot; Sep 2024 &rarr; Jun 2028</span>
-            <span class="readout" id="progress-value">&mdash;</span>
+
+          <div class="progress-axis">
+            <span>Sep 2024</span>
+            <span>UC San Diego</span>
+            <span>Jun 2028</span>
           </div>
         </div>
       </div>
@@ -177,8 +188,12 @@
   <!-- ── EXPERTISE ──────────────────────────────────────────── -->
   <section class="section" id="expertise" aria-labelledby="expertise-title">
     <header class="section-head">
+      <div class="section-meta">
+        <span class="section-index" aria-hidden="true">01</span>
+        <span class="section-rule" aria-hidden="true"></span>
+        <span class="section-note">6 domains</span>
+      </div>
       <h2 class="section-title" id="expertise-title">What I work on</h2>
-      <span class="section-note">6 domains</span>
     </header>
 
     <div class="cap-grid" data-reveal-group>
@@ -229,8 +244,12 @@
   <!-- ── SELECTED WORK ──────────────────────────────────────── -->
   <section class="section" id="work" aria-labelledby="work-title">
     <header class="section-head">
+      <div class="section-meta">
+        <span class="section-index" aria-hidden="true">02</span>
+        <span class="section-rule" aria-hidden="true"></span>
+        <span class="section-note">5 projects</span>
+      </div>
       <h2 class="section-title" id="work-title">Selected work</h2>
-      <span class="section-note">5 projects</span>
     </header>
 
     <article class="feature" data-reveal>
@@ -295,8 +314,8 @@
       </div>
 
       <div class="feature-specs">
-        <span class="spec"><span class="label">Stack</span><span class="spec-val">Next.js / Postgres / Drizzle</span></span>
-        <span class="spec"><span class="label">Host</span><span class="spec-val">Vercel</span></span>
+        <span class="spec"><span class="label leads">Stack</span><span class="spec-val">Next.js / Postgres / Drizzle</span></span>
+        <span class="spec"><span class="label leads">Host</span><span class="spec-val">Vercel</span></span>
       </div>
     </article>
 
@@ -343,8 +362,12 @@
   <!-- ── EXPERIENCE ─────────────────────────────────────────── -->
   <section class="section" id="experience" aria-labelledby="experience-title">
     <header class="section-head">
+      <div class="section-meta">
+        <span class="section-index" aria-hidden="true">03</span>
+        <span class="section-rule" aria-hidden="true"></span>
+        <span class="section-note">2023 &rarr; present</span>
+      </div>
       <h2 class="section-title" id="experience-title">Experience</h2>
-      <span class="section-note">2023 &rarr; present</span>
     </header>
 
     <div class="timeline" data-reveal-group>
@@ -381,8 +404,12 @@
   <!-- ── ACTIVITY ───────────────────────────────────────────── -->
   <section class="section" id="activity" aria-labelledby="activity-title">
     <header class="section-head">
+      <div class="section-meta">
+        <span class="section-index" aria-hidden="true">04</span>
+        <span class="section-rule" aria-hidden="true"></span>
+        <span class="section-note">Trailing 12 months</span>
+      </div>
       <h2 class="section-title" id="activity-title">Activity</h2>
-      <span class="section-note">Trailing 12 months</span>
     </header>
 
     <div data-reveal>
@@ -410,9 +437,17 @@
         </div>
       </div>
 
+      <!-- Weekday labels on alternate rows only: at a 14px cell
+           a label on every row would collide with itself, and
+           three named rows are enough to orient the other four. -->
       <div class="chart">
-        <div class="chart-months" id="chart-months"></div>
-        <div class="chart-grid" id="chart-grid"></div>
+        <div class="chart-frame">
+          <div class="chart-days" aria-hidden="true">
+            <span></span><span>Mon</span><span></span><span>Wed</span><span></span><span>Fri</span><span></span>
+          </div>
+          <div class="chart-months" id="chart-months"></div>
+          <div class="chart-grid" id="chart-grid"></div>
+        </div>
       </div>
 
       <div class="chart-foot">
@@ -437,8 +472,12 @@
   <!-- ── CONTACT ────────────────────────────────────────────── -->
   <section class="section" id="contact" aria-labelledby="contact-title">
     <header class="section-head">
+      <div class="section-meta">
+        <span class="section-index" aria-hidden="true">05</span>
+        <span class="section-rule" aria-hidden="true"></span>
+        <span class="section-note">5 links</span>
+      </div>
       <h2 class="section-title" id="contact-title">Get in touch</h2>
-      <span class="section-note">5 links</span>
     </header>
 
     <div class="contact-grid" data-reveal-group>

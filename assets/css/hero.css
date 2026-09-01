@@ -1,10 +1,10 @@
 /* ============================================================
-   HERO — the introduction and the status card
+   HERO — the introduction and the status panel
 
-   Left column says who this is. Right column is a status card
+   Left column says who this is. Right column is a status panel
    whose every row is live or computed: the clock ticks, the
-   progress bar is derived from the two dates in the markup,
-   and the availability badge is the page's only colour.
+   meter is derived from the two dates in the markup, and the
+   availability badge is the page's only colour.
    ============================================================ */
 
 .hero {
@@ -54,17 +54,17 @@
   margin-block-start: 1.75rem;
 }
 
-/* ── Status card ──────────────────────────────────────────────
-   Four rows. Each is an icon, a label and a value on a shared
-   grid, so labels and values form columns instead of drifting
-   row by row. */
+/* ── Status panel ─────────────────────────────────────────────
+   A titled bar over a stack of label/value rows, each row tied
+   together by a dotted leader. The leader is what makes the
+   column alignment unnecessary: the eye follows the dots
+   across instead of relying on the label and the value sharing
+   a grid track, which is why these are plain flex rows. */
 
 .status {
   border: 1px solid var(--border);
   border-radius: var(--r-xl);
   background: var(--bg);
-  box-shadow: var(--shadow-sm);
-  overflow: hidden;
 }
 
 .status-head {
@@ -74,37 +74,21 @@
   gap: var(--gap-sm);
   padding: 0.8125rem 1.125rem;
   border-block-end: 1px solid var(--border);
+  border-start-start-radius: var(--r-xl);
+  border-start-end-radius: var(--r-xl);
   background: var(--surface);
 }
 
 .status-rows {
   display: grid;
-  grid-template-columns: auto auto minmax(0, 1fr);
-  align-items: center;
-  gap: 0.875rem;
+  gap: 0.8125rem;
   padding: 1.125rem;
 }
 
 .status-row {
-  display: grid;
-  grid-column: 1 / -1;
-  grid-template-columns: subgrid;
+  display: flex;
   align-items: center;
-}
-
-/* Without subgrid the rows must still be rows, just without the
-   shared column alignment. */
-@supports not (grid-template-columns: subgrid) {
-  .status-rows { display: block; }
-
-  .status-row {
-    display: flex;
-    align-items: center;
-    gap: 0.875rem;
-  }
-
-  .status-row + .status-row { margin-block-start: 0.875rem; }
-  .status-val { margin-inline-start: auto; }
+  gap: 0.75rem;
 }
 
 .status-row .icon {
@@ -116,7 +100,6 @@
   font-size: var(--text-sm);
   font-weight: 500;
   color: var(--fg);
-  text-align: end;
   min-inline-size: 0;
 }
 
@@ -125,23 +108,49 @@
   font-weight: 500;
 }
 
-/* ── Progress ─────────────────────────────────────────────────
-   The degree bar. Its width is computed on load from the start
-   and end dates in the markup, so it cannot go stale the way a
-   hard-coded percentage would. */
+/* ── Degree meter ─────────────────────────────────────────────
+   The fill width is computed on load from the start and end
+   dates in the markup, so it cannot go stale the way a
+   hard-coded percentage would.
+
+   Drawn as discrete cells rather than a smooth bar. A meter
+   divided into twenty is countable — a reader can see "eleven
+   of twenty" without reading the number beside it — and the
+   quantisation is honest about the precision on offer, which
+   a continuous bar quietly overstates.
+
+   The cells are cut into the track by an overlay rather than
+   built from twenty elements, so the count is one number in
+   one place and the fill underneath stays a single animatable
+   width. */
 
 .status-progress {
-  grid-column: 1 / -1;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  padding-block-start: 0.125rem;
+  padding-block-start: 0.25rem;
+}
+
+.progress-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-sm);
+}
+
+.progress-head .readout {
+  font-size: var(--text-mono);
+  font-weight: 500;
 }
 
 .progress-track {
-  block-size: 5px;
-  border-radius: var(--r-full);
-  background: var(--surface-2);
+  --seg: 5%;   /* 20 cells */
+
+  position: relative;
+  block-size: 10px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-xs);
+  background: var(--bg);
   overflow: hidden;
 }
 
@@ -149,20 +158,35 @@
   display: block;
   block-size: 100%;
   inline-size: 0;
-  border-radius: var(--r-full);
   background: var(--fg);
 }
 
-.progress-meta {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--gap-sm);
-  font-size: var(--text-xs);
-  color: var(--fg-subtle);
+/* The cuts sit above the fill, so a growing fill appears to
+   light one cell at a time. */
+.progress-track::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    to right,
+    var(--bg) 0 1px,
+    transparent 1px var(--seg)
+  );
+  pointer-events: none;
 }
 
-.progress-meta .readout { color: var(--fg-subtle); }
+/* Endpoints under the two ends of the meter, which is what
+   makes the meter an axis rather than a bar: the reader can
+   see what the left edge and the right edge each mean. */
+.progress-axis {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--gap-xs);
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  color: var(--fg-subtle);
+}
 
 @media (max-width: 400px) {
   .status-rows { padding: 1rem; gap: 0.75rem; }

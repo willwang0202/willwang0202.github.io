@@ -2,15 +2,25 @@
    COMPONENTS — the reusable pieces
 
    Everything in this file is a primitive used in more than one
-   section: buttons, badges, tags, cards, icon tiles. Section
-   files compose these rather than restyling them.
+   section: buttons, badges, tags, panels, icon frames, leaders.
+   Section files compose these rather than restyling them.
+
+   The register is instrument panel rather than app UI: square
+   corners, hairline rules, and mono uppercase on anything that
+   names a value. Prose stays in the sans face; the moment a
+   string is a label, an identifier or a reading, it moves to
+   the mono face. That split is the whole system.
    ============================================================ */
 
 /* ── Button ───────────────────────────────────────────────────
    Two variants, which is all the page has work for: a solid
-   primary and a bordered secondary. Both are the same height
+   primary and a hairline secondary. Both are the same height
    and the same radius, so a row of them reads as one control
    group.
+
+   Set in mono uppercase because a button is an instruction,
+   not a sentence — the same reason a physical control is
+   silkscreened rather than handwritten.
 
    white-space: nowrap keeps a label from wrapping to two lines
    inside a button, which is the fastest way to make a clean
@@ -24,9 +34,11 @@
   block-size: 38px;
   border: 1px solid transparent;
   border-radius: var(--r-md);
-  font-family: inherit;
-  font-size: var(--text-sm);
+  font-family: var(--font-mono);
+  font-size: var(--text-mono);
   font-weight: 500;
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
   white-space: nowrap;
   cursor: pointer;
   transition:
@@ -35,6 +47,8 @@
     color var(--dur-fast) var(--ease-out);
 }
 
+/* The icon is sized off the sans scale, not the mono one: at
+   the button's letter-spacing a 1em glyph would read wide. */
 .btn .icon { font-size: 1rem; }
 
 .btn--primary {
@@ -63,16 +77,21 @@
 
 /* ── Badge ────────────────────────────────────────────────────
    A pill that states a status. It always contains a real
-   status word — never a decorative tagline. */
+   status word — never a decorative tagline. Squared off and
+   set in mono for the same reason the buttons are: this is a
+   readout, not a sticker. */
 
 .badge {
   display: inline-flex;
   align-items: center;
   gap: 0.4375rem;
-  padding: 0.3125rem 0.6875rem 0.3125rem 0.5625rem;
-  border-radius: var(--r-full);
-  font-size: var(--text-xs);
+  padding: 0.3125rem 0.5625rem;
+  border-radius: var(--r-sm);
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
   font-weight: 500;
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
   line-height: 1;
 }
 
@@ -84,20 +103,22 @@
 
 /* ── Tag ──────────────────────────────────────────────────────
    A technology name. Mono, because it is a proper noun from a
-   package registry rather than a word of prose. */
+   package registry rather than a word of prose — and for that
+   same reason it is never uppercased: `pandas` and `p5.js` are
+   spelled the way their authors spell them.
 
-/* --fg-muted, not --fg-subtle: the chip's own fill raises the
-   background off white, and --fg-subtle only clears 4.31:1
-   against it. --fg-muted holds 6.1:1 on the chip, which an
-   11px label needs anyway. */
+   Drawn as a hairline box rather than a filled chip. The fill
+   was doing nothing the border does not already do, and losing
+   it puts the text back on white, where it has more room. */
+
 .tag {
   display: inline-flex;
   align-items: center;
   padding: 0.1875rem 0.4375rem;
+  border: 1px solid var(--border);
   border-radius: var(--r-sm);
-  background: var(--surface-2);
   font-family: var(--font-mono);
-  font-size: 0.6875rem;
+  font-size: var(--text-label);
   font-weight: 400;
   color: var(--fg-muted);
   line-height: 1.4;
@@ -109,13 +130,13 @@
   gap: 0.3125rem;
 }
 
-/* ── Card ─────────────────────────────────────────────────────
+/* ── Panel ────────────────────────────────────────────────────
    The base surface. Hairline border, no fill — the border is
    what separates it from the page, so a background would be
    saying the same thing twice.
 
-   .card--link adds the lift, and only elements that are
-   actually clickable get it. */
+   .card--link adds the hover response, and only elements that
+   are actually clickable get it. */
 
 .card {
   border: 1px solid var(--border);
@@ -134,7 +155,7 @@
 
 .card--link:hover {
   border-color: var(--border-strong);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-sm);
   transform: translateY(-2px);
 }
 
@@ -142,8 +163,87 @@
   .card--link:hover { transform: none; }
 }
 
-/* ── Icon tile ────────────────────────────────────────────────
-   A bordered square holding one icon. It gives the icon a
+/* ── Corner registration ──────────────────────────────────────
+   Every panel is bracketed at two opposite corners. The mark
+   comes from drafting and from CAD selection boxes, where a
+   bounding box is stated by its corners rather than by a
+   continuous outline — the corner is where the extent of a
+   thing is actually decided, and it is the only part of an
+   edge that carries two dimensions at once.
+
+   Two corners, not four: a diagonal pair already states the
+   box, and twenty panels wearing four marks each would be a
+   texture rather than a mark.
+
+   On a clickable panel the marks go to full ink on hover, so
+   the same element that frames the card also answers the
+   cursor — one mark doing two jobs. */
+
+.card,
+.feature,
+.status { position: relative; }
+
+.card::before, .card::after,
+.feature::before, .feature::after,
+.status::before, .status::after {
+  content: '';
+  position: absolute;
+  inline-size: var(--tick);
+  block-size: var(--tick);
+  border: 0 solid var(--fg-faint);
+  pointer-events: none;
+  transition: border-color var(--dur-mid) var(--ease-out);
+}
+
+.card::before,
+.feature::before,
+.status::before {
+  inset-block-start: -1px;
+  inset-inline-start: -1px;
+  border-block-start-width: 1px;
+  border-inline-start-width: 1px;
+}
+
+.card::after,
+.feature::after,
+.status::after {
+  inset-block-end: -1px;
+  inset-inline-end: -1px;
+  border-block-end-width: 1px;
+  border-inline-end-width: 1px;
+}
+
+.card--link:hover::before,
+.card--link:hover::after { border-color: var(--fg); }
+
+/* ── Leader ───────────────────────────────────────────────────
+   A dotted rule running from a label to its value across the
+   gap between them. Borrowed from parts lists and tables of
+   contents, where it exists for exactly one reason: to hold
+   the eye on the right row when a label and its value are far
+   apart. Applied only where that gap is wide enough to lose.
+
+   The element carrying .leads absorbs the slack, so the value
+   it points at lands hard against the right edge and a stack
+   of rows ends in a clean column. */
+
+.leads {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+  min-inline-size: 0;
+}
+
+.leads::after {
+  content: '';
+  flex: 1;
+  min-inline-size: 0.5rem;
+  border-block-end: 1px dotted var(--fg-faint);
+}
+
+/* ── Icon frame ───────────────────────────────────────────────
+   A hairline square holding one icon. It gives the icon a
    consistent optical size and a baseline to sit on, so six
    cards in a grid line up regardless of each glyph's own
    bounding box. */
@@ -155,7 +255,6 @@
   block-size: 34px;
   border: 1px solid var(--border);
   border-radius: var(--r-sm);
-  background: var(--surface);
   color: var(--fg);
   font-size: 1.0625rem;
   flex: none;
@@ -166,7 +265,7 @@
 
 .card--link:hover .icon-tile {
   border-color: var(--border-strong);
-  background: var(--surface-2);
+  background: var(--surface);
 }
 
 /* ── Arrow affordance ─────────────────────────────────────────
