@@ -1,246 +1,176 @@
 /* ============================================================
-   LAYOUT — the rack, the mounting strip, module headers
-   Sections are modules bolted to a rack. The strip down the
-   left edge is the rack rail: it carries the model number,
-   the section index, and the power indicator.
+   LAYOUT — header, container, section heads, footer
    ============================================================ */
 
-.page {
-  position: relative;
-  z-index: 1;
-  padding-inline-start: var(--strip-w);
+/* ── Header ───────────────────────────────────────────────────
+   Sticky, hairline-bottomed, blurred. It stays because the nav
+   is the only way to move around a single-page site; it is
+   short and quiet because it is not the content.
+
+   The blur only turns on where it is supported, so browsers
+   without it get an opaque bar rather than translucent text
+   over scrolling content. */
+
+.site-header {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 50;
+  block-size: var(--header-h);
+  border-block-end: 1px solid var(--border);
+  background: var(--bg);
 }
+
+@supports (backdrop-filter: blur(8px)) {
+  .site-header {
+    background: rgba(255, 255, 255, 0.82);
+    backdrop-filter: blur(8px) saturate(140%);
+  }
+}
+
+.header-inner {
+  max-inline-size: var(--measure);
+  margin-inline: auto;
+  padding-inline: var(--pad-x);
+  block-size: 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--gap-md);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  font-size: var(--text-sm);
+  color: var(--fg);
+  letter-spacing: -0.01em;
+}
+
+/* The monogram is the favicon at text size — the same mark in
+   the tab and in the header, so the page identifies itself
+   consistently. */
+.brand-mark {
+  display: grid;
+  place-items: center;
+  inline-size: 26px;
+  block-size: 26px;
+  border-radius: var(--r-sm);
+  background: var(--fg);
+  color: var(--bg);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-inline-start: auto;
+}
+
+.site-nav a {
+  padding: 0.375rem 0.625rem;
+  border-radius: var(--r-md);
+  font-size: var(--text-sm);
+  color: var(--fg-subtle);
+  white-space: nowrap;
+  transition:
+    color var(--dur-fast) var(--ease-out),
+    background-color var(--dur-fast) var(--ease-out);
+}
+
+.site-nav a:hover {
+  color: var(--fg);
+  background: var(--surface-2);
+}
+
+.site-nav a[aria-current] { color: var(--fg); font-weight: 500; }
+
+.header-cta { margin-inline-start: 0.375rem; }
+
+/* Below 800px the section links are dropped rather than stuffed
+   into a hamburger: five anchors on a page this short are a
+   convenience, not the navigation, and the contact button is
+   the one control worth keeping at every width. */
+@media (max-width: 800px) {
+  .site-nav { display: none; }
+  .header-cta { margin-inline-start: auto; }
+}
+
+/* ── Container ────────────────────────────────────────────────── */
 
 .shell {
   max-inline-size: var(--measure);
   margin-inline: auto;
-  padding-inline: clamp(1.25rem, 4vw, 3rem);
-  padding-block-end: var(--section-y);
+  padding-inline: var(--pad-x);
 }
 
-.shell > section {
-  padding-block: var(--section-y) 0;
-  scroll-margin-block-start: 2rem;
+/* Each section is separated by a hairline rather than by white
+   space alone, so the boundary survives when a section's
+   content is short. */
+.section {
+  padding-block: var(--section-y);
+  border-block-start: 1px solid var(--border);
+  scroll-margin-block-start: calc(var(--header-h) + 1rem);
 }
 
-/* ── Rack rail ────────────────────────────────────────────────
-   Fixed to the left edge. Reads as the machined flange of an
-   enclosure: a raised strip with countersunk mounting holes
-   running its full height. */
+/* ── Section head ─────────────────────────────────────────────
+   Title on the left, a count on the right. The count is a real
+   number of items in the section below it — it changes when
+   the content changes, which is the only reason it is there. */
 
-.rail {
-  position: fixed;
-  inset-block: 0;
-  inset-inline-start: 0;
-  z-index: 20;
-  inline-size: var(--strip-w);
+.section-head {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  align-items: baseline;
   justify-content: space-between;
-  padding-block: 1.25rem;
-  background: linear-gradient(90deg, var(--plate-2), var(--plate) 60%, var(--recess));
-  border-inline-end: 1px solid var(--rule);
+  gap: var(--gap-md);
+  margin-block-end: var(--gap-lg);
 }
 
-/* Mounting holes, repeated down the strip behind the content. */
-.rail::before {
-  content: '';
-  position: absolute;
-  inset-block: 0;
-  inset-inline-start: 50%;
-  translate: -50% 0;
-  inline-size: 5px;
-  background-image: radial-gradient(
-    circle at 50% 50%,
-    var(--recess) 0 2px,
-    var(--rule) 2px 2.5px,
-    transparent 2.5px
-  );
-  background-size: 5px 40px;
-  opacity: 0.9;
-}
-
-.rail-mark {
-  position: relative;
-  font-family: var(--face-display);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  color: var(--ink);
-  background: var(--plate);
-  padding-block: 0.5rem;
-}
-
-.rail-nav {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  background: var(--plate);
-  padding-block: 1rem;
-}
-
-.rail-nav a {
-  font-family: var(--face-data);
-  font-size: var(--t-micro);
-  letter-spacing: var(--track-silk);
-  text-transform: uppercase;
-  color: var(--ink-soft);
-  writing-mode: vertical-rl;
-  transition: color var(--dur-fast) var(--ease-snap);
-}
-
-.rail-nav a:hover { color: var(--ink); }
-
-/* The active section gets a scribed tick to its left, the way
-   a panel marks the selected channel. */
-.rail-nav a[aria-current] {
-  color: var(--ink);
-  font-weight: 500;
-}
-
-.rail-nav a[aria-current]::before {
-  content: '';
-  position: absolute;
-  inset-inline-start: -0.55rem;
-  inline-size: 3px;
-  block-size: 1.15em;
-  background: var(--ink);
-}
-
-.rail-nav a { position: relative; }
-
-.rail-status {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-  background: var(--plate);
-  padding-block: 0.5rem;
-}
-
-.rail-status .silk { writing-mode: vertical-rl; }
-
-/* ── Module header ────────────────────────────────────────────
-   Every section opens with a silkscreened strip: a part code,
-   the title, a hairline that runs to the right edge, and a
-   count. The hairline draws itself on reveal. */
-
-.module-head {
-  display: grid;
-  grid-template-columns: auto auto 1fr auto;
-  align-items: center;
-  gap: 0.875rem;
-  margin-block-end: var(--gap-md);
-}
-
-.module-code {
-  font-family: var(--face-data);
-  font-size: var(--t-micro);
-  font-weight: 500;
-  letter-spacing: var(--track-silk);
-  color: var(--ink);
-  padding: 0.35rem 0.5rem;
-  background: var(--recess);
-  clip-path: var(--chamfer-sm);
-}
-
-.module-title {
-  font-size: var(--t-h2);
+.section-title {
+  font-size: var(--text-h2);
   font-weight: 600;
-  font-stretch: 105%;
 }
 
-.module-rule {
-  block-size: 1px;
-  background: var(--rule);
-  transform-origin: left center;
-}
-
-.module-count {
-  font-family: var(--face-data);
-  font-size: var(--t-micro);
-  letter-spacing: var(--track-silk);
-  text-transform: uppercase;
-  color: var(--ink-soft);
+.section-note {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--fg-subtle);
   white-space: nowrap;
 }
 
-/* ── Footer ───────────────────────────────────────────────────
-   The drawing's title block, bottom-right, the way a technical
-   sheet signs itself. */
-
-.foot {
-  margin-block-start: var(--section-y);
-  padding-block-start: 1.25rem;
-  border-block-start: 1px solid var(--rule);
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 0.75rem 1.5rem;
+@media (max-width: 560px) {
+  .section-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--gap-xs);
+  }
 }
 
-.foot-cell {
+/* ── Footer ───────────────────────────────────────────────────── */
+
+.site-footer {
+  border-block-start: 1px solid var(--border);
+  padding-block: var(--gap-lg);
   display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-sm) var(--gap-md);
+  font-size: var(--text-xs);
+  color: var(--fg-subtle);
 }
 
-.foot-val {
-  font-family: var(--face-display);
-  font-size: var(--t-small);
-  font-weight: 500;
-  color: var(--ink);
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-md);
 }
 
-/* ── Narrow ───────────────────────────────────────────────────
-   Below 720px the rail lies down along the top edge: same
-   flange, rotated, so the enclosure metaphor survives. */
-
-@media (max-width: 720px) {
-  :root { --strip-w: 0px; }
-
-  .page { padding-inline-start: 0; padding-block-start: 2.75rem; }
-
-  .rail {
-    inset-block: 0 auto;
-    inset-inline: 0;
-    inline-size: auto;
-    block-size: 2.75rem;
-    flex-direction: row;
-    padding: 0 0.875rem;
-    border-inline-end: 0;
-    border-block-end: 1px solid var(--rule);
-    background: linear-gradient(180deg, var(--plate-2), var(--plate) 60%, var(--recess));
-  }
-
-  .rail::before {
-    inset-block: 50% auto;
-    inset-inline: 0;
-    translate: 0 -50%;
-    inline-size: auto;
-    block-size: 5px;
-    background-size: 40px 5px;
-  }
-
-  .rail-nav {
-    flex-direction: row;
-    gap: 1rem;
-    padding-block: 0;
-    padding-inline: 0.5rem;
-  }
-
-  .rail-nav a { writing-mode: horizontal-tb; }
-
-  .rail-nav a[aria-current]::before {
-    inset-inline-start: 0;
-    inset-block-start: -0.4rem;
-    inline-size: 100%;
-    block-size: 2px;
-  }
-
-  .rail-status .silk { writing-mode: horizontal-tb; }
-  .rail-status { flex-direction: row; padding-inline: 0.5rem; }
-  .rail-mark { padding-block: 0; padding-inline: 0.25rem; }
+.footer-links a {
+  transition: color var(--dur-fast) var(--ease-out);
 }
+
+.footer-links a:hover { color: var(--fg); }

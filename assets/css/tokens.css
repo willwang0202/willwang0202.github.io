@@ -1,131 +1,123 @@
 /* ============================================================
-   DESIGN TOKENS — CW-01 Instrument
-   The page is a measurement instrument drawn on engineering
-   paper. Everything here describes a physical object: an
-   anodised enclosure, a silkscreened faceplate, recessed
-   display wells, and one red status LED.
+   DESIGN TOKENS
 
-   The palette is fully achromatic by intent. Contrast does
-   the work colour usually does, so the greys must be exact.
+   A neutral, near-achromatic UI system. One saturated colour
+   exists and it means exactly one thing: "live". Everything
+   else is greyscale, so hierarchy is carried by weight, size
+   and space rather than by hue.
    ============================================================ */
 
 :root {
-  /* ── Enclosure ────────────────────────────────────────────
-     Five greys, five jobs. Implied light comes from top-left,
-     so raised surfaces are lighter than the ground and
-     recessed wells are darker. Never reuse one for another's
-     job — that is what makes an achromatic palette read as
-     material rather than as flat grey. */
-  --paper:   #E8E8E6;  /* ground: the drawing sheet */
-  --plate:   #F3F3F1;  /* raised: faceplates, cards */
-  --plate-2: #FAFAF8;  /* raised, lit edge */
-  --recess:  #DDDDDA;  /* inset: display wells, tracks */
+  /* ── Surface ──────────────────────────────────────────────
+     White ground, two greys above it. --surface is the resting
+     fill of a card; --surface-2 is that card under the cursor.
+     A third grey would have no job, so there isn't one. */
+  --bg:         #FFFFFF;
+  --surface:    #FAFAFA;
+  --surface-2:  #F4F4F5;
 
-  /* ── Ink ──────────────────────────────────────────────────
-     Contrast ratios measured against --paper (#E8E8E6).
-     Anything carrying words must clear 4.5:1; --ink-faint
-     does not, so it is restricted to marks, never text. */
-  --ink:       #17181B;  /* 14.3:1 — readouts, headings */
-  --ink-mid:   #55585C;  /*  5.7:1 — body prose */
-  --ink-soft:  #63666A;  /*  4.6:1 — silkscreen micro-labels */
-  --ink-faint: #93969A;  /*  2.5:1 — TICK MARKS ONLY, no text */
+  /* Hairlines. --border draws every card and divider on the
+     page; --border-strong is only for a border that has to
+     survive sitting on --surface rather than on white. */
+  --border:        #E8E8E8;
+  --border-strong: #D9D9D9;
 
-  /* ── Engraving ────────────────────────────────────────────
-     Hairlines are structure, not decoration. Two weights:
-     one for module edges, one for the internal grid. */
-  --rule:      #C9C9C6;
-  --rule-soft: #DEDEDB;
-  --grid-line: rgba(23, 24, 27, 0.075);
+  /* ── Foreground ───────────────────────────────────────────
+     Three text tiers, each set by its contrast floor on white
+     rather than by eye. --fg-faint carries no words: it is for
+     icon strokes and chart marks, which only owe 3:1.
 
-  /* ── Signal ───────────────────────────────────────────────
-     The only saturated value on the page. It appears at LED
-     scale and nowhere else — roughly forty pixels in total.
-     Spending the entire colour budget on one 6px dot is the
-     point: it makes the dot mean something. */
-  --led:      #E5341C;
-  --led-glow: rgba(229, 52, 28, 0.28);
+     The ratios below are against --bg. On --surface every tier
+     still clears its floor, but on --surface-2 --fg-subtle
+     drops to 4.31:1 — so anything filled with --surface-2 uses
+     --fg-muted for its text instead. */
+  --fg:        #0A0A0A;  /* 19.8:1 — headings, values */
+  --fg-muted:  #5C5C5C;  /*  6.6:1 — body copy */
+  --fg-subtle: #737373;  /*  4.7:1 — labels, captions */
+  --fg-faint:  #949494;  /*  3.0:1 — MARKS ONLY, never text */
+
+  /* ── Live ─────────────────────────────────────────────────
+     The page's entire colour budget, spent on one meaning:
+     something is currently running. It appears on the
+     availability badge and the deployed-project badge, and
+     nowhere else. Two values because a 3:1 dot and a 4.5:1
+     word are different jobs. */
+  --live:      #16A34A;  /* 3.3:1 — the dot, a graphical object */
+  --live-ink:  #15803D;  /* 5.0:1 on white, 4.9:1 on --live-bg */
+  --live-bg:   #F0FDF4;
+
+  /* ── Chart ────────────────────────────────────────────────
+     Four ink steps for the contribution heatmap. Deliberately
+     grey, not green: density is the variable being encoded,
+     and borrowing the "live" colour to encode volume would
+     make that colour mean two things. */
+  --chart-1: #E4E4E4;
+  --chart-2: #BDBDBD;
+  --chart-3: #8A8A8A;
+  --chart-4: #3F3F3F;
 
   /* ── Type ─────────────────────────────────────────────────
-     Archivo is a grotesque out of American industrial
-     signage; its numerals are square and mechanical, which
-     is what a readout needs. Instrument Sans carries prose
-     without arguing with it. Martian Mono is the silkscreen
-     layer — boxy enough at 10px to read as panel printing. */
-  --face-display: 'Archivo', system-ui, sans-serif;
-  --face-body:    'Instrument Sans', system-ui, sans-serif;
-  --face-data:    'Martian Mono', ui-monospace, monospace;
+     Two families. Instrument Sans carries every word on the
+     page; JetBrains Mono carries values that are read as data
+     — a clock, a count, a date range, a tech tag. The split is
+     semantic, so a reader can tell prose from readout without
+     being told. */
+  --font-sans: 'Instrument Sans', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
 
-  /* Type scale. The readout sizes are deliberately far apart
-     from the prose sizes — an instrument has huge numbers and
-     tiny labels, and almost nothing in between. */
-  --t-name:   clamp(2.75rem, 8.5vw, 7.5rem);
-  --t-readout: clamp(2.5rem, 6vw, 4.25rem);
-  --t-h2:     clamp(1.5rem, 2.8vw, 2.125rem);
-  --t-h3:     1.125rem;
-  --t-body:   0.9375rem;
-  --t-small:  0.8125rem;
-  --t-micro:  0.625rem;   /* silkscreen */
+  --text-display: clamp(2.5rem, 6.5vw, 4.5rem);
+  --text-h2:      clamp(1.5rem, 3vw, 2rem);
+  --text-h3:      1.0625rem;
+  --text-body:    0.9375rem;
+  --text-sm:      0.875rem;
+  --text-xs:      0.8125rem;
+  --text-label:   0.6875rem;  /* uppercase eyebrows */
 
-  --track-silk: 0.16em;   /* micro-labels, engraved codes */
-  --track-tight: -0.035em; /* large readouts */
+  --track-tight: -0.03em;   /* display sizes only */
+  --track-label:  0.08em;   /* uppercase labels only */
 
   /* ── Geometry ─────────────────────────────────────────────
-     One chamfer, milled at 45°. Zero radius everywhere else:
-     this enclosure is machined, not moulded. Panel screws sit
-     at a fixed inset from every module corner. */
-  --notch:    10px;
-  --notch-sm: 6px;
-  --chamfer: polygon(
-    0 0,
-    calc(100% - var(--notch)) 0,
-    100% var(--notch),
-    100% 100%,
-    var(--notch) 100%,
-    0 calc(100% - var(--notch))
-  );
-  --chamfer-sm: polygon(
-    0 0,
-    calc(100% - var(--notch-sm)) 0,
-    100% var(--notch-sm),
-    100% 100%,
-    var(--notch-sm) 100%,
-    0 calc(100% - var(--notch-sm))
-  );
+     Radius scales with the element's footprint so curvature
+     stays visually constant: a 24px chip and a 600px card
+     cannot share a radius and look like the same material. */
+  --r-xs:   4px;   /* chart cells */
+  --r-sm:   6px;   /* tags, badges, icon tiles */
+  --r-md:   8px;   /* buttons, inputs */
+  --r-lg:  12px;   /* cards */
+  --r-xl:  16px;   /* the feature card */
+  --r-full: 999px; /* pills and dots */
 
-  /* Engineering paper. 8mm major over 2mm minor, which is what
-     the reference drawing sits on. */
-  --grid-minor: 8px;
-  --grid-major: 64px;
+  /* ── Elevation ────────────────────────────────────────────
+     Two shadows. --shadow-sm is a hairline's worth of depth
+     for a resting card; --shadow-md is the same card lifted
+     under the cursor. Both are near-black at low alpha, never
+     a coloured or blurred glow. */
+  --shadow-sm: 0 1px 2px rgba(9, 9, 11, 0.04);
+  --shadow-md: 0 1px 2px rgba(9, 9, 11, 0.04),
+               0 8px 24px -12px rgba(9, 9, 11, 0.12);
 
   /* ── Rhythm ───────────────────────────────────────────────── */
   --gap-xs: 0.5rem;
-  --gap-sm: 1rem;
-  --gap-md: 1.75rem;
-  --gap-lg: 3.5rem;
-  --section-y: clamp(4.5rem, 10vh, 7.5rem);
-  --strip-w: 3.25rem;   /* left mounting strip */
-  --measure: 1200px;
+  --gap-sm: 0.75rem;
+  --gap-md: 1.25rem;
+  --gap-lg: 2rem;
+  --section-y: clamp(3.5rem, 8vh, 5.5rem);
+  --measure: 1120px;
+  --pad-x: clamp(1.25rem, 5vw, 2rem);
+  --header-h: 60px;
 
-  /* Contribution cell geometry, sized so 53 weeks fill the
-     measure without JS measuring anything. */
-  --cell: 13px;
+  /* Heatmap cell geometry. 53 weeks at 18px a column is 954px,
+     which fills the measure without JS having to measure
+     anything and without the chart running short of it. */
+  --cell: 14px;
   --cell-gap: 4px;
 
   /* ── Motion ───────────────────────────────────────────────
-     Mechanical, not organic. A needle overshoots slightly and
-     settles; a plotter pen draws at constant speed; a relay
-     snaps. Nothing on this page bounces or blurs. */
-  --ease-settle: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-snap:   cubic-bezier(0.7, 0, 0.2, 1);
-  --ease-linear: linear;              /* pen travel */
-  --ease-needle: cubic-bezier(0.34, 1.28, 0.5, 1); /* slight overshoot */
-
-  --dur-relay:  90ms;
-  --dur-fast:   160ms;
-  --dur-mid:    320ms;
-  --dur-draw:   700ms;    /* pen stroke */
-  --dur-sweep:  1100ms;   /* needle power-on */
-
-  --stagger: 55ms;
-  --lift: 6px;
+     Durations and easings live here so the CSS transitions and
+     the Motion-driven JS animations read from one source. The
+     JS mirrors these as seconds; see assets/js/motion-config.js.
+     Everything decelerates — nothing on this page bounces. */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast: 140ms;
+  --dur-mid:  220ms;
 }

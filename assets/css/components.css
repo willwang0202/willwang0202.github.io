@@ -1,0 +1,192 @@
+/* ============================================================
+   COMPONENTS — the reusable pieces
+
+   Everything in this file is a primitive used in more than one
+   section: buttons, badges, tags, cards, icon tiles. Section
+   files compose these rather than restyling them.
+   ============================================================ */
+
+/* ── Button ───────────────────────────────────────────────────
+   Two variants, which is all the page has work for: a solid
+   primary and a bordered secondary. Both are the same height
+   and the same radius, so a row of them reads as one control
+   group.
+
+   white-space: nowrap keeps a label from wrapping to two lines
+   inside a button, which is the fastest way to make a clean
+   layout look broken on a narrow screen. */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-inline: 0.9375rem;
+  block-size: 38px;
+  border: 1px solid transparent;
+  border-radius: var(--r-md);
+  font-family: inherit;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
+}
+
+.btn .icon { font-size: 1rem; }
+
+.btn--primary {
+  background: var(--fg);
+  color: var(--bg);
+}
+
+.btn--primary:hover { background: #262626; }
+
+.btn--secondary {
+  background: var(--bg);
+  color: var(--fg);
+  border-color: var(--border-strong);
+}
+
+.btn--secondary:hover {
+  background: var(--surface);
+  border-color: var(--fg-faint);
+}
+
+.btn:active { transform: translateY(1px); }
+
+@media (prefers-reduced-motion: reduce) {
+  .btn:active { transform: none; }
+}
+
+/* ── Badge ────────────────────────────────────────────────────
+   A pill that states a status. It always contains a real
+   status word — never a decorative tagline. */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4375rem;
+  padding: 0.3125rem 0.6875rem 0.3125rem 0.5625rem;
+  border-radius: var(--r-full);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  line-height: 1;
+}
+
+.badge--live {
+  background: var(--live-bg);
+  color: var(--live-ink);
+  box-shadow: inset 0 0 0 1px rgba(22, 163, 74, 0.18);
+}
+
+/* ── Tag ──────────────────────────────────────────────────────
+   A technology name. Mono, because it is a proper noun from a
+   package registry rather than a word of prose. */
+
+/* --fg-muted, not --fg-subtle: the chip's own fill raises the
+   background off white, and --fg-subtle only clears 4.31:1
+   against it. --fg-muted holds 6.1:1 on the chip, which an
+   11px label needs anyway. */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.1875rem 0.4375rem;
+  border-radius: var(--r-sm);
+  background: var(--surface-2);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 400;
+  color: var(--fg-muted);
+  line-height: 1.4;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3125rem;
+}
+
+/* ── Card ─────────────────────────────────────────────────────
+   The base surface. Hairline border, no fill — the border is
+   what separates it from the page, so a background would be
+   saying the same thing twice.
+
+   .card--link adds the lift, and only elements that are
+   actually clickable get it. */
+
+.card {
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--bg);
+  padding: var(--gap-md);
+}
+
+.card--link {
+  display: block;
+  transition:
+    border-color var(--dur-mid) var(--ease-out),
+    box-shadow var(--dur-mid) var(--ease-out),
+    transform var(--dur-mid) var(--ease-out);
+}
+
+.card--link:hover {
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card--link:hover { transform: none; }
+}
+
+/* ── Icon tile ────────────────────────────────────────────────
+   A bordered square holding one icon. It gives the icon a
+   consistent optical size and a baseline to sit on, so six
+   cards in a grid line up regardless of each glyph's own
+   bounding box. */
+
+.icon-tile {
+  display: grid;
+  place-items: center;
+  inline-size: 34px;
+  block-size: 34px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--surface);
+  color: var(--fg);
+  font-size: 1.0625rem;
+  flex: none;
+  transition:
+    border-color var(--dur-mid) var(--ease-out),
+    background-color var(--dur-mid) var(--ease-out);
+}
+
+.card--link:hover .icon-tile {
+  border-color: var(--border-strong);
+  background: var(--surface-2);
+}
+
+/* ── Arrow affordance ─────────────────────────────────────────
+   The corner arrow on a card that leaves the page. It moves on
+   hover in the direction it points, which is the whole reason
+   it is an arrow and not a dot. */
+
+.go {
+  color: var(--fg-faint);
+  font-size: 1rem;
+  transition:
+    transform var(--dur-mid) var(--ease-out),
+    color var(--dur-mid) var(--ease-out);
+}
+
+.card--link:hover .go {
+  color: var(--fg);
+  transform: translate(2px, -2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card--link:hover .go { transform: none; }
+}

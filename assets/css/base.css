@@ -1,5 +1,5 @@
 /* ============================================================
-   BASE — reset, the drawing sheet, type defaults
+   BASE — reset, type defaults, icons, focus
    ============================================================ */
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -7,6 +7,7 @@
 html {
   -webkit-text-size-adjust: 100%;
   scroll-behavior: smooth;
+  overflow-x: clip;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -15,172 +16,137 @@ html {
 
 body {
   margin: 0;
-  background: var(--paper);
-  color: var(--ink-mid);
-  font-family: var(--face-body);
-  font-size: var(--t-body);
-  line-height: 1.62;
+  overflow-x: clip;
+  background: var(--bg);
+  color: var(--fg-muted);
+  font-family: var(--font-sans);
+  font-size: var(--text-body);
+  line-height: 1.6;
   font-synthesis-weight: none;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
-/* ── The sheet ────────────────────────────────────────────────
-   Engineering paper: 2mm minor grid under an 8mm major. Fixed
-   to the viewport so the page reads as an object moving across
-   a drawing board rather than as ink printed on a scroll. */
-
-.sheet {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background-image:
-    linear-gradient(var(--grid-line) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px),
-    linear-gradient(rgba(23, 24, 27, 0.036) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(23, 24, 27, 0.036) 1px, transparent 1px);
-  background-size:
-    var(--grid-major) var(--grid-major),
-    var(--grid-major) var(--grid-major),
-    var(--grid-minor) var(--grid-minor),
-    var(--grid-minor) var(--grid-minor);
-}
-
-/* A faint vignette so the sheet has an edge and the centre of
-   the page reads as lit. Without it the flat grey goes dead. */
-.sheet::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    120% 90% at 50% 8%,
-    rgba(255, 255, 255, 0.55) 0%,
-    rgba(255, 255, 255, 0) 55%,
-    rgba(23, 24, 27, 0.05) 100%
-  );
-}
-
-/* ── Type defaults ───────────────────────────────────────────── */
+/* ── Type defaults ────────────────────────────────────────────
+   Headings are always roman and always tight — the negative
+   tracking is what makes a large grotesque read as set rather
+   than as default browser type. */
 
 h1, h2, h3 {
   margin: 0;
-  font-family: var(--face-display);
-  color: var(--ink);
+  color: var(--fg);
   font-weight: 600;
-  line-height: 1.05;
+  line-height: 1.15;
   letter-spacing: var(--track-tight);
+  /* A long unbroken token in a display size would otherwise
+     push the page sideways on a 320px screen. */
+  overflow-wrap: anywhere;
+  min-width: 0;
 }
+
+h3 { font-size: var(--text-h3); letter-spacing: -0.01em; }
 
 p { margin: 0; }
-
 ul { margin: 0; padding: 0; list-style: none; }
+a { color: inherit; text-decoration: none; }
 
-a {
-  color: inherit;
-  text-decoration: none;
+/* ── Icons ────────────────────────────────────────────────────
+   Every icon on the page is a Lucide glyph pulled from the
+   sprite in index.html. They inherit currentColor and the
+   local font size, so an icon beside a label is always
+   optically the same weight as the label.
+
+   Icon artwork: Lucide (lucide.dev), ISC licence. */
+
+.icon {
+  inline-size: 1em;
+  block-size: 1em;
+  flex: none;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
 }
 
-/* ── Silkscreen ───────────────────────────────────────────────
-   The micro-label layer. Panel screen-printing: uppercase,
-   widely tracked, small, and always a real label for a real
-   thing next to it. Never used as decoration. */
+.icon-sprite { display: none; }
 
-.silk {
-  font-family: var(--face-data);
-  font-size: var(--t-micro);
-  font-weight: 400;
-  letter-spacing: var(--track-silk);
+/* ── Label ────────────────────────────────────────────────────
+   The uppercase micro-label. Used only where a value needs
+   naming — never as a decorative eyebrow above a heading that
+   already says the same word. */
+
+.label {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  font-weight: 500;
+  letter-spacing: var(--track-label);
   text-transform: uppercase;
-  color: var(--ink-soft);
+  color: var(--fg-subtle);
   line-height: 1;
 }
 
 /* ── Readout ──────────────────────────────────────────────────
-   Large mechanical numerals. Tabular figures so a live clock
-   does not shift width as the digits change. */
+   Anything read as a value rather than as prose. Tabular
+   figures so a live clock and a rolling counter do not change
+   width as their digits change. */
 
 .readout {
-  font-family: var(--face-display);
+  font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
   font-feature-settings: 'tnum' 1;
-  color: var(--ink);
-  letter-spacing: var(--track-tight);
-  line-height: 0.9;
+  color: var(--fg);
 }
 
-/* ── LED ──────────────────────────────────────────────────────
-   The page's entire colour budget. A lit dot behind a lens:
-   a hot core, a soft bloom, and a dark rim where the bezel
-   sits proud of the faceplate. */
+/* ── Live dot ─────────────────────────────────────────────────
+   A filled dot with a soft ring, the standard "this is running
+   right now" affordance. The ring is what separates it from a
+   bullet point. */
 
-.led {
-  position: relative;
-  display: inline-block;
-  inline-size: 7px;
-  block-size: 7px;
-  border-radius: 50%;
-  background: var(--led);
-  box-shadow:
-    0 0 0 1px rgba(23, 24, 27, 0.28),
-    0 0 6px 1px var(--led-glow);
+.dot {
+  inline-size: 6px;
+  block-size: 6px;
+  border-radius: var(--r-full);
+  background: var(--live);
+  box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.16);
   flex: none;
 }
 
-.led::after {
-  content: '';
-  position: absolute;
-  inset: 1px 1px auto 1px;
-  block-size: 2px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.55);
-}
-
 @media (prefers-reduced-motion: no-preference) {
-  .led { animation: pulse 3.2s var(--ease-settle) infinite; }
+  .dot { animation: dot-pulse 2.8s var(--ease-out) infinite; }
 }
 
-@keyframes pulse {
-  0%, 72%, 100% { opacity: 1; }
-  80%           { opacity: 0.45; }
+@keyframes dot-pulse {
+  0%, 100% { box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.16); }
+  50%      { box-shadow: 0 0 0 5px rgba(22, 163, 74, 0.08); }
 }
 
-/* ── Panel screws ─────────────────────────────────────────────
-   Applied to modules via .is-mounted. Two slotted screws at the
-   top corners, drawn in pure CSS: a shallow dish with a slot. */
+/* ── Reveal gate ──────────────────────────────────────────────
+   Holds revealable content hidden for the moment between first
+   paint and assets/js/reveal.js taking over, so nothing flashes
+   in before it animates in.
 
-.is-mounted { position: relative; }
+   Both classes come from scripts: .js from the inline snippet
+   in the document head, .reveal-ready from reveal.js (or from
+   that snippet's failsafe timer). With scripting off, neither
+   is ever set and this rule never applies — the page is simply
+   visible. */
 
-.is-mounted::before,
-.is-mounted::after {
-  content: '';
-  position: absolute;
-  inset-block-start: 9px;
-  inline-size: 6px;
-  block-size: 6px;
-  border-radius: 50%;
-  background:
-    linear-gradient(90deg, transparent 43%, var(--ink-faint) 43%, var(--ink-faint) 57%, transparent 57%),
-    linear-gradient(160deg, var(--plate-2), var(--recess));
-  box-shadow: inset 0 0 0 1px var(--rule);
-  pointer-events: none;
-}
-
-.is-mounted::before { inset-inline-start: 9px; }
-.is-mounted::after  { inset-inline-end: 9px; }
+.js:not(.reveal-ready) [data-reveal] { opacity: 0; }
 
 /* ── Focus ────────────────────────────────────────────────────
-   Visible on the light ground without introducing colour: a
-   solid ink ring with a paper gap, like a scribed outline. */
+   One visible ring for every focusable thing, offset so it
+   never sits on top of the element's own border. */
 
 :focus-visible {
-  outline: 2px solid var(--ink);
-  outline-offset: 3px;
+  outline: 2px solid var(--fg);
+  outline-offset: 2px;
+  border-radius: var(--r-xs);
 }
 
 ::selection {
-  background: var(--ink);
-  color: var(--paper);
+  background: var(--fg);
+  color: var(--bg);
 }
 
 .visually-hidden {

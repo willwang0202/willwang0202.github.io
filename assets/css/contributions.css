@@ -1,0 +1,150 @@
+/* ============================================================
+   CONTRIBUTIONS — the GitHub commit heatmap
+
+   A density chart. The only variable it encodes is how many
+   commits landed on a day, so it is drawn in one ink at four
+   values and carries no colour at all.
+   ============================================================ */
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr));
+  gap: var(--gap-sm);
+  margin-block-end: var(--gap-md);
+}
+
+.stat {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1rem;
+}
+
+.stat-body { min-inline-size: 0; }
+
+.stat-key {
+  display: block;
+  font-size: var(--text-xs);
+  color: var(--fg-subtle);
+}
+
+.stat-val {
+  display: block;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 1.25rem;
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--fg);
+  letter-spacing: -0.02em;
+}
+
+/* ── The chart ────────────────────────────────────────────────
+   Scrolls sideways on a narrow screen rather than compressing.
+   A squeezed chart misreports its own data. */
+
+.chart {
+  overflow-x: auto;
+  padding-block-end: 0.5rem;
+  scrollbar-width: thin;
+}
+
+.chart-months {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: calc(var(--cell) + var(--cell-gap));
+  margin-block-end: 0.375rem;
+  min-inline-size: max-content;
+}
+
+.chart-months span {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  color: var(--fg-subtle);
+}
+
+.chart-grid {
+  display: grid;
+  grid-auto-flow: column;
+  gap: var(--cell-gap);
+  min-inline-size: max-content;
+}
+
+.chart-week {
+  display: grid;
+  gap: var(--cell-gap);
+}
+
+/* Level 0 is an empty cell with a hairline, so a day with no
+   commits still occupies the grid and the week reads as seven
+   days rather than as however many were non-zero. */
+.day {
+  position: relative;
+  inline-size: var(--cell);
+  block-size: var(--cell);
+  border-radius: var(--r-xs);
+  background: var(--surface-2);
+}
+
+.day[data-level="1"] { background: var(--chart-1); }
+.day[data-level="2"] { background: var(--chart-2); }
+.day[data-level="3"] { background: var(--chart-3); }
+.day[data-level="4"] { background: var(--chart-4); }
+
+/* Tooltip. It carries the exact count and date, which is the
+   only thing the heatmap itself cannot say. */
+.day-tip {
+  position: absolute;
+  inset-block-end: calc(100% + 6px);
+  inset-inline-start: 50%;
+  translate: -50% 0;
+  z-index: 5;
+  padding: 0.375rem 0.5rem;
+  border-radius: var(--r-sm);
+  background: var(--fg);
+  color: var(--bg);
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-fast) var(--ease-out);
+}
+
+.day:hover .day-tip,
+.day:focus-visible .day-tip { opacity: 1; }
+
+/* ── Legend and note ──────────────────────────────────────────── */
+
+.chart-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-sm) var(--gap-md);
+  margin-block-start: var(--gap-sm);
+}
+
+.chart-key {
+  display: flex;
+  align-items: center;
+  gap: 0.3125rem;
+  font-size: var(--text-xs);
+  color: var(--fg-subtle);
+}
+
+.chart-key .day { inline-size: 10px; block-size: 10px; }
+
+.chart-note {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: var(--text-xs);
+  color: var(--fg-subtle);
+}
+
+/* A failed feed says so in the interface rather than rendering
+   an empty chart and hoping nobody looks. */
+.chart-note[data-state="error"] { color: var(--fg); }
+
+.chart-note[data-state="error"] .icon { color: var(--fg); }

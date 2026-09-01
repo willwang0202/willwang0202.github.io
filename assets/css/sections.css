@@ -1,0 +1,317 @@
+/* ============================================================
+   SECTIONS — capabilities, work, experience, contact
+
+   Each section composes the primitives in components.css. The
+   only rules here are the ones that describe a section's own
+   arrangement.
+   ============================================================ */
+
+/* ── Capabilities ─────────────────────────────────────────────
+   Six parallel domains. A grid rather than a numbered list,
+   because they are not a sequence and nothing is ranked. */
+
+.cap-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: var(--gap-sm);
+}
+
+.cap-name {
+  margin-block: 0.875rem 0.375rem;
+}
+
+.cap-desc {
+  font-size: var(--text-sm);
+  margin-block-end: 0.875rem;
+}
+
+/* Cards in a row already stretch to a shared height. Pushing
+   the tag row to the bottom of each one means the tags line up
+   across the row too, instead of floating at whatever height
+   each description happens to end. */
+.cap-grid .card,
+.work-grid .card {
+  display: flex;
+  flex-direction: column;
+}
+
+.cap-grid .tags,
+.work-grid .tags { margin-block-start: auto; }
+
+/* ── Featured project ─────────────────────────────────────────
+   The one project that gets full width. Everything it shows —
+   the counts, the stack, the status — is a fact about the
+   shipped application. */
+
+.feature {
+  border: 1px solid var(--border);
+  border-radius: var(--r-xl);
+  padding: clamp(1.25rem, 3vw, 2rem);
+  margin-block-end: var(--gap-sm);
+}
+
+.feature-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gap-sm);
+  margin-block-end: 1rem;
+}
+
+/* The status badge is pushed to the far edge so it reads as a
+   property of the whole card rather than of the subtitle it
+   would otherwise sit beside. */
+.feature-top .badge { margin-inline-start: auto; }
+
+/* Lowercase i is part of the product name, so this is never
+   uppercased or capitalised by CSS. */
+.feature-name {
+  font-size: clamp(1.5rem, 3.5vw, 2rem);
+  font-weight: 600;
+}
+
+.feature-sub {
+  font-size: var(--text-sm);
+  color: var(--fg-subtle);
+  margin-block-start: 0.25rem;
+}
+
+.feature-desc {
+  max-inline-size: 68ch;
+  margin-block: 1rem 1.5rem;
+}
+
+.feature-cols {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  align-items: start;
+}
+
+.feature-list {
+  display: grid;
+  gap: 0.625rem;
+}
+
+.feature-list li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.625rem;
+  align-items: start;
+  font-size: var(--text-sm);
+}
+
+.feature-list .icon {
+  font-size: 0.9375rem;
+  margin-block-start: 0.28em;
+  color: var(--fg-faint);
+}
+
+/* ── Metrics ──────────────────────────────────────────────────
+   Four counts, each labelled with what it counts. The numeral
+   is the content, so it is set large and the label sits under
+   it at caption size. */
+
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  margin-block-end: var(--gap-md);
+}
+
+.metric {
+  background: var(--bg);
+  padding: 0.875rem 1rem;
+}
+
+.metric-val {
+  display: block;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 1.5rem;
+  font-weight: 500;
+  line-height: 1.1;
+  color: var(--fg);
+  letter-spacing: -0.02em;
+}
+
+.metric-key {
+  display: block;
+  margin-block-start: 0.375rem;
+  font-size: var(--text-xs);
+  color: var(--fg-subtle);
+}
+
+.feature-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-sm);
+}
+
+.feature-specs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  margin-block-start: 1.5rem;
+  padding-block-start: 1.125rem;
+  border-block-start: 1px solid var(--border);
+}
+
+.spec {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: var(--text-xs);
+}
+
+.spec-val { color: var(--fg); font-weight: 500; }
+
+/* ── Project cards ────────────────────────────────────────────── */
+
+.work-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  gap: var(--gap-sm);
+}
+
+.work-head {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-block-end: 0.75rem;
+}
+
+.work-name { flex: 1; min-inline-size: 0; }
+
+.work-desc {
+  font-size: var(--text-sm);
+  margin-block-end: 0.875rem;
+}
+
+/* ── Experience ───────────────────────────────────────────────
+   A real sequence, so it gets a timeline: one rail with a node
+   per entry. The rail is the only thing on the page drawn
+   purely to show ordering, and ordering is information here. */
+
+.timeline {
+  position: relative;
+  display: grid;
+  gap: var(--gap-lg);
+  padding-inline-start: 1.625rem;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  inset-block: 0.5rem;
+  inset-inline-start: 3px;
+  inline-size: 1px;
+  background: var(--border);
+}
+
+.entry { position: relative; }
+
+.entry::before {
+  content: '';
+  position: absolute;
+  inset-block-start: 0.4rem;
+  inset-inline-start: -1.625rem;
+  inline-size: 7px;
+  block-size: 7px;
+  border-radius: var(--r-full);
+  background: var(--bg);
+  box-shadow: 0 0 0 1px var(--border-strong);
+}
+
+/* The current entry is marked, because "which of these is still
+   running" is the first thing a reader wants from a timeline. */
+.entry[data-current]::before {
+  background: var(--live);
+  box-shadow: 0 0 0 3px var(--live-bg);
+}
+
+.entry-date {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--fg-subtle);
+  margin-block-end: 0.375rem;
+}
+
+.entry-role { font-size: var(--text-h3); }
+
+.entry-org {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--fg-muted);
+  margin-block: 0.125rem 0.5rem;
+}
+
+.entry-desc {
+  font-size: var(--text-sm);
+  max-inline-size: 70ch;
+}
+
+/* Once there is room, the dates move into a column of their
+   own. Four dates in a vertical stack can be compared at a
+   glance; four dates each buried above its own heading cannot. */
+@media (min-width: 760px) {
+  .entry {
+    display: grid;
+    grid-template-columns: 9.5rem minmax(0, 1fr);
+    grid-template-areas:
+      "date role"
+      "date org"
+      "date desc";
+    column-gap: var(--gap-md);
+  }
+
+  .entry-date {
+    grid-area: date;
+    margin-block-end: 0;
+    padding-block-start: 0.2rem;
+  }
+
+  .entry-role { grid-area: role; }
+  .entry-org  { grid-area: org; }
+  .entry-desc { grid-area: desc; }
+}
+
+/* ── Contact ──────────────────────────────────────────────────── */
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  gap: var(--gap-sm);
+}
+
+.contact {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 0.875rem 1rem;
+}
+
+.contact-key {
+  display: block;
+  font-size: var(--text-xs);
+  color: var(--fg-subtle);
+}
+
+.contact-val {
+  display: block;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--fg);
+  overflow-wrap: anywhere;
+}
+
+/* ── Narrow ───────────────────────────────────────────────────── */
+
+@media (max-width: 760px) {
+  .feature-cols { grid-template-columns: minmax(0, 1fr); }
+}

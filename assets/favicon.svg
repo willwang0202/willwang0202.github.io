@@ -1,8 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <!-- Chamfered faceplate on the sheet, with CW engraved and the
-       status LED lit in the corner. Matches the page palette. -->
-  <path d="M0 0 H26 L32 6 V32 H6 L0 26 Z" fill="#E8E8E6"/>
-  <path d="M0 0 H26 L32 6 V32 H6 L0 26 Z" fill="none" stroke="#C9C9C6" stroke-width="2"/>
-  <path d="M6 9 h3.2 v14 H6 z M11.4 9 h3 l1.8 8 1.8 -8 h3 v14 h-3 v-7 l-1.8 7 h-2 l-1.8 -7 v7 h-3 z" fill="#17181B"/>
-  <circle cx="26.5" cy="25.5" r="2.6" fill="#E5341C"/>
+  <!-- The header monogram at tab size: the same rounded ink
+       square with the same initials, so the tab and the page
+       identify themselves identically. Strokes match the weight
+       of the Lucide icons used throughout the site. -->
+  <rect width="32" height="32" rx="7" fill="#0A0A0A"/>
+  <g fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M16.5 11.6A5.6 5.6 0 1 0 16.5 20.4"/>
+    <path d="M18.2 11.6 20 20.4 21.7 15.4 23.4 20.4 25.2 11.6"/>
+  </g>
 </svg>
