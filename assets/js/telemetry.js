@@ -136,7 +136,7 @@
     if (streakEl) streakEl.textContent = currentStreak(days) + 'd';
     if (peakEl) peakEl.textContent = peakCount(days);
 
-    setNote('Live from the GitHub contribution feed. Hover a cell for the day.');
+    setNote('Live from the GitHub contribution feed · hover a cell for its day');
   }
 
   fetch(FEED_URL)
@@ -150,7 +150,7 @@
       render(days);
     })
     .catch(function (error) {
-      setNote('No signal from the contribution feed. The graph is unavailable right now.', 'error');
+      setNote('No signal from the contribution feed · the chart is unavailable right now', 'error');
       if (totalEl) totalEl.textContent = '--';
       if (streakEl) streakEl.textContent = '--';
       if (peakEl) peakEl.textContent = '--';

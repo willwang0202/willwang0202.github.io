@@ -3,35 +3,35 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Chen-An Wang — Data Science, Audio ML, AI Tooling</title>
-  <meta name="description" content="Chen-An Wang builds audio machine learning pipelines, developer tooling on language models, and interactive systems. Data Science at UC San Diego.">
-  <meta name="color-scheme" content="dark">
+  <title>Chen-An Wang — Machine Learning, AI Tooling, Web Systems</title>
+  <meta name="description" content="Chen-An Wang builds machine learning systems, developer tooling on language models, and full-stack web applications. Data Science at UC San Diego.">
+  <meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#E8E8E6">
 
-  <meta property="og:title" content="Chen-An Wang — Data Science, Audio ML, AI Tooling">
-  <meta property="og:description" content="Audio ML pipelines, developer tooling on language models, and interactive systems.">
+  <meta property="og:title" content="Chen-An Wang — Machine Learning, AI Tooling, Web Systems">
+  <meta property="og:description" content="Machine learning systems, developer tooling on language models, and full-stack web applications.">
   <meta property="og:type" content="profile">
 
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Chakra+Petch:wght@400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Instrument+Sans:wght@400;500;600&family=Martian+Mono:wght@400;500&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="assets/css/tokens.css">
   <link rel="stylesheet" href="assets/css/base.css">
-  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/layout.css">
+  <link rel="stylesheet" href="assets/css/hero.css">
+  <link rel="stylesheet" href="assets/css/modules.css">
+  <link rel="stylesheet" href="assets/css/telemetry.css">
+  <link rel="stylesheet" href="assets/css/motion.css">
 </head>
 <body>
 
-<div class="atmosphere" aria-hidden="true"></div>
+<!-- The drawing sheet: engineering grid, fixed behind the page. -->
+<div class="sheet" aria-hidden="true"></div>
 
-<!-- Boot sequence. Skippable, once per session, skipped under reduced motion. -->
-<div class="boot" id="boot" hidden>
-  <div id="boot-lines"></div>
-  <div class="boot-bar"><div class="boot-fill" id="boot-fill"></div></div>
-  <p class="boot-skip">Press any key to skip</p>
-</div>
-
+<!-- Rack rail. The machined flange of the enclosure. -->
 <nav class="rail" aria-label="Section index">
   <span class="rail-mark">CW</span>
   <div class="rail-nav">
@@ -42,103 +42,200 @@
     <a href="#channels">Net</a>
   </div>
   <div class="rail-status">
-    <span class="pip" aria-hidden="true"></span>
-    <span class="label">Online</span>
+    <span class="led" aria-hidden="true"></span>
+    <span class="silk">Pwr</span>
   </div>
 </nav>
 
 <div class="page">
 <main class="shell">
 
-  <!-- ── HERO ─────────────────────────────────────────────
-       Opens the way the game opens on a target: a name at
-       scale, and a bracket-framed readout of who it belongs to. -->
+  <!-- ── HERO ─────────────────────────────────────────────────
+       The drawing names its subject on the left and shows the
+       instrument on the right. Every readout on the plate is
+       live: the clock is San Diego time, the needle is its
+       second hand, the fader is elapsed degree progress. -->
   <section class="hero" aria-labelledby="hero-name">
-    <div class="hero-eyebrow">
-      <span class="pip" aria-hidden="true"></span>
-      <span class="label">Target acquired</span>
-    </div>
 
-    <h1 class="hero-name" id="hero-name" data-glitch="Chen-An Wang">Chen-An&nbsp;Wang</h1>
-    <p class="hero-role">Data Science &middot; Audio ML &middot; AI Tooling</p>
-
-    <div class="hero-body">
-      <div>
-        <p class="hero-desc">
-          I build audio machine learning pipelines, developer tooling on top of
-          language models, and software that makes noise. Currently reading Data
-          Science at UC San Diego.
-        </p>
-        <a href="#channels" class="btn">Open a channel</a>
+    <div class="hero-title">
+      <div class="hero-eyebrow">
+        <span class="silk">Sheet 01 &middot; Subject</span>
       </div>
 
-      <div class="panel scan-target">
-        <span class="scan" aria-hidden="true"></span>
-        <p class="label" style="margin-bottom: 1rem;">Identity readout</p>
+      <h1 class="hero-name" id="hero-name">Chen&#8209;An<span>Wang</span></h1>
+
+      <p class="hero-role">Machine Learning &middot; AI Tooling &middot; Web Systems</p>
+
+      <p class="hero-desc">
+        I build machine learning systems and developer tooling on top of language
+        models, then ship the full-stack applications around them. Currently
+        reading Data Science at UC San Diego.
+      </p>
+
+      <div class="hero-actions">
+        <a href="#channels" class="btn">Open a channel</a>
+        <a href="#archive" class="btn btn--ghost">See the archive</a>
+      </div>
+    </div>
+
+    <div class="hero-plate">
+      <div class="plate">
+
+        <div class="plate-head">
+          <div class="plate-id">
+            <span class="silk">CW&#8209;01</span>
+            <span class="silk">Ident</span>
+          </div>
+          <div class="plate-pwr">
+            <span class="led" aria-hidden="true"></span>
+            <span class="silk">Live</span>
+          </div>
+        </div>
+
+        <!-- Gauge. The scale spans 250°, matching SCALE_DEG in
+             panel.js; the needle reads seconds across it. -->
+        <div class="gauge-wrap">
+          <div class="callout callout--left">
+            <span class="silk">Sec</span>
+            <span class="callout-val">0&mdash;60</span>
+            <span class="callout-line" aria-hidden="true"></span>
+          </div>
+
+          <div class="gauge">
+            <svg viewBox="0 0 220 220" aria-hidden="true" focusable="false">
+              <path class="gauge-ring"  d="M 46.1 154.7 A 78 78 0 1 1 173.9 154.7" />
+              <path class="gauge-minor" d="M 37.9 160.5 A 88 88 0 1 1 182.1 160.5"
+                    pathLength="1000" stroke-dasharray="2 8" fill="none" />
+              <path class="gauge-major" d="M 32.2 164.5 A 95 95 0 1 1 187.8 164.5"
+                    pathLength="1000" stroke-dasharray="3 47" fill="none" />
+            </svg>
+
+            <span class="gauge-needle" id="panel-needle" aria-hidden="true"></span>
+            <span class="gauge-hub" aria-hidden="true"></span>
+
+            <div class="gauge-well">
+              <span class="readout gauge-time" id="panel-time">--:--:--</span>
+              <span class="silk gauge-zone">Pacific</span>
+            </div>
+          </div>
+
+          <div class="callout callout--right">
+            <span class="callout-line" aria-hidden="true"></span>
+            <span class="silk">Utc</span>
+            <span class="callout-val">&minus;08</span>
+          </div>
+        </div>
+
+        <!-- Rating plate. Four facts, engraved. -->
         <dl class="vitals">
-          <div class="vital"><dt class="vital-key">Base</dt><dd class="vital-val">San Diego, CA</dd></div>
-          <div class="vital"><dt class="vital-key">Affil</dt><dd class="vital-val">UC San Diego</dd></div>
-          <div class="vital"><dt class="vital-key">Field</dt><dd class="vital-val">Audio&nbsp;/&nbsp;ML</dd></div>
-          <div class="vital"><dt class="vital-key">Local</dt><dd class="vital-val vital-val--live" id="local-time">--:--:--</dd></div>
-          <div class="vital"><dt class="vital-key">Status</dt><dd class="vital-val vital-val--live">Open to work</dd></div>
+          <div class="vital"><dt class="silk">Base</dt><dd>San Diego, CA</dd></div>
+          <div class="vital"><dt class="silk">Affil</dt><dd>UC San Diego</dd></div>
+          <div class="vital"><dt class="silk">Field</dt><dd>ML&nbsp;/&nbsp;AI</dd></div>
+          <div class="vital"><dt class="silk">State</dt><dd>Open to work</dd></div>
         </dl>
+
+        <!-- Fader reads elapsed fraction of the degree, computed
+             from the dates below rather than hard-coded. -->
+        <div class="controls">
+          <span class="knob" aria-hidden="true"></span>
+
+          <div class="fader">
+            <div class="fader-track" id="panel-fader"
+                 data-start="2024-09-01" data-end="2028-06-15">
+              <span class="fader-fill" aria-hidden="true"></span>
+              <span class="fader-cap" aria-hidden="true"></span>
+            </div>
+            <div class="fader-label">
+              <span class="silk">B.S. Data Science</span>
+              <span class="silk" id="panel-fader-val">&mdash;</span>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </section>
 
-  <!-- ── CAPABILITIES ─────────────────────────────────────── -->
+  <!-- ── CAPABILITIES ─────────────────────────────────────────
+       Six parallel domains, each silkscreened with its own
+       abbreviation. Not numbered: these are not steps. -->
   <section id="capabilities" aria-labelledby="capabilities-title">
-    <header class="section-head reveal">
-      <span class="section-tag">CAP //</span>
-      <h2 class="section-title" id="capabilities-title">Capabilities</h2>
-      <span class="section-count">06 domains</span>
+    <header class="module-head">
+      <span class="module-code">CAP</span>
+      <h2 class="module-title" id="capabilities-title">Capabilities</h2>
+      <span class="module-rule" aria-hidden="true"></span>
+      <span class="module-count">06 domains</span>
     </header>
 
     <div class="grid-cap reveal reveal-stagger">
       <article class="cap reveal">
-        <h3 class="cap-name">Machine Learning</h3>
+        <div class="cap-head">
+          <span class="cap-code">ML</span>
+          <h3 class="cap-name">Machine Learning</h3>
+        </div>
         <p class="cap-desc">Neural networks, model training, optimisation, and deployment pipelines for production systems.</p>
         <div class="tags"><span class="tag">PyTorch</span><span class="tag">HuggingFace</span><span class="tag">sentence-transformers</span></div>
       </article>
+
       <article class="cap reveal">
-        <h3 class="cap-name">Audio &amp; Music Tech</h3>
-        <p class="cap-desc">Signal processing, feature extraction, music information retrieval, and real-time audio.</p>
-        <div class="tags"><span class="tag">Essentia</span><span class="tag">librosa</span><span class="tag">DSP</span></div>
-      </article>
-      <article class="cap reveal">
-        <h3 class="cap-name">Data Science</h3>
-        <p class="cap-desc">Statistical modelling, data pipelines, and exploratory analysis over large datasets.</p>
-        <div class="tags"><span class="tag">Python</span><span class="tag">pandas</span><span class="tag">NumPy</span><span class="tag">SQL</span></div>
-      </article>
-      <article class="cap reveal">
-        <h3 class="cap-name">AI Tooling</h3>
+        <div class="cap-head">
+          <span class="cap-code">AIT</span>
+          <h3 class="cap-name">AI Tooling</h3>
+        </div>
         <p class="cap-desc">Developer tools and workflows built on language models, embeddings, and agents.</p>
         <div class="tags"><span class="tag">LLMs</span><span class="tag">RAG</span><span class="tag">Agents</span></div>
       </article>
+
       <article class="cap reveal">
-        <h3 class="cap-name">Creative Coding</h3>
+        <div class="cap-head">
+          <span class="cap-code">DSC</span>
+          <h3 class="cap-name">Data Science</h3>
+        </div>
+        <p class="cap-desc">Statistical modelling, data pipelines, and exploratory analysis over large datasets.</p>
+        <div class="tags"><span class="tag">Python</span><span class="tag">pandas</span><span class="tag">NumPy</span><span class="tag">SQL</span></div>
+      </article>
+
+      <article class="cap reveal">
+        <div class="cap-head">
+          <span class="cap-code">WEB</span>
+          <h3 class="cap-name">Web Development</h3>
+        </div>
+        <p class="cap-desc">Full-stack applications, APIs, and front-end interfaces that hold up in production.</p>
+        <div class="tags"><span class="tag">React</span><span class="tag">Next.js</span><span class="tag">Node.js</span><span class="tag">Supabase</span></div>
+      </article>
+
+      <article class="cap reveal">
+        <div class="cap-head">
+          <span class="cap-code">CCD</span>
+          <h3 class="cap-name">Creative Coding</h3>
+        </div>
         <p class="cap-desc">Generative art, interactive visualisation, and audiovisual work built in code.</p>
         <div class="tags"><span class="tag">p5.js</span><span class="tag">WebAudio</span><span class="tag">GLSL</span></div>
       </article>
+
       <article class="cap reveal">
-        <h3 class="cap-name">Web Development</h3>
-        <p class="cap-desc">Full-stack applications, APIs, and front-end interfaces that hold up in production.</p>
-        <div class="tags"><span class="tag">React</span><span class="tag">Next.js</span><span class="tag">Node.js</span><span class="tag">Supabase</span></div>
+        <div class="cap-head">
+          <span class="cap-code">AUD</span>
+          <h3 class="cap-name">Audio &amp; Music Tech</h3>
+        </div>
+        <p class="cap-desc">Signal processing, feature extraction, music information retrieval, and real-time audio.</p>
+        <div class="tags"><span class="tag">Essentia</span><span class="tag">librosa</span><span class="tag">DSP</span></div>
       </article>
     </div>
   </section>
 
-  <!-- ── ARCHIVE ──────────────────────────────────────────── -->
+  <!-- ── ARCHIVE ──────────────────────────────────────────────── -->
   <section id="archive" aria-labelledby="archive-title">
-    <header class="section-head reveal">
-      <span class="section-tag">ARC //</span>
-      <h2 class="section-title" id="archive-title">Project archive</h2>
-      <span class="section-count">05 records</span>
+    <header class="module-head">
+      <span class="module-code">ARC</span>
+      <h2 class="module-title" id="archive-title">Project archive</h2>
+      <span class="module-rule" aria-hidden="true"></span>
+      <span class="module-count">05 records</span>
     </header>
 
-    <article class="panel feature scan-target reveal">
-      <span class="scan" aria-hidden="true"></span>
-      <span class="feature-flag">Featured</span>
+    <article class="plate feature is-mounted reveal">
+      <span class="feature-flag"><span class="led" aria-hidden="true"></span>Featured</span>
+
       <h3 class="feature-name">iM System</h3>
       <p class="feature-sub">Fan re-creation of the social network from Rayark's Cytus II</p>
       <p class="feature-desc">
@@ -158,29 +255,41 @@
 
         <div>
           <div class="metrics">
-            <div><span class="metric-val">70+</span><span class="metric-key">Components</span></div>
-            <div><span class="metric-val">5</span><span class="metric-key">Languages</span></div>
-            <div><span class="metric-val">24</span><span class="metric-key">Migrations</span></div>
-            <div><span class="metric-val">12</span><span class="metric-key">Characters</span></div>
+            <div class="metric">
+              <span class="metric-val" data-count="70" data-suffix="+">70+</span>
+              <span class="silk metric-key">Components</span>
+            </div>
+            <div class="metric">
+              <span class="metric-val" data-count="5">5</span>
+              <span class="silk metric-key">Languages</span>
+            </div>
+            <div class="metric">
+              <span class="metric-val" data-count="24">24</span>
+              <span class="silk metric-key">Migrations</span>
+            </div>
+            <div class="metric">
+              <span class="metric-val" data-count="12">12</span>
+              <span class="silk metric-key">Characters</span>
+            </div>
           </div>
+
           <div class="feature-actions">
-            <a href="https://imsystem.app" target="_blank" rel="noopener" class="btn" style="margin-top:0;">Launch app</a>
+            <a href="https://imsystem.app" target="_blank" rel="noopener" class="btn">Launch app</a>
             <a href="https://github.com/willwang0202/imsystem.app" target="_blank" rel="noopener" class="btn btn--ghost">Read source</a>
           </div>
         </div>
       </div>
 
-      <div class="telemetry">
-        <span><span class="telemetry-key">STACK</span><span class="telemetry-val">Next.js / Postgres / Drizzle</span></span>
-        <span><span class="telemetry-key">HOST</span><span class="telemetry-val">Vercel</span></span>
-        <span><span class="telemetry-key">STATE</span><span class="telemetry-val">Live</span></span>
+      <div class="spec-strip">
+        <span class="spec"><span class="silk">Stack</span><span class="spec-val">Next.js / Postgres / Drizzle</span></span>
+        <span class="spec"><span class="silk">Host</span><span class="spec-val">Vercel</span></span>
+        <span class="spec"><span class="silk">State</span><span class="spec-val">Live</span></span>
       </div>
     </article>
 
     <div class="ledger reveal reveal-stagger">
-      <article class="record scan-target reveal">
-        <span class="scan" aria-hidden="true"></span>
-        <span class="status status--live">Active</span>
+      <article class="record reveal">
+        <span class="record-code">AUD</span>
         <div>
           <h3 class="record-name">Timbre</h3>
           <p class="record-desc">Audio ML pipeline extracting three-dimensional affect vectors and emotion scores for 20,000+ tracks across 16 languages. Client-side ranking returns results in under 200&nbsp;ms with no API call.</p>
@@ -188,19 +297,8 @@
         <span class="record-tech">Python / ML / React</span>
       </article>
 
-      <article class="record scan-target reveal">
-        <span class="scan" aria-hidden="true"></span>
-        <span class="status status--live">Active</span>
-        <div>
-          <h3 class="record-name">CloudSeed</h3>
-          <p class="record-desc">Algorithmic reverb plugin with real-time spectral processing and a modular signal chain.</p>
-        </div>
-        <span class="record-tech">C++ / DSP / VST</span>
-      </article>
-
-      <article class="record scan-target reveal">
-        <span class="scan" aria-hidden="true"></span>
-        <span class="status status--live">Active</span>
+      <article class="record reveal">
+        <span class="record-code">SEC</span>
         <div>
           <h3 class="record-name">FixRelay</h3>
           <p class="record-desc">Security scanner that detects vulnerabilities and generates contextual fix prompts for model-assisted remediation.</p>
@@ -208,24 +306,34 @@
         <span class="record-tech">Security / LLM</span>
       </article>
 
-      <article class="record scan-target reveal">
-        <span class="scan" aria-hidden="true"></span>
-        <span class="status status--live">Active</span>
+      <article class="record reveal">
+        <span class="record-code">HW</span>
         <div>
           <h3 class="record-name">E-Ink Claude Monitor</h3>
           <p class="record-desc">Ambient display rendering model output to an e-ink screen for persistent, low-power information surfaces.</p>
         </div>
         <span class="record-tech">Hardware / API</span>
       </article>
+
+      <article class="record reveal">
+        <span class="record-code">DSP</span>
+        <div>
+          <h3 class="record-name">CloudSeed</h3>
+          <p class="record-desc">Algorithmic reverb plugin with real-time spectral processing and a modular signal chain.</p>
+        </div>
+        <span class="record-tech">C++ / DSP / VST</span>
+      </article>
     </div>
   </section>
 
-  <!-- ── SERVICE RECORD ───────────────────────────────────── -->
+  <!-- ── SERVICE RECORD ───────────────────────────────────────
+       A real sequence, so it gets a timeline. -->
   <section id="record" aria-labelledby="record-title">
-    <header class="section-head reveal">
-      <span class="section-tag">LOG //</span>
-      <h2 class="section-title" id="record-title">Service record</h2>
-      <span class="section-count">2023 &rarr; present</span>
+    <header class="module-head">
+      <span class="module-code">LOG</span>
+      <h2 class="module-title" id="record-title">Service record</h2>
+      <span class="module-rule" aria-hidden="true"></span>
+      <span class="module-count">2023 &rarr; present</span>
     </header>
 
     <div class="log reveal reveal-stagger">
@@ -235,18 +343,21 @@
         <p class="entry-org">UC San Diego</p>
         <p class="entry-desc">Machine learning, statistical modelling, music information retrieval, and creative coding.</p>
       </article>
+
       <article class="entry reveal">
         <p class="entry-date">2025 &rarr; present</p>
         <h3 class="entry-role">Founder</h3>
         <p class="entry-org">Timbre</p>
         <p class="entry-desc">End-to-end audio ML pipeline for music emotion analysis across 20,000+ tracks and 16 languages, with deterministic client-side ranking and no API dependency.</p>
       </article>
+
       <article class="entry reveal">
         <p class="entry-date">Jul &rarr; Aug 2024</p>
         <h3 class="entry-role">Automation Engineer</h3>
         <p class="entry-org">Fortune Medical Instrument Corp.</p>
         <p class="entry-desc">Quadrupled production throughput with PLC and SCADA control for automated silicone fabrication, from procurement through cleanroom installation and staff training.</p>
       </article>
+
       <article class="entry reveal">
         <p class="entry-date">Jul &rarr; Aug 2023</p>
         <h3 class="entry-role">MIS Engineer</h3>
@@ -256,75 +367,102 @@
     </div>
   </section>
 
-  <!-- ── COMMIT TELEMETRY ─────────────────────────────────── -->
+  <!-- ── COMMIT TELEMETRY ─────────────────────────────────────── -->
   <section id="telemetry" aria-labelledby="telemetry-title">
-    <header class="section-head reveal">
-      <span class="section-tag">TLM //</span>
-      <h2 class="section-title" id="telemetry-title">Commit telemetry</h2>
-      <span class="section-count">Trailing 12 months</span>
+    <header class="module-head">
+      <span class="module-code">TLM</span>
+      <h2 class="module-title" id="telemetry-title">Commit telemetry</h2>
+      <span class="module-rule" aria-hidden="true"></span>
+      <span class="module-count">Trailing 12 months</span>
     </header>
 
     <div class="reveal">
       <div class="tlm-stats">
         <div class="tlm-stat">
-          <span class="label">Total commits</span>
+          <span class="silk">Total commits</span>
           <span class="metric-val" id="tlm-total">&mdash;</span>
         </div>
         <div class="tlm-stat">
-          <span class="label">Current streak</span>
+          <span class="silk">Current streak</span>
           <span class="metric-val" id="tlm-streak">&mdash;</span>
         </div>
         <div class="tlm-stat">
-          <span class="label">Busiest day</span>
+          <span class="silk">Busiest day</span>
           <span class="metric-val" id="tlm-peak">&mdash;</span>
         </div>
       </div>
 
-      <div class="graph-wrap">
+      <div class="chart">
         <div class="months" id="tlm-months"></div>
         <div class="graph" id="tlm-graph"></div>
       </div>
+
+      <div class="graph-key">
+        <span class="silk">Less</span>
+        <span class="day" aria-hidden="true"></span>
+        <span class="day" data-level="1" aria-hidden="true"></span>
+        <span class="day" data-level="2" aria-hidden="true"></span>
+        <span class="day" data-level="3" aria-hidden="true"></span>
+        <span class="day" data-level="4" aria-hidden="true"></span>
+        <span class="silk">More</span>
+      </div>
+
       <p class="graph-note" id="tlm-note">Reading contribution feed&hellip;</p>
     </div>
   </section>
 
-  <!-- ── CHANNELS ─────────────────────────────────────────── -->
+  <!-- ── CHANNELS ─────────────────────────────────────────────
+       The rear I/O panel: five labelled ports. -->
   <section id="channels" aria-labelledby="channels-title">
-    <header class="section-head reveal">
-      <span class="section-tag">NET //</span>
-      <h2 class="section-title" id="channels-title">Open a channel</h2>
-      <span class="section-count">05 endpoints</span>
+    <header class="module-head">
+      <span class="module-code">NET</span>
+      <h2 class="module-title" id="channels-title">Open a channel</h2>
+      <span class="module-rule" aria-hidden="true"></span>
+      <span class="module-count">05 endpoints</span>
     </header>
 
     <div class="channels reveal reveal-stagger">
       <a class="channel reveal" href="https://github.com/willwang0202" target="_blank" rel="noopener">
-        <span class="channel-key">GIT</span><span class="channel-val">willwang0202</span>
+        <span class="channel-port" aria-hidden="true"></span>
+        <span><span class="channel-key">Git</span><span class="channel-val">willwang0202</span></span>
+        <span class="channel-arrow" aria-hidden="true">&rarr;</span>
       </a>
       <a class="channel reveal" href="https://linkedin.com/in/chen-an-wang-519603333" target="_blank" rel="noopener">
-        <span class="channel-key">LNK</span><span class="channel-val">Chen-An Wang</span>
+        <span class="channel-port" aria-hidden="true"></span>
+        <span><span class="channel-key">Lnk</span><span class="channel-val">Chen-An Wang</span></span>
+        <span class="channel-arrow" aria-hidden="true">&rarr;</span>
       </a>
       <a class="channel reveal" href="https://imsystem.app" target="_blank" rel="noopener">
-        <span class="channel-key">APP</span><span class="channel-val">imsystem.app</span>
+        <span class="channel-port" aria-hidden="true"></span>
+        <span><span class="channel-key">App</span><span class="channel-val">imsystem.app</span></span>
+        <span class="channel-arrow" aria-hidden="true">&rarr;</span>
       </a>
       <a class="channel reveal" href="https://timbrebrief.com" target="_blank" rel="noopener">
-        <span class="channel-key">PRJ</span><span class="channel-val">timbrebrief.com</span>
+        <span class="channel-port" aria-hidden="true"></span>
+        <span><span class="channel-key">Prj</span><span class="channel-val">timbrebrief.com</span></span>
+        <span class="channel-arrow" aria-hidden="true">&rarr;</span>
       </a>
       <a class="channel reveal" href="mailto:wangchenan2006@gmail.com">
-        <span class="channel-key">MSG</span><span class="channel-val">wangchenan2006@gmail.com</span>
+        <span class="channel-port" aria-hidden="true"></span>
+        <span><span class="channel-key">Msg</span><span class="channel-val">wangchenan2006@gmail.com</span></span>
+        <span class="channel-arrow" aria-hidden="true">&rarr;</span>
       </a>
     </div>
   </section>
 
+  <!-- Title block, the way a drawing sheet signs itself. -->
   <footer class="foot">
-    <span>Chen-An Wang</span>
-    <span>Built by hand &middot; No tracking</span>
+    <div class="foot-cell"><span class="silk">Subject</span><span class="foot-val">Chen-An Wang</span></div>
+    <div class="foot-cell"><span class="silk">Sheet</span><span class="foot-val">01 of 01</span></div>
+    <div class="foot-cell"><span class="silk">Drawn</span><span class="foot-val">By hand</span></div>
+    <div class="foot-cell"><span class="silk">Tracking</span><span class="foot-val">None</span></div>
   </footer>
 
 </main>
 </div>
 
-<script src="assets/js/boot.js"></script>
-<script src="assets/js/hud.js"></script>
+<script src="assets/js/panel.js"></script>
+<script src="assets/js/powerup.js"></script>
 <script src="assets/js/telemetry.js"></script>
 </body>
 </html>

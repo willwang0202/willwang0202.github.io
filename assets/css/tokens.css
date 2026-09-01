@@ -1,64 +1,80 @@
 /* ============================================================
-   DESIGN TOKENS — Neomilitarism
-   "Substance over style." Forceful, functional, high quality.
-   Palette is bone-on-black with a single authoritative yellow.
-   Cyan is reserved: it appears only during a scan.
+   DESIGN TOKENS — CW-01 Instrument
+   The page is a measurement instrument drawn on engineering
+   paper. Everything here describes a physical object: an
+   anodised enclosure, a silkscreened faceplate, recessed
+   display wells, and one red status LED.
+
+   The palette is fully achromatic by intent. Contrast does
+   the work colour usually does, so the greys must be exact.
    ============================================================ */
 
 :root {
-  /* ── Surface ──────────────────────────────────────────────
-     Warm-neutral black, not the blue-tinted void of synthwave. */
-  --black:        #08090B;
-  --panel:        #101215;
-  --panel-raised: #16191D;
+  /* ── Enclosure ────────────────────────────────────────────
+     Five greys, five jobs. Implied light comes from top-left,
+     so raised surfaces are lighter than the ground and
+     recessed wells are darker. Never reuse one for another's
+     job — that is what makes an achromatic palette read as
+     material rather than as flat grey. */
+  --paper:   #E8E8E6;  /* ground: the drawing sheet */
+  --plate:   #F3F3F1;  /* raised: faceplates, cards */
+  --plate-2: #FAFAF8;  /* raised, lit edge */
+  --recess:  #DDDDDA;  /* inset: display wells, tracks */
 
   /* ── Ink ──────────────────────────────────────────────────
-     Eggshell, never pure white. The game's menus use a slightly
-     beige cast so the software reads as issued, not consumer.
-     Every tier clears 4.5:1 on both --black and --panel: the faint
-     tier carries labels and telemetry, which is real content at
-     small sizes, so it cannot be decorative grey. */
-  --bone:         #E4E0D4;
-  --bone-dim:     #B3AFA4;
-  --bone-faint:   #8D8A80;
+     Contrast ratios measured against --paper (#E8E8E6).
+     Anything carrying words must clear 4.5:1; --ink-faint
+     does not, so it is restricted to marks, never text. */
+  --ink:       #17181B;  /* 14.3:1 — readouts, headings */
+  --ink-mid:   #55585C;  /*  5.7:1 — body prose */
+  --ink-soft:  #63666A;  /*  4.6:1 — silkscreen micro-labels */
+  --ink-faint: #93969A;  /*  2.5:1 — TICK MARKS ONLY, no text */
 
-  /* ── Structure ────────────────────────────────────────────
-     Gunmetal for rules, chamfers and inactive states. */
-  --steel:        #2A2E33;
-  --steel-lit:    #3E444B;
+  /* ── Engraving ────────────────────────────────────────────
+     Hairlines are structure, not decoration. Two weights:
+     one for module edges, one for the internal grid. */
+  --rule:      #C9C9C6;
+  --rule-soft: #DEDEDB;
+  --grid-line: rgba(23, 24, 27, 0.075);
 
   /* ── Signal ───────────────────────────────────────────────
-     Yellow is the only decorative accent and carries authority.
-     Rust is the low-fi off-red the HUD uses for status.
-     Cyan is the scan colour and appears nowhere at rest. */
-  --yellow:       #FCEE0A;
-  --rust:         #E4593C;
-  --cyan:         #2BD9E8;
+     The only saturated value on the page. It appears at LED
+     scale and nowhere else — roughly forty pixels in total.
+     Spending the entire colour budget on one 6px dot is the
+     point: it makes the dot mean something. */
+  --led:      #E5341C;
+  --led-glow: rgba(229, 52, 28, 0.28);
 
   /* ── Type ─────────────────────────────────────────────────
-     Rajdhani carries the game's UI; it is condensed, square and
-     built for dense readouts. Chakra Petch has clipped terminals
-     that echo the chamfer. Share Tech Mono is the data layer. */
-  --face-display: 'Rajdhani', system-ui, sans-serif;
-  --face-body:    'Chakra Petch', system-ui, sans-serif;
-  --face-data:    'Share Tech Mono', ui-monospace, monospace;
+     Archivo is a grotesque out of American industrial
+     signage; its numerals are square and mechanical, which
+     is what a readout needs. Instrument Sans carries prose
+     without arguing with it. Martian Mono is the silkscreen
+     layer — boxy enough at 10px to read as panel printing. */
+  --face-display: 'Archivo', system-ui, sans-serif;
+  --face-body:    'Instrument Sans', system-ui, sans-serif;
+  --face-data:    'Martian Mono', ui-monospace, monospace;
 
-  /* Type scale — 1.333 (perfect fourth), clamped for viewport. */
-  --t-hero:  clamp(3.5rem, 11vw, 9rem);
-  --t-h2:    clamp(1.75rem, 3.4vw, 2.75rem);
-  --t-h3:    1.375rem;
-  --t-body:  1rem;
-  --t-small: 0.8125rem;
-  --t-micro: 0.6875rem;
+  /* Type scale. The readout sizes are deliberately far apart
+     from the prose sizes — an instrument has huge numbers and
+     tiny labels, and almost nothing in between. */
+  --t-name:   clamp(2.75rem, 8.5vw, 7.5rem);
+  --t-readout: clamp(2.5rem, 6vw, 4.25rem);
+  --t-h2:     clamp(1.5rem, 2.8vw, 2.125rem);
+  --t-h3:     1.125rem;
+  --t-body:   0.9375rem;
+  --t-small:  0.8125rem;
+  --t-micro:  0.625rem;   /* silkscreen */
 
-  --track-label: 0.22em;  /* eyebrows, system labels */
-  --track-data:  0.08em;
+  --track-silk: 0.16em;   /* micro-labels, engraved codes */
+  --track-tight: -0.035em; /* large readouts */
 
   /* ── Geometry ─────────────────────────────────────────────
-     One chamfer size, applied consistently. Zero radius: this
-     interface is milled, not moulded. */
-  --notch: 14px;
-  --notch-sm: 8px;
+     One chamfer, milled at 45°. Zero radius everywhere else:
+     this enclosure is machined, not moulded. Panel screws sit
+     at a fixed inset from every module corner. */
+  --notch:    10px;
+  --notch-sm: 6px;
   --chamfer: polygon(
     0 0,
     calc(100% - var(--notch)) 0,
@@ -76,38 +92,40 @@
     0 calc(100% - var(--notch-sm))
   );
 
+  /* Engineering paper. 8mm major over 2mm minor, which is what
+     the reference drawing sits on. */
+  --grid-minor: 8px;
+  --grid-major: 64px;
+
   /* ── Rhythm ───────────────────────────────────────────────── */
   --gap-xs: 0.5rem;
   --gap-sm: 1rem;
-  --gap-md: 2rem;
-  --gap-lg: 4rem;
-  --section-y: clamp(5rem, 12vh, 9rem);
-  --rail-w: 4.5rem;
-  --measure: 1180px;
+  --gap-md: 1.75rem;
+  --gap-lg: 3.5rem;
+  --section-y: clamp(4.5rem, 10vh, 7.5rem);
+  --strip-w: 3.25rem;   /* left mounting strip */
+  --measure: 1200px;
 
-  /* Contribution cell geometry. Sized so 53 weeks fill the measure;
-     the month labels derive their width from these, so the header
-     stays locked to the columns without JS measuring anything. */
-  --cell: 15px;
+  /* Contribution cell geometry, sized so 53 weeks fill the
+     measure without JS measuring anything. */
+  --cell: 13px;
   --cell-gap: 4px;
 
   /* ── Motion ───────────────────────────────────────────────
-     Mechanical easing. Hardware snaps; it does not bounce.
-     Scale inspired by transitions.dev's semantic duration ladder. */
-  --ease-snap: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-hard: cubic-bezier(0.7, 0, 0.3, 1);
-  --ease-smooth: cubic-bezier(0.22, 1, 0.36, 1);
-  --ease-bounce: cubic-bezier(0.34, 1.36, 0.64, 1);
+     Mechanical, not organic. A needle overshoots slightly and
+     settles; a plotter pen draws at constant speed; a relay
+     snaps. Nothing on this page bounces or blurs. */
+  --ease-settle: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-snap:   cubic-bezier(0.7, 0, 0.2, 1);
+  --ease-linear: linear;              /* pen travel */
+  --ease-needle: cubic-bezier(0.34, 1.28, 0.5, 1); /* slight overshoot */
 
-  --dur-micro: 80ms;
-  --dur-fast:  120ms;
-  --dur-mid:   260ms;
-  --dur-slow:  420ms;
-  --dur-reveal: 560ms;
+  --dur-relay:  90ms;
+  --dur-fast:   160ms;
+  --dur-mid:    320ms;
+  --dur-draw:   700ms;    /* pen stroke */
+  --dur-sweep:  1100ms;   /* needle power-on */
 
-  --stagger: 50ms;
-  --blur-sm: 2px;
-  --blur-md: 4px;
-  --dist-sm: 8px;
-  --dist-md: 14px;
+  --stagger: 55ms;
+  --lift: 6px;
 }

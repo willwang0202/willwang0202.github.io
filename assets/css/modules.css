@@ -1,0 +1,439 @@
+/* ============================================================
+   MODULES — capabilities, archive, service record, channels
+   ============================================================ */
+
+/* ── Capabilities ─────────────────────────────────────────────
+   Six sub-modules on the plate. Each carries the domain's own
+   abbreviation as its silkscreen code, not a position number:
+   these are six parallel capabilities, not six steps. */
+
+/* Cells are outlined rather than separated by a gap over a
+   coloured container: with auto-fit, the last row is usually
+   short, and the gap technique paints those empty tracks in the
+   divider colour. Outlines of adjacent cells overlap exactly,
+   so the grid still rules at one pixel — and a missing cell
+   simply shows the sheet. */
+.grid-cap {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.cap {
+  outline: 1px solid var(--rule);
+  padding: 1.25rem 1.25rem 1.375rem;
+  transition: background var(--dur-fast) var(--ease-snap);
+}
+
+.cap:hover { background: var(--plate); }
+
+.cap-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.625rem;
+  margin-block-end: 0.625rem;
+}
+
+.cap-code {
+  font-family: var(--face-data);
+  font-size: var(--t-micro);
+  font-weight: 500;
+  letter-spacing: var(--track-silk);
+  color: var(--ink-soft);
+  flex: none;
+}
+
+.cap-name {
+  font-size: var(--t-h3);
+  font-weight: 600;
+  font-stretch: 100%;
+}
+
+.cap-desc {
+  font-size: var(--t-small);
+  margin-block-end: 0.875rem;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.tag {
+  font-family: var(--face-data);
+  font-size: 0.5625rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  padding: 0.25rem 0.4rem;
+  box-shadow: inset 0 0 0 1px var(--rule);
+}
+
+/* ── Featured record ──────────────────────────────────────────
+   The archive's one full-plate entry. */
+
+.feature {
+  padding: 1.75rem clamp(1.25rem, 3vw, 2rem) 1.5rem;
+  margin-block-end: 1.75rem;
+}
+
+.feature-flag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: var(--face-data);
+  font-size: var(--t-micro);
+  font-weight: 500;
+  letter-spacing: var(--track-silk);
+  text-transform: uppercase;
+  color: var(--paper);
+  background: var(--ink);
+  padding: 0.3rem 0.5rem;
+  margin-block-end: 1rem;
+}
+
+/* Not uppercased: the project is called "iM System", and the
+   lowercase i is part of the name. */
+.feature-name {
+  font-size: clamp(1.875rem, 4vw, 2.875rem);
+  font-weight: 700;
+  font-stretch: 108%;
+}
+
+.feature-sub {
+  font-family: var(--face-data);
+  font-size: var(--t-micro);
+  letter-spacing: var(--track-silk);
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-block: 0.5rem 1rem;
+}
+
+.feature-desc {
+  max-inline-size: 62ch;
+  margin-block-end: 1.5rem;
+}
+
+.feature-cols {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  align-items: start;
+}
+
+/* Spec list. Each line gets a scribed tick in the margin
+   instead of a bullet — a drawing annotates, it does not
+   bullet-point. */
+.feature-list li {
+  position: relative;
+  font-size: var(--t-small);
+  padding-inline-start: 1.125rem;
+  padding-block: 0.4rem;
+  border-block-end: 1px solid var(--rule-soft);
+}
+
+.feature-list li::before {
+  content: '';
+  position: absolute;
+  inset-block-start: 0.95em;
+  inset-inline-start: 0;
+  inline-size: 7px;
+  block-size: 1px;
+  background: var(--ink-faint);
+}
+
+.feature-list li:last-child { border-block-end: 0; }
+
+/* ── Metrics ──────────────────────────────────────────────────
+   Four counters in a recessed well. The numerals are the point,
+   so they are set at readout scale with the label beneath. */
+
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+  margin-block-end: 1.25rem;
+}
+
+.metric {
+  background: var(--recess);
+  padding: 0.875rem 0.875rem 0.75rem;
+  box-shadow: inset 0 1px 2px rgba(23, 24, 27, 0.1);
+}
+
+.metric-val {
+  display: block;
+  font-family: var(--face-display);
+  font-variant-numeric: tabular-nums;
+  font-size: 1.75rem;
+  font-weight: 700;
+  font-stretch: 92%;
+  line-height: 1;
+  color: var(--ink);
+  letter-spacing: var(--track-tight);
+}
+
+.metric-key {
+  display: block;
+  margin-block-start: 0.4rem;
+}
+
+.feature-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.625rem;
+}
+
+/* Rating-plate strip along the bottom of the module. */
+.spec-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.75rem;
+  margin-block-start: 1.5rem;
+  padding-block-start: 0.875rem;
+  border-block-start: 1px solid var(--rule);
+}
+
+.spec {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.spec-val {
+  font-family: var(--face-display);
+  font-size: var(--t-small);
+  font-weight: 500;
+  color: var(--ink);
+}
+
+/* ── Ledger ───────────────────────────────────────────────────
+   The remaining archive entries as an index: hairline-ruled
+   rows, no boxes. On hover the row's margin tick extends, the
+   way a pen would mark the line you are reading. */
+
+.ledger { border-block-start: 1px solid var(--rule); }
+
+.record {
+  display: grid;
+  grid-template-columns: 8.5rem minmax(0, 1fr) auto;
+  gap: 1.25rem;
+  align-items: baseline;
+  padding: 1.125rem 0.5rem 1.125rem 1.25rem;
+  border-block-end: 1px solid var(--rule);
+  position: relative;
+  transition: background var(--dur-fast) var(--ease-snap);
+}
+
+.record::before {
+  content: '';
+  position: absolute;
+  inset-block-start: 1.55rem;
+  inset-inline-start: 0;
+  inline-size: 8px;
+  block-size: 1px;
+  background: var(--ink-faint);
+  transition: inline-size var(--dur-fast) var(--ease-snap),
+              background var(--dur-fast) var(--ease-snap);
+}
+
+.record:hover { background: var(--plate); }
+.record:hover::before { inline-size: 16px; background: var(--ink); }
+
+/* The index code: which capability the record belongs to, using
+   the same abbreviations silkscreened on the CAP module. It ties
+   the archive back to the capability list instead of repeating
+   "Active" four times. */
+.record-code {
+  font-family: var(--face-data);
+  font-size: var(--t-micro);
+  font-weight: 500;
+  letter-spacing: var(--track-silk);
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.record-name {
+  font-size: var(--t-h3);
+  font-weight: 600;
+  margin-block-end: 0.35rem;
+}
+
+.record-desc {
+  font-size: var(--t-small);
+  max-inline-size: 62ch;
+}
+
+.record-tech {
+  font-family: var(--face-data);
+  font-size: var(--t-micro);
+  letter-spacing: var(--track-silk);
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  white-space: nowrap;
+  text-align: end;
+}
+
+/* ── Service record ───────────────────────────────────────────
+   Genuinely a sequence, so it gets a timeline: a scribed rule
+   with a node at each entry's date. */
+
+.log {
+  position: relative;
+  padding-inline-start: 1.5rem;
+}
+
+.log::before {
+  content: '';
+  position: absolute;
+  inset-block: 0.5rem;
+  inset-inline-start: 3px;
+  inline-size: 1px;
+  background: var(--rule);
+}
+
+.entry {
+  position: relative;
+  padding-block: 0 1.75rem;
+}
+
+.entry:last-child { padding-block-end: 0; }
+
+.entry::before {
+  content: '';
+  position: absolute;
+  inset-block-start: 0.45rem;
+  inset-inline-start: -1.5rem;
+  inline-size: 7px;
+  block-size: 7px;
+  border-radius: 50%;
+  background: var(--paper);
+  box-shadow: 0 0 0 1px var(--ink-soft);
+}
+
+.entry-date {
+  font-family: var(--face-data);
+  font-size: var(--t-micro);
+  letter-spacing: var(--track-silk);
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-block-end: 0.4rem;
+}
+
+.entry-role {
+  font-size: var(--t-h3);
+  font-weight: 600;
+}
+
+.entry-org {
+  font-family: var(--face-display);
+  font-size: var(--t-small);
+  font-weight: 500;
+  color: var(--ink-mid);
+  margin-block: 0.15rem 0.5rem;
+}
+
+.entry-desc {
+  font-size: var(--t-small);
+  max-inline-size: 68ch;
+}
+
+/* ── Channels ─────────────────────────────────────────────────
+   The rear I/O panel. Each link is a labelled port: a recessed
+   socket, a silkscreened designation, and the address it
+   carries. Hovering seats the connector — the socket darkens
+   and the row travels 1px, like a plug going home. */
+
+.channels {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.channel {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.875rem;
+  outline: 1px solid var(--rule);
+  padding: 1rem 1.125rem;
+  transition: background var(--dur-fast) var(--ease-snap),
+              translate var(--dur-relay) var(--ease-snap);
+}
+
+.channel:hover { background: var(--plate); }
+.channel:active { translate: 0 1px; }
+
+/* The socket: an inset chamfered well with a contact slot. */
+.channel-port {
+  position: relative;
+  inline-size: 30px;
+  block-size: 30px;
+  flex: none;
+  background: var(--recess);
+  clip-path: var(--chamfer-sm);
+  box-shadow: inset 0 1px 2px rgba(23, 24, 27, 0.22);
+  display: grid;
+  place-items: center;
+  transition: background var(--dur-fast) var(--ease-snap);
+}
+
+.channel-port::after {
+  content: '';
+  inline-size: 11px;
+  block-size: 3px;
+  background: var(--ink-faint);
+  transition: background var(--dur-fast) var(--ease-snap);
+}
+
+.channel:hover .channel-port { background: #D2D2CF; }
+.channel:hover .channel-port::after { background: var(--ink); }
+
+.channel-key {
+  font-family: var(--face-data);
+  font-size: var(--t-micro);
+  font-weight: 500;
+  letter-spacing: var(--track-silk);
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-block-end: 0.25rem;
+  display: block;
+}
+
+.channel-val {
+  font-family: var(--face-display);
+  font-size: var(--t-small);
+  font-weight: 500;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.channel-arrow {
+  font-size: 0.875rem;
+  color: var(--ink-faint);
+  transition: translate var(--dur-fast) var(--ease-snap),
+              color var(--dur-fast) var(--ease-snap);
+}
+
+.channel:hover .channel-arrow { translate: 3px 0; color: var(--ink); }
+
+/* ── Narrow ───────────────────────────────────────────────── */
+
+@media (max-width: 760px) {
+  .feature-cols { grid-template-columns: 1fr; }
+
+  .record {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .record-tech { text-align: start; }
+}
+
+@media (max-width: 480px) {
+  .metrics { grid-template-columns: 1fr 1fr; }
+  .module-head { grid-template-columns: auto 1fr; row-gap: 0.5rem; }
+  .module-rule { display: none; }
+  .module-count { grid-column: 1 / -1; }
+}

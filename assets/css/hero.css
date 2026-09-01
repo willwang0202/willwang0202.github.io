@@ -1,0 +1,475 @@
+/* ============================================================
+   HERO — the CW-01 faceplate
+   Left: the drawing's title. Right: the instrument itself,
+   with a tick-scale gauge, a live clock in a recessed well,
+   and physical controls. Every readout on the plate is real
+   data; nothing here is a decorative dial.
+   ============================================================ */
+
+.hero {
+  padding-block: clamp(3rem, 9vh, 6rem) 0 !important;
+  display: grid;
+  grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: center;
+  min-block-size: min(74vh, 660px);
+}
+
+/* ── Title block ──────────────────────────────────────────── */
+
+.hero-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-block-end: 1.5rem;
+}
+
+.hero-eyebrow::after {
+  content: '';
+  flex: 1;
+  block-size: 1px;
+  background: var(--rule);
+  max-inline-size: 5rem;
+}
+
+.hero-name {
+  font-size: var(--t-name);
+  font-weight: 700;
+  font-stretch: 105%;
+  line-height: 0.86;
+  text-transform: uppercase;
+  margin-block-end: 1rem;
+}
+
+/* The surname sits on its own line at normal weight — the
+   drawing names the part, then qualifies it. */
+.hero-name span {
+  display: block;
+  font-weight: 400;
+  font-stretch: 92%;
+  color: var(--ink-mid);
+}
+
+.hero-role {
+  font-family: var(--face-data);
+  font-size: var(--t-micro);
+  letter-spacing: var(--track-silk);
+  text-transform: uppercase;
+  color: var(--ink);
+  padding-block-end: 1.25rem;
+  border-block-end: 1px solid var(--rule);
+  margin-block-end: 1.25rem;
+}
+
+.hero-desc {
+  max-inline-size: 44ch;
+  margin-block-end: 1.75rem;
+}
+
+/* ── Button ───────────────────────────────────────────────────
+   A panel switch: raised, chamfered, and it physically travels
+   down 1px when pressed. */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--face-data);
+  font-size: var(--t-micro);
+  font-weight: 500;
+  letter-spacing: var(--track-silk);
+  text-transform: uppercase;
+  color: var(--paper);
+  background: var(--ink);
+  padding: 0.85rem 1.25rem;
+  clip-path: var(--chamfer-sm);
+  transition: background var(--dur-fast) var(--ease-snap),
+              translate var(--dur-relay) var(--ease-snap);
+}
+
+.btn::after {
+  content: '→';
+  font-size: 0.85em;
+  transition: translate var(--dur-fast) var(--ease-snap);
+}
+
+.btn:hover { background: #2C2E33; }
+.btn:hover::after { translate: 3px 0; }
+.btn:active { translate: 0 1px; }
+
+.btn--ghost {
+  color: var(--ink);
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--rule);
+}
+
+.btn--ghost:hover { background: var(--recess); }
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+/* ── The plate ────────────────────────────────────────────────
+   A raised faceplate: lit top edge, shadow beneath, chamfered
+   corner. This is the only element on the page with depth. */
+
+.plate {
+  position: relative;
+  background: linear-gradient(168deg, var(--plate-2), var(--plate) 42%, var(--recess));
+  clip-path: var(--chamfer);
+  padding: 1.5rem 1.375rem 1.25rem;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    0 1px 2px rgba(23, 24, 27, 0.06),
+    0 12px 28px -18px rgba(23, 24, 27, 0.4);
+}
+
+.plate-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-block-end: 0.5rem;
+}
+
+.plate-id {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.plate-pwr {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+/* ── Gauge ────────────────────────────────────────────────────
+   A 250° tick scale with a needle. The dashed stroke on an arc
+   path produces the ticks — dense minors on the inner radius,
+   sparse majors outside them.
+
+   The gauge sits between two callouts, so the whole assembly is
+   a three-column grid. Laying the annotations out in flow
+   rather than absolutely positioning them means they stay
+   attached to the dial at every viewport width. */
+
+.gauge-wrap {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.5rem;
+  margin-block: 0.5rem;
+}
+
+.gauge {
+  position: relative;
+  inline-size: min(100%, 220px);
+  margin-inline: auto;
+  aspect-ratio: 1;
+  /* The scale opens at the bottom, so the lower band of the
+     square is empty once the well is placed. Reclaim it rather
+     than leaving a gap above the rating plate. */
+  margin-block-end: -7%;
+}
+
+.gauge svg {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  overflow: visible;
+}
+
+.gauge-minor { stroke: var(--ink-faint); stroke-width: 6; }
+.gauge-major { stroke: var(--ink-soft);  stroke-width: 11; }
+.gauge-ring  { stroke: var(--rule); stroke-width: 1; fill: none; }
+
+/* Needle pivots at the gauge centre. Its angle is set by
+   --needle-deg, which the power-on sequence drives. */
+.gauge-needle {
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  inline-size: 2px;
+  block-size: 34%;
+  background: linear-gradient(180deg, var(--ink) 65%, var(--ink-faint));
+  transform-origin: 50% 100%;
+  rotate: var(--needle-deg, 0deg);
+  translate: -50% -100%;
+}
+
+.gauge-hub {
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  translate: -50% -50%;
+  inline-size: 13px;
+  block-size: 13px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, var(--plate-2), var(--recess));
+  box-shadow: 0 0 0 1px var(--rule), 0 1px 2px rgba(23, 24, 27, 0.2);
+}
+
+/* The clock sits inside the gauge, in a recessed well — the
+   display glass is below the faceplate surface. */
+.gauge-well {
+  position: absolute;
+  /* Seated in the scale's opening rather than laid across it,
+     so the well never cuts through a tick mark. */
+  inset-block-start: 60%;
+  inset-inline: 14%;
+  padding: 0.5rem 0.25rem 0.55rem;
+  text-align: center;
+  background: var(--recess);
+  clip-path: var(--chamfer-sm);
+  box-shadow:
+    inset 0 0 0 1px var(--rule),
+    inset 0 1px 2px rgba(23, 24, 27, 0.16),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.6);
+}
+
+.gauge-time {
+  display: block;
+  font-size: clamp(1.5rem, 3.4vw, 1.875rem);
+  font-weight: 600;
+  font-stretch: 88%;
+}
+
+.gauge-zone {
+  display: block;
+  margin-block-start: 0.25rem;
+}
+
+/* ── Vitals well ──────────────────────────────────────────────
+   Four inset rows. Key silkscreened at left, value right —
+   the layout of a real rating plate. */
+
+.vitals {
+  margin: 1.25rem 0 0;
+  padding: 0.75rem 0.875rem;
+  background: var(--recess);
+  clip-path: var(--chamfer-sm);
+  box-shadow: inset 0 1px 2px rgba(23, 24, 27, 0.13);
+  display: grid;
+  gap: 0.45rem;
+}
+
+.vital {
+  display: grid;
+  grid-template-columns: 4.25rem 1fr;
+  align-items: baseline;
+  gap: 0.75rem;
+}
+
+.vital dd {
+  margin: 0;
+  font-family: var(--face-display);
+  font-size: var(--t-small);
+  font-weight: 500;
+  color: var(--ink);
+  text-align: end;
+}
+
+/* ── Controls ─────────────────────────────────────────────────
+   A knurled knob and a fader. They are ornaments in the honest
+   sense: they are labelled for what the plate above them shows,
+   and they do not pretend to be interactive. */
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-block-start: 1.125rem;
+}
+
+.knob {
+  position: relative;
+  inline-size: 44px;
+  block-size: 44px;
+  border-radius: 50%;
+  flex: none;
+  /* Knurling on the rim, a flat cap over it, and a highlight
+     where the light hits. The cap is painted above the facets,
+     so the knurl reads only on the outer ring — which is where
+     a real knob is actually knurled. */
+  background:
+    radial-gradient(circle at 36% 28%, rgba(255, 255, 255, 0.95) 0 14%, transparent 48%),
+    radial-gradient(circle at 50% 50%, var(--plate) 0 63%, transparent 63%),
+    repeating-conic-gradient(
+      from 0deg,
+      var(--recess) 0 4.5deg,
+      var(--plate-2) 4.5deg 9deg
+    );
+  box-shadow:
+    0 0 0 1px var(--rule),
+    inset 0 1px 1px rgba(255, 255, 255, 0.9),
+    0 2px 4px rgba(23, 24, 27, 0.16);
+  transition: rotate var(--dur-mid) var(--ease-needle);
+}
+
+/* Indicator line, pointing at the current setting. */
+.knob::after {
+  content: '';
+  position: absolute;
+  inset-block-start: 8px;
+  inset-inline-start: 50%;
+  translate: -50% 0;
+  inline-size: 2px;
+  block-size: 9px;
+  background: var(--ink);
+}
+
+.plate:hover .knob { rotate: 24deg; }
+
+.fader {
+  flex: 1;
+  min-inline-size: 0;
+}
+
+.fader-track {
+  position: relative;
+  block-size: 22px;
+  background: var(--recess);
+  clip-path: var(--chamfer-sm);
+  box-shadow: inset 0 1px 2px rgba(23, 24, 27, 0.18);
+  display: flex;
+  align-items: center;
+  padding-inline: 4px;
+}
+
+/* Travelled portion of the fader, set by --fader-pct. */
+.fader-fill {
+  position: absolute;
+  inset-block: 4px;
+  inset-inline-start: 4px;
+  inline-size: calc(var(--fader-pct, 0%) - 8px);
+  background: linear-gradient(90deg, var(--rule), var(--ink-faint));
+  transition: inline-size var(--dur-sweep) var(--ease-settle);
+}
+
+.fader-cap {
+  position: relative;
+  inline-size: 13px;
+  block-size: 16px;
+  margin-inline-start: calc(var(--fader-pct, 0%) - 15px);
+  background: linear-gradient(180deg, var(--plate-2), var(--recess));
+  box-shadow: 0 0 0 1px var(--rule), 0 1px 2px rgba(23, 24, 27, 0.25);
+  transition: margin-inline-start var(--dur-sweep) var(--ease-settle);
+}
+
+.fader-cap::after {
+  content: '';
+  position: absolute;
+  inset-block: 4px;
+  inset-inline: 5px;
+  background: var(--ink-faint);
+}
+
+.fader-label {
+  display: flex;
+  justify-content: space-between;
+  margin-block-start: 0.4rem;
+}
+
+/* ── Callouts ─────────────────────────────────────────────────
+   The signature. Drafted leader lines flanking the dial: a
+   label, its value, and a hairline running to a node dot at the
+   thing it describes. They state real facts about the gauge —
+   what it measures and which timezone it reads — the way an
+   assembly drawing calls out its parts.
+
+   Laid out in the grid rather than positioned over the plate,
+   so they cannot drift off their target at any width. */
+
+.callout {
+  display: grid;
+  grid-template-rows: auto auto;
+  align-items: center;
+  gap: 0 0.4rem;
+  row-gap: 0.15rem;
+}
+
+.callout-val {
+  font-family: var(--face-display);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+/* The leader: a hairline with a node at the dial end. It draws
+   outward from the dial on power-on. */
+.callout-line {
+  position: relative;
+  min-inline-size: 20px;
+  block-size: 1px;
+  background: var(--ink-faint);
+  align-self: center;
+}
+
+.callout-line::after {
+  content: '';
+  position: absolute;
+  inset-block-start: 50%;
+  inline-size: 5px;
+  block-size: 5px;
+  border-radius: 50%;
+  background: var(--paper);
+  box-shadow: 0 0 0 1px var(--ink-soft);
+}
+
+.callout--left {
+  grid-template-columns: auto 1fr;
+  text-align: end;
+}
+
+.callout--left .silk         { grid-area: 1 / 1; }
+.callout--left .callout-val  { grid-area: 2 / 1; }
+.callout--left .callout-line {
+  grid-area: 1 / 2 / 3 / 3;
+  transform-origin: left center;
+}
+
+.callout--left .callout-line::after {
+  inset-inline-end: -1px;
+  translate: 0 -50%;
+}
+
+.callout--right {
+  grid-template-columns: 1fr auto;
+}
+
+.callout--right .callout-line {
+  grid-area: 1 / 1 / 3 / 2;
+  transform-origin: right center;
+}
+
+.callout--right .silk        { grid-area: 1 / 2; }
+.callout--right .callout-val { grid-area: 2 / 2; }
+
+.callout--right .callout-line::after {
+  inset-inline-start: -1px;
+  translate: 0 -50%;
+}
+
+/* Below this the plate is too narrow to carry annotations
+   without crowding the dial. The dial still reads correctly
+   on its own, so they are dropped rather than shrunk. */
+@media (max-width: 420px) {
+  .callout { display: none; }
+}
+
+/* ── Narrow ───────────────────────────────────────────────── */
+
+@media (max-width: 860px) {
+  .hero {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    min-block-size: 0;
+  }
+
+  .hero-plate { max-inline-size: 380px; }
+}
