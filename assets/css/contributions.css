@@ -155,6 +155,79 @@
 .day:hover .day-tip,
 .day:focus-visible .day-tip { opacity: 1; }
 
+/* ── Weekday distribution ─────────────────────────────────────
+   The heatmap's rows are already weekdays, so a reader can see
+   that some rows are darker than others. What they cannot do
+   is total them: "is Saturday actually quieter than Tuesday, or
+   does it just look that way" is a question the matrix cannot
+   answer and a bar chart answers immediately.
+
+   Same seven rows in the same order as the matrix beside it —
+   Sunday first, as the heatmap columns are packed — so the two
+   charts can be read against each other without re-orienting.
+
+   Every track is the same width, so the cell cuts line up down
+   the whole chart and a row can be compared to the one above it
+   by counting rather than by eye. */
+
+.weekday {
+  margin-block-start: var(--gap-md);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: var(--gap-md);
+}
+
+.weekday-head {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-block-end: 1rem;
+}
+
+.weekday-rows {
+  display: grid;
+  gap: 0.625rem;
+}
+
+.weekday-row {
+  display: grid;
+  grid-template-columns: 2.5rem minmax(0, 1fr) 3.5rem;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.weekday-day,
+.weekday-count {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.weekday-day { color: var(--fg-subtle); }
+
+/* The count is the value the bar is drawing, so it is set at
+   full ink and in tabular figures — seven numbers in a column
+   that change width would not read as a column. */
+.weekday-count {
+  color: var(--fg);
+  font-variant-numeric: tabular-nums;
+  text-align: end;
+}
+
+/* Narrow enough that the title and its qualifier stop sharing a
+   line comfortably. Stacked, the leader has nothing left to
+   span, so it goes with them. */
+@media (max-width: 480px) {
+  .weekday-head {
+    display: grid;
+    gap: 0.3125rem;
+  }
+
+  .weekday-head .leads::after { display: none; }
+}
+
 /* ── Legend and note ──────────────────────────────────────────── */
 
 .chart-foot {

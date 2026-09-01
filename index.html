@@ -24,6 +24,7 @@
   <link rel="stylesheet" href="assets/css/layout.css">
   <link rel="stylesheet" href="assets/css/hero.css">
   <link rel="stylesheet" href="assets/css/sections.css">
+  <link rel="stylesheet" href="assets/css/spans.css">
   <link rel="stylesheet" href="assets/css/contributions.css">
 
   <script>
@@ -168,11 +169,11 @@
             <span class="readout" id="progress-value">&mdash;</span>
           </div>
 
-          <div class="progress-track" data-progress
+          <div class="meter meter--stepped" data-progress
                data-start="2024-09-01" data-end="2028-06-15"
                role="progressbar" aria-label="Degree progress"
                aria-valuemin="0" aria-valuemax="100">
-            <span class="progress-fill" aria-hidden="true"></span>
+            <span class="meter-fill" aria-hidden="true"></span>
           </div>
 
           <div class="progress-axis">
@@ -370,29 +371,50 @@
       <h2 class="section-title" id="experience-title">Experience</h2>
     </header>
 
+    <!-- Duration chart. Built by assets/js/spans.js from the
+         dates carried on the entries below, so the two can
+         never disagree. Hidden from assistive technology
+         because the timeline states every one of these dates
+         in text directly underneath. -->
+    <!-- No [data-reveal]: the panel is unhidden by script after
+         the chart is built, which is later than the moment
+         reveal.js collects its targets. Leaving it out of the
+         reveal pass is simpler than ordering the two. -->
+    <div class="spans" id="span-chart-panel" aria-hidden="true" hidden>
+      <div class="spans-head">
+        <span class="label leads">Duration</span>
+        <span class="label">Elapsed vs. scheduled</span>
+      </div>
+      <div id="span-chart"></div>
+    </div>
+
     <div class="timeline" data-reveal-group>
-      <article class="entry" data-current data-reveal>
+      <article class="entry" data-current data-reveal
+               data-start="2024-09-01" data-end="2028-06-15">
         <p class="entry-date">Sep 2024 &rarr; Jun 2028</p>
         <h3 class="entry-role">B.S. Data Science</h3>
         <p class="entry-org">UC San Diego</p>
         <p class="entry-desc">Machine learning, statistical modelling, music information retrieval, and creative coding.</p>
       </article>
 
-      <article class="entry" data-current data-reveal>
+      <article class="entry" data-current data-reveal
+               data-start="2025-01-01" data-end="present">
         <p class="entry-date">2025 &rarr; present</p>
         <h3 class="entry-role">Founder</h3>
         <p class="entry-org">Timbre</p>
         <p class="entry-desc">End-to-end audio ML pipeline for music emotion analysis across 20,000+ tracks and 16 languages, with deterministic client-side ranking and no API dependency.</p>
       </article>
 
-      <article class="entry" data-reveal>
+      <article class="entry" data-reveal
+               data-start="2024-07-01" data-end="2024-08-31">
         <p class="entry-date">Jul &rarr; Aug 2024</p>
         <h3 class="entry-role">Automation Engineer</h3>
         <p class="entry-org">Fortune Medical Instrument Corp.</p>
         <p class="entry-desc">Quadrupled production throughput with PLC and SCADA control for automated silicone fabrication, from procurement through cleanroom installation and staff training.</p>
       </article>
 
-      <article class="entry" data-reveal>
+      <article class="entry" data-reveal
+               data-start="2023-07-01" data-end="2023-08-31">
         <p class="entry-date">Jul &rarr; Aug 2023</p>
         <h3 class="entry-role">MIS Engineer</h3>
         <p class="entry-org">Fortune Medical Instrument Corp.</p>
@@ -435,6 +457,13 @@
             <span class="stat-key">Busiest day</span>
           </span>
         </div>
+        <div class="card stat">
+          <span class="icon-tile"><svg class="icon" aria-hidden="true"><use href="#i-check"></use></svg></span>
+          <span class="stat-body">
+            <span class="stat-val" id="stat-active">&mdash;</span>
+            <span class="stat-key">Days with commits</span>
+          </span>
+        </div>
       </div>
 
       <!-- Weekday labels on alternate rows only: at a 14px cell
@@ -465,6 +494,19 @@
           <span class="day" data-level="4" aria-hidden="true"></span>
           More
         </p>
+      </div>
+
+      <!-- Totals per weekday over the same window. The matrix
+           above shows which days; this shows which weekdays,
+           which the matrix cannot be totalled by eye to give.
+           Rows are filled by assets/js/contributions.js and the
+           panel is removed outright if the feed fails. -->
+      <div class="weekday" id="weekday" hidden>
+        <div class="weekday-head">
+          <span class="label leads">Commits by weekday</span>
+          <span class="label">Trailing 12 months</span>
+        </div>
+        <div class="weekday-rows" id="weekday-rows"></div>
       </div>
     </div>
   </section>

@@ -10,6 +10,7 @@ import { initReveal } from './reveal.js';
 import { initCounters } from './counters.js';
 import { initClock, initProgress } from './status.js';
 import { initContributions } from './contributions.js';
+import { initSpans } from './spans.js';
 import { initNav } from './nav.js';
 
 /* Reveal runs first: it owns the visibility gate set in the
@@ -20,4 +21,5 @@ initNav();
 initClock();
 initProgress();
 initCounters();
+initSpans();
 initContributions();

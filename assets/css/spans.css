@@ -1,0 +1,163 @@
+/* ============================================================
+   SPANS — the experience duration chart
+
+   The timeline below states when each role ran. It cannot state
+   how long they ran relative to each other, or which of them
+   overlapped, because four date strings in a stack are four
+   separate facts. Laid out against one shared time axis they
+   become one fact, which is the entire reason this chart
+   exists.
+
+   Every bar is the shared .meter: the track is the full extent
+   of the role and the fill is how much of it has already
+   happened. A finished internship is a full bar; the degree is
+   a track running to Jun 2028 with the fill stopping at today.
+   The distinction between elapsed and scheduled is the honest
+   one, and it costs nothing to draw.
+
+   The chart is aria-hidden: it re-presents the timeline's own
+   dates spatially, and the timeline states all of them in text
+   directly below. A screen reader gets the facts once, in the
+   order they were written.
+   ============================================================ */
+
+.spans {
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: var(--gap-md);
+  margin-block-end: var(--gap-lg);
+}
+
+.spans-head {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-block-end: 1.125rem;
+}
+
+.spans-body {
+  position: relative;
+  display: grid;
+  gap: 0.875rem;
+}
+
+/* ── Row ──────────────────────────────────────────────────────
+   Label and date sit on one line above a full-width rail. The
+   rail is full width on every row, so the axis underneath is
+   true for all four bars — a fixed label column would have
+   given the longest job title control of where the axis
+   starts, and would have run out of room at 320px. */
+
+.span-row { position: relative; z-index: 1; }
+
+.span-line {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin-block-end: 0.4375rem;
+}
+
+.span-name,
+.span-dates {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+
+.span-name { color: var(--fg); font-weight: 500; }
+
+.span-dates {
+  color: var(--fg-subtle);
+  margin-inline-start: auto;
+  white-space: nowrap;
+}
+
+/* The rail is the whole domain; the bar is this role's slice of
+   it, so a bar's left edge and width are the data. */
+.span-rail {
+  position: relative;
+  block-size: 10px;
+}
+
+.span-rail .meter {
+  position: absolute;
+  inset-block: 0;
+  /* Set by spans.js from the role's own dates. */
+  inline-size: 0;
+}
+
+/* A role with no end date is still running, so its bar is left
+   open with the same live dot the availability badge uses —
+   the page's one colour, spent on its one meaning. */
+.span-open {
+  position: absolute;
+  inset-block-start: 50%;
+  translate: 0 -50%;
+  margin-inline-start: 0.375rem;
+}
+
+/* ── Axis ─────────────────────────────────────────────────────
+   Year gridlines behind the bars, and one line for today. The
+   grid is drawn from the domain rather than from a fixed list,
+   so it stays correct as the dates move. */
+
+.spans-grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.spans-tick {
+  position: absolute;
+  inset-block: 0;
+  inline-size: 1px;
+  background: var(--border);
+}
+
+/* Today is a reading, not a division of the axis, so it is
+   drawn at mark strength rather than as another hairline. */
+.spans-tick[data-now] { background: var(--fg-faint); }
+
+.spans-axis {
+  position: relative;
+  block-size: 1rem;
+  margin-block-start: 0.625rem;
+  border-block-start: 1px solid var(--border);
+}
+
+.spans-axis span {
+  position: absolute;
+  inset-block-start: 0.3125rem;
+  translate: -50% 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  color: var(--fg-subtle);
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.spans-axis span[data-now] { color: var(--fg); }
+
+/* At the narrowest widths the job title and its date range stop
+   fitting on one line together. Stacking them keeps both
+   readable and leaves the rail — the part that is actually the
+   chart — at full width. */
+@media (max-width: 480px) {
+  .span-line {
+    display: grid;
+    gap: 0.1875rem;
+  }
+
+  .span-dates { margin-inline-start: 0; }
+
+  /* Same treatment as the weekday panel's head, so the two
+     charts collapse the same way. */
+  .spans-head {
+    display: grid;
+    gap: 0.3125rem;
+  }
+
+  .spans-head .leads::after { display: none; }
+}

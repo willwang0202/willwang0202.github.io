@@ -181,11 +181,15 @@
 
 .card,
 .feature,
-.status { position: relative; }
+.status,
+.spans,
+.weekday { position: relative; }
 
 .card::before, .card::after,
 .feature::before, .feature::after,
-.status::before, .status::after {
+.status::before, .status::after,
+.spans::before, .spans::after,
+.weekday::before, .weekday::after {
   content: '';
   position: absolute;
   inline-size: var(--tick);
@@ -197,7 +201,9 @@
 
 .card::before,
 .feature::before,
-.status::before {
+.status::before,
+.spans::before,
+.weekday::before {
   inset-block-start: -1px;
   inset-inline-start: -1px;
   border-block-start-width: 1px;
@@ -206,7 +212,9 @@
 
 .card::after,
 .feature::after,
-.status::after {
+.status::after,
+.spans::after,
+.weekday::after {
   inset-block-end: -1px;
   inset-inline-end: -1px;
   border-block-end-width: 1px;
@@ -240,6 +248,63 @@
   flex: 1;
   min-inline-size: 0.5rem;
   border-block-end: 1px dotted var(--fg-faint);
+}
+
+/* ── Meter ────────────────────────────────────────────────────
+   One bar, used by everything on the page that reports a
+   quantity against a known extent: the degree meter, the
+   weekday distribution, the experience spans. The track is the
+   whole of the thing being measured, the fill is how much of it
+   has happened. Because all three read the same way, a reader
+   learns the idiom once.
+
+   No fill on the track itself — the hairline states the extent,
+   and a grey wash behind the ink would only make the fill
+   harder to judge. */
+
+.meter {
+  position: relative;
+  block-size: 10px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-xs);
+  background: var(--bg);
+  overflow: hidden;
+}
+
+.meter-fill {
+  display: block;
+  block-size: 100%;
+  inline-size: 0;
+  background: var(--fg);
+}
+
+/* Cut into discrete cells. A meter divided into twenty is
+   countable — "eleven of twenty" can be read without the
+   number beside it — and the quantisation is honest about the
+   precision on offer, which a continuous bar quietly
+   overstates.
+
+   The cuts are an overlay above the fill rather than twenty
+   elements, so the count is one number in one place and the
+   fill underneath stays a single animatable width. Only for
+   meters that share a track width: --seg is a percentage of
+   the element, so bars of differing widths would each be cut
+   at a different rate and the cells would mean nothing. */
+
+.meter--stepped {
+  --seg: 5%;   /* 20 cells */
+}
+
+.meter--stepped::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    to right,
+    var(--bg) 0 1px,
+    transparent 1px var(--seg)
+  );
+  pointer-events: none;
 }
 
 /* ── Icon frame ───────────────────────────────────────────────

@@ -113,16 +113,9 @@
    dates in the markup, so it cannot go stale the way a
    hard-coded percentage would.
 
-   Drawn as discrete cells rather than a smooth bar. A meter
-   divided into twenty is countable — a reader can see "eleven
-   of twenty" without reading the number beside it — and the
-   quantisation is honest about the precision on offer, which
-   a continuous bar quietly overstates.
-
-   The cells are cut into the track by an overlay rather than
-   built from twenty elements, so the count is one number in
-   one place and the fill underneath stays a single animatable
-   width. */
+   The bar itself is the shared .meter primitive in
+   components.css — the same one the weekday distribution and
+   the experience spans use. */
 
 .status-progress {
   display: flex;
@@ -141,38 +134,6 @@
 .progress-head .readout {
   font-size: var(--text-mono);
   font-weight: 500;
-}
-
-.progress-track {
-  --seg: 5%;   /* 20 cells */
-
-  position: relative;
-  block-size: 10px;
-  border: 1px solid var(--border-strong);
-  border-radius: var(--r-xs);
-  background: var(--bg);
-  overflow: hidden;
-}
-
-.progress-fill {
-  display: block;
-  block-size: 100%;
-  inline-size: 0;
-  background: var(--fg);
-}
-
-/* The cuts sit above the fill, so a growing fill appears to
-   light one cell at a time. */
-.progress-track::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: repeating-linear-gradient(
-    to right,
-    var(--bg) 0 1px,
-    transparent 1px var(--seg)
-  );
-  pointer-events: none;
 }
 
 /* Endpoints under the two ends of the meter, which is what

@@ -60,7 +60,7 @@ export function initProgress() {
   const track = document.querySelector('[data-progress]');
   if (!track) return;
 
-  const fill = track.querySelector('.progress-fill');
+  const fill = track.querySelector('.meter-fill');
   const valueEl = document.getElementById('progress-value');
   if (!fill) return;
 
