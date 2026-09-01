@@ -128,7 +128,7 @@ function buildRow(span, domain, now) {
   }
 
   row.append(line, rail);
-  return { row, fill, width: fill.style.width };
+  return { row, fill };
 }
 
 function buildGrid(ticks, domain, now) {
@@ -252,14 +252,16 @@ export function initSpans() {
 
   /* Same treatment as the degree meter: the resting width is
      already set inline, so the chart is correct whether or not
-     Motion arrives to grow the fills into place. */
+     Motion arrives to sweep the fills into view — and the
+     sweep is a scaleX, which composites, rather than a width
+     transition, which would re-lay out four bars a frame. */
   loadMotion().then((motion) => {
     if (!motion) return;
 
     bars.forEach((bar, index) => {
       motion.animate(
         bar.fill,
-        { width: ['0%', bar.width] },
+        { transform: ['scaleX(0)', 'scaleX(1)'] },
         { duration: DURATION.slow, ease: EASE_OUT, delay: 0.1 + index * 0.06 }
       );
     });

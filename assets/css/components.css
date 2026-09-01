@@ -44,7 +44,8 @@
   transition:
     background-color var(--dur-fast) var(--ease-out),
     border-color var(--dur-fast) var(--ease-out),
-    color var(--dur-fast) var(--ease-out);
+    color var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);
 }
 
 /* The icon is sized off the sans scale, not the mono one: at
@@ -69,7 +70,12 @@
   border-color: var(--fg-faint);
 }
 
-.btn:active { transform: translateY(1px); }
+/* Press feedback. The whole control shrinks rather than
+   dropping a pixel: scale takes the label and the icon down
+   with it, so the button reads as one object being pushed
+   instead of a box sliding under stationary text. Small enough
+   to be felt rather than watched. */
+.btn:active { transform: scale(0.97); }
 
 @media (prefers-reduced-motion: reduce) {
   .btn:active { transform: none; }
@@ -150,17 +156,33 @@
   transition:
     border-color var(--dur-mid) var(--ease-out),
     box-shadow var(--dur-mid) var(--ease-out),
-    transform var(--dur-mid) var(--ease-out);
+    transform var(--dur-fast) var(--ease-out);
 }
 
 .card--link:hover {
   border-color: var(--border-strong);
   box-shadow: var(--shadow-sm);
-  transform: translateY(-2px);
 }
 
+/* The lift is gated on a real pointer. A touch screen fires
+   :hover on tap and then holds it until the next tap lands
+   somewhere else, which would leave a card raised long after
+   the finger was gone. Touch gets the press response below
+   instead, which is the honest one — it ends when the press
+   does. */
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .card--link:hover { transform: translateY(-2px); }
+}
+
+/* A card is a click target like any other, and on touch this
+   is the only feedback there is. The scale is shallower than a
+   button's: the same ratio across a much larger area travels a
+   much greater distance, so it has to be smaller to read as
+   the same press. */
+.card--link:active { transform: scale(0.99); }
+
 @media (prefers-reduced-motion: reduce) {
-  .card--link:hover { transform: none; }
+  .card--link:active { transform: none; }
 }
 
 /* ── Corner registration ──────────────────────────────────────
@@ -271,11 +293,19 @@
   overflow: hidden;
 }
 
+/* The resting width is written inline by the script that owns
+   the bar, so the reading is correct before anything animates
+   and stays correct if nothing ever does. Growth is a scaleX
+   from that width, never a width transition: width is a layout
+   property, and twelve bars re-laying out together every frame
+   is the one thing on this page that could actually drop them.
+   Anchored left, because a bar grows from its zero. */
 .meter-fill {
   display: block;
   block-size: 100%;
   inline-size: 0;
   background: var(--fg);
+  transform-origin: 0 50%;
 }
 
 /* Cut into discrete cells. A meter divided into twenty is
@@ -346,11 +376,10 @@
     color var(--dur-mid) var(--ease-out);
 }
 
-.card--link:hover .go {
-  color: var(--fg);
-  transform: translate(2px, -2px);
-}
+.card--link:hover .go { color: var(--fg); }
 
-@media (prefers-reduced-motion: reduce) {
-  .card--link:hover .go { transform: none; }
+/* Same gate as the card lift: on touch there is no hover to
+   move out of, only a hover to get stuck in. */
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .card--link:hover .go { transform: translate(2px, -2px); }
 }

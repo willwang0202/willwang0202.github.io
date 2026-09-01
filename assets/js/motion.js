@@ -17,14 +17,16 @@ const LOAD_TIMEOUT_MS = 2500;
 export const prefersReducedMotion =
   window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-/* Shared timing. These mirror --ease-out and the duration
-   tokens in tokens.css; anything animated in JS uses these so
-   a JS reveal and a CSS hover feel like the same system. */
-export const EASE_OUT = [0.16, 1, 0.3, 1];
+/* Shared timing, in seconds. Every value here is the same
+   number as the matching token in tokens.css — a JS reveal and
+   a CSS hover are the same system, so they cannot be allowed to
+   drift to values that merely look similar. Change one and
+   change the other. */
+export const EASE_OUT = [0.16, 1, 0.3, 1];       /* --ease-out */
 export const DURATION = {
-  fast: 0.18,
-  mid: 0.42,
-  slow: 0.8
+  fast: 0.14,   /* --dur-fast: 140ms */
+  mid: 0.22,    /* --dur-mid:  220ms */
+  slow: 0.42    /* --dur-slow: 420ms */
 };
 
 let pending = null;

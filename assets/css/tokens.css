@@ -128,9 +128,25 @@
   /* ── Motion ───────────────────────────────────────────────
      Durations and easings live here so the CSS transitions and
      the Motion-driven JS animations read from one source. The
-     JS mirrors these as seconds; see assets/js/motion-config.js.
-     Everything decelerates — nothing on this page bounces. */
-  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+     JS mirrors these as seconds in assets/js/motion.js, and the
+     two must be edited together. Nothing on this page bounces.
+
+     Two curves, because there are two kinds of motion here.
+     --ease-out is for anything entering or leaving: it starts
+     at full speed, so the interface answers on the first frame
+     the reader is watching. --ease-in-out is for something
+     already on screen that is changing — it has to accelerate
+     out of a resting state and settle back into one, which a
+     decelerating curve cannot do.
+
+     Three durations, each the ceiling for a class of motion:
+     a press (--dur-fast), an entrance or a hover (--dur-mid),
+     and a chart drawing itself (--dur-slow). Interface motion
+     stays under 300ms; only the charts, which are explaining
+     something rather than responding, are allowed past it. */
+  --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
   --dur-fast: 140ms;
   --dur-mid:  220ms;
+  --dur-slow: 420ms;
 }

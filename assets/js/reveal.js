@@ -22,16 +22,20 @@ const STAGGER_S = 0.06;
    animation is finishing as the reader arrives at it. */
 const ENTER_MARGIN = '0px 0px -12% 0px';
 
+/* No will-change here. Everything on the page that is going to
+   reveal is hidden at once, so declaring intent up front would
+   hand the compositor a layer for every card on the page and
+   hold them all until the reader scrolled that far. Motion
+   promotes each element as it actually animates, which is what
+   the hint was for. */
 function hide(el) {
   el.style.opacity = '0';
   el.style.transform = `translateY(${RISE_PX}px)`;
-  el.style.willChange = 'opacity, transform';
 }
 
 function show(el) {
   el.style.opacity = '';
   el.style.transform = '';
-  el.style.willChange = '';
 }
 
 /* A group's children animate as one batch; a lone element is a

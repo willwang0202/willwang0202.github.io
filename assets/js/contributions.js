@@ -271,8 +271,11 @@ export function initContributions() {
       setNote('Live from the GitHub contribution feed — hover a cell for its day');
 
       /* The widths are already set inline, so the chart is
-         correct with or without Motion; this only grows them
-         into place when the runtime is there. */
+         correct with or without Motion; this only sweeps them
+         into view when the runtime is there. scaleX rather
+         than width, so seven bars arriving together composite
+         instead of re-laying out the panel seven times a
+         frame. */
       if (fills.length) {
         loadMotion().then((motion) => {
           if (!motion) return;
@@ -280,7 +283,7 @@ export function initContributions() {
           fills.forEach((bar, index) => {
             motion.animate(
               bar.fill,
-              { width: ['0%', bar.width] },
+              { transform: ['scaleX(0)', 'scaleX(1)'] },
               { duration: DURATION.slow, ease: EASE_OUT, delay: index * 0.05 }
             );
           });

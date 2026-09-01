@@ -87,9 +87,13 @@ export function initProgress() {
   loadMotion().then((motion) => {
     if (!motion) return;
 
+    /* Grown with scaleX rather than width. The bar is already
+       at its true width above, so this only sweeps it into
+       view — and it sweeps on the compositor, where animating
+       width would re-lay the bar out on every frame. */
     motion.animate(
       fill,
-      { width: ['0%', `${percent}%`] },
+      { transform: ['scaleX(0)', 'scaleX(1)'] },
       { duration: DURATION.slow, ease: EASE_OUT, delay: 0.2 }
     );
   });
