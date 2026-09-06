@@ -20,9 +20,15 @@ export function initNav() {
 
   if (!linkBySection.size) return;
 
+  const hero = document.querySelector('.hero');
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (!entry.isIntersecting) return;
+
+      if (entry.target === hero) {
+        links.forEach((link) => link.removeAttribute('aria-current'));
+        return;
+      }
 
       const active = linkBySection.get(entry.target);
       if (!active) return;
@@ -33,4 +39,5 @@ export function initNav() {
   }, { rootMargin: READING_BAND });
 
   linkBySection.forEach((_link, section) => observer.observe(section));
+  if (hero) observer.observe(hero);
 }

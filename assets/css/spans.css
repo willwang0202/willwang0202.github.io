@@ -152,8 +152,7 @@
 
   .span-dates { margin-inline-start: 0; }
 
-  /* Same treatment as the weekday panel's head, so the two
-     charts collapse the same way. */
+  /* Stack the chart title and its date range on narrow screens. */
   .spans-head {
     display: grid;
     gap: 0.3125rem;

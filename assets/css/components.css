@@ -204,14 +204,12 @@
 .card,
 .feature,
 .status,
-.spans,
-.weekday { position: relative; }
+.spans { position: relative; }
 
 .card::before, .card::after,
 .feature::before, .feature::after,
 .status::before, .status::after,
-.spans::before, .spans::after,
-.weekday::before, .weekday::after {
+.spans::before, .spans::after {
   content: '';
   position: absolute;
   inline-size: var(--tick);
@@ -224,8 +222,7 @@
 .card::before,
 .feature::before,
 .status::before,
-.spans::before,
-.weekday::before {
+.spans::before {
   inset-block-start: -1px;
   inset-inline-start: -1px;
   border-block-start-width: 1px;
@@ -235,8 +232,7 @@
 .card::after,
 .feature::after,
 .status::after,
-.spans::after,
-.weekday::after {
+.spans::after {
   inset-block-end: -1px;
   inset-inline-end: -1px;
   border-block-end-width: 1px;
@@ -274,10 +270,10 @@
 
 /* ── Meter ────────────────────────────────────────────────────
    One bar, used by everything on the page that reports a
-   quantity against a known extent: the degree meter, the
-   weekday distribution, the experience spans. The track is the
+   quantity against a known extent: the degree meter and
+   experience spans. The track is the
    whole of the thing being measured, the fill is how much of it
-   has happened. Because all three read the same way, a reader
+   has happened. Because both read the same way, a reader
    learns the idiom once.
 
    No fill on the track itself — the hairline states the extent,

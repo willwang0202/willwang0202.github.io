@@ -28,17 +28,25 @@
   <link rel="stylesheet" href="assets/css/spans.css">
   <link rel="stylesheet" href="assets/css/contributions.css">
   <link rel="stylesheet" href="assets/css/techno.css">
+  <link rel="stylesheet" href="assets/css/motion.css">
 
   <script>
-    /* Opens the reveal gate in base.css so scroll-in animation
-       has something to animate from. assets/js/reveal.js closes
-       it again the moment it runs; this timer is the failsafe
-       for the case where that module never loads, so content is
-       never left permanently hidden by a script. */
+    /* A bounded entrance gate; the document is visible if any module fails. */
     (function () {
       var root = document.documentElement;
-      root.classList.add('js');
-      window.setTimeout(function () { root.classList.add('reveal-ready'); }, 2500);
+      var paused = false;
+      try { paused = localStorage.getItem('cw-motion-paused') === 'true'; } catch (_) {}
+      var enabled = !paused && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      root.dataset.motion = enabled ? 'on' : 'off';
+      if (enabled) {
+        root.classList.add('js');
+        var navigation = performance.getEntriesByType('navigation')[0];
+        if (!location.hash && (!navigation || navigation.type !== 'back_forward')) root.classList.add('intro-pending');
+      }
+      window.setTimeout(function () {
+        root.classList.add('reveal-ready');
+        root.classList.remove('intro-pending');
+      }, 1900);
     })();
   </script>
 </head>
@@ -107,19 +115,28 @@
   <!-- A decorative instrument accompanies the profile; readouts below are real. -->
   <section class="hero" aria-labelledby="hero-name">
     <div class="hero-topline"><span>PERSONAL PORTFOLIO</span><span class="hero-edition">ENGINEERING × CURIOSITY <i aria-hidden="true"></i></span></div>
-    <div class="hero-copy" data-reveal>
-      <span class="badge badge--live"><span class="dot" aria-hidden="true"></span>Available for work</span>
-      <h1 class="hero-name" id="hero-name">Chen-An<br>Wang<span class="name-point" aria-hidden="true"></span></h1>
-      <p class="hero-role">Machine learning. AI tooling. Web systems.</p>
-      <p class="hero-desc">I turn complex ideas into working systems. From machine learning and language models to the full-stack applications around them.</p>
-      <div class="hero-actions">
+    <div class="hero-copy">
+      <span class="badge badge--live" data-intro-item><span class="dot" aria-hidden="true"></span>Available for work</span>
+      <h1 class="hero-name" id="hero-name" aria-label="Chen-An Wang"><span class="name-line" aria-hidden="true"><span class="name-word">Chen-An</span></span><span class="name-line" aria-hidden="true"><span class="name-word">Wang<span class="name-point"></span></span></span></h1>
+      <p class="hero-role" data-intro-item>Machine learning. AI tooling. Web systems.</p>
+      <p class="hero-desc" data-intro-item>I turn complex ideas into working systems. From machine learning and language models to the full-stack applications around them.</p>
+      <div class="hero-actions" data-intro-item>
         <a class="btn btn--primary" href="#work">Explore my work<svg class="icon" aria-hidden="true"><use href="#i-arrow-up-right"></use></svg></a>
         <a class="hero-social" href="https://github.com/willwang0202" target="_blank" rel="noopener" aria-label="Visit my GitHub"><svg class="icon" aria-hidden="true"><use href="#i-github"></use></svg></a>
       </div>
     </div>
-    <div class="hero-instrument" aria-hidden="true" data-reveal>
+    <div class="hero-instrument" aria-hidden="true">
       <div class="instrument-registration"><span>PROFILE / CW</span><span class="registration-cross">+</span></div>
-      <img src="assets/instrument.svg" width="640" height="640" alt="" fetchpriority="high">
+      <div class="instrument-assembly">
+        <div class="instrument-plate"><img src="assets/instrument.svg" width="640" height="640" alt="" fetchpriority="high"></div>
+        <svg class="instrument-orbit instrument-orbit--outer" viewBox="0 0 640 640" focusable="false">
+          <circle cx="320" cy="320" r="302" pathLength="360" stroke-dasharray="36 79 10 55"/>
+          <path class="orbit-accent" d="M320 18a302 302 0 0 1 42 3"/>
+        </svg>
+        <svg class="instrument-orbit instrument-orbit--inner" viewBox="0 0 640 640" focusable="false">
+          <circle cx="320" cy="320" r="282" pathLength="360" stroke-dasharray="3 87"/>
+        </svg>
+      </div>
       <div class="instrument-caption"><span class="signal-lines"></span><span>FROM MODELS TO SYSTEMS</span><span>↗</span></div>
     </div>
     <div class="hero-bottomline" aria-hidden="true"><span>IDEAS → EXPERIMENTS → REAL-WORLD APPLICATIONS</span><span class="ruler"></span><span>SCROLL TO EXPLORE ↓</span></div>
@@ -456,19 +473,6 @@
           More
         </p>
       </div>
-
-      <!-- Totals per weekday over the same window. The matrix
-           above shows which days; this shows which weekdays,
-           which the matrix cannot be totalled by eye to give.
-           Rows are filled by assets/js/contributions.js and the
-           panel is removed outright if the feed fails. -->
-      <div class="weekday" id="weekday" hidden>
-        <div class="weekday-head">
-          <span class="label leads">Commits by weekday</span>
-          <span class="label">Trailing 12 months</span>
-        </div>
-        <div class="weekday-rows" id="weekday-rows"></div>
-      </div>
     </div>
   </section>
 
@@ -540,6 +544,10 @@
       <a href="mailto:wangchenan2006@gmail.com">Email</a>
     </nav>
     <span>BUILT WITH INTENT. NO TRACKING.</span>
+    <div class="motion-controls">
+      <button class="motion-control" type="button" data-intro-replay hidden>Replay intro <span aria-hidden="true">↗</span></button>
+      <button class="motion-control" type="button" data-motion-toggle aria-label="Pause animations" aria-pressed="false" hidden>Motion on</button>
+    </div>
   </footer>
 
 </main>

@@ -6,18 +6,10 @@
    interface rather than rendering an empty chart.
    ============================================================ */
 
-import { loadMotion, EASE_OUT, DURATION } from './motion.js';
-
 const FEED_URL = 'https://github-contributions-api.jogruber.de/v4/willwang0202?y=last';
 const DAYS_PER_WEEK = 7;
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
                 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
-/* Sunday first, matching how the heatmap columns are packed, so
-   the bar chart and the matrix name their rows the same way. */
-const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-
-const PERCENT = 100;
 
 const ICON_OK = '#i-activity';
 const ICON_ERROR = '#i-alert';
@@ -55,20 +47,6 @@ function totalCount(days) {
 
 function activeCount(days) {
   return days.filter((day) => day.count > 0).length;
-}
-
-/* Totals per weekday across the whole window. Indexed by
-   Date#getDay, so the array is already in WEEKDAYS order. */
-function countsByWeekday(days) {
-  const totals = new Array(DAYS_PER_WEEK).fill(0);
-
-  days.forEach((day) => {
-    const date = new Date(`${day.date}T00:00:00`);
-    const index = date.getDay();
-    if (Number.isInteger(index)) totals[index] += day.count;
-  });
-
-  return totals;
 }
 
 /* Pads the first partial week with nulls so weekdays line up
@@ -153,47 +131,6 @@ function renderGrid(gridEl, weeks) {
   gridEl.replaceChildren(fragment);
 }
 
-/* Seven bars, each scaled against the busiest weekday rather
-   than against the total. The question the chart answers is
-   which days are heavier than which, and normalising to the
-   maximum is what makes the lightest day still visible. */
-function renderWeekday(rowsEl, days) {
-  const totals = countsByWeekday(days);
-  const peak = Math.max(...totals);
-  if (peak <= 0) return [];
-
-  const fragment = document.createDocumentFragment();
-  const fills = [];
-
-  totals.forEach((total, index) => {
-    const row = document.createElement('div');
-    row.className = 'weekday-row';
-
-    const name = document.createElement('span');
-    name.className = 'weekday-day';
-    name.textContent = WEEKDAYS[index];
-
-    const meter = document.createElement('div');
-    meter.className = 'meter meter--stepped';
-
-    const fill = document.createElement('span');
-    fill.className = 'meter-fill';
-    fill.style.width = `${(total / peak) * PERCENT}%`;
-    meter.appendChild(fill);
-
-    const count = document.createElement('span');
-    count.className = 'weekday-count';
-    count.textContent = String(total);
-
-    row.append(name, meter, count);
-    fragment.appendChild(row);
-    fills.push({ fill, width: fill.style.width });
-  });
-
-  rowsEl.replaceChildren(fragment);
-  return fills;
-}
-
 /* ── Entry point ────────────────────────────────────────────── */
 
 export function initContributions() {
@@ -208,8 +145,6 @@ export function initContributions() {
   const streakEl = document.getElementById('stat-streak');
   const peakEl = document.getElementById('stat-peak');
   const activeEl = document.getElementById('stat-active');
-  const weekdayEl = document.getElementById('weekday');
-  const weekdayRowsEl = document.getElementById('weekday-rows');
 
   function setNote(message, state) {
     if (noteTextEl) noteTextEl.textContent = message;
@@ -243,11 +178,6 @@ export function initContributions() {
       if (el) el.textContent = '—';
     });
 
-    /* An empty seven-bar chart would still look like a
-       measurement. With no data behind it the chart is removed
-       rather than drawn at zero. */
-    if (weekdayEl) weekdayEl.hidden = true;
-
     setNote('No signal from the contribution feed — the chart is unavailable right now', 'error');
   }
 
@@ -265,30 +195,7 @@ export function initContributions() {
       renderGrid(gridEl, weeks);
       renderStats(days);
 
-      const fills = weekdayRowsEl ? renderWeekday(weekdayRowsEl, days) : [];
-      if (weekdayEl) weekdayEl.hidden = fills.length === 0;
-
       setNote('Live from the GitHub contribution feed — hover a cell for its day');
-
-      /* The widths are already set inline, so the chart is
-         correct with or without Motion; this only sweeps them
-         into view when the runtime is there. scaleX rather
-         than width, so seven bars arriving together composite
-         instead of re-laying out the panel seven times a
-         frame. */
-      if (fills.length) {
-        loadMotion().then((motion) => {
-          if (!motion) return;
-
-          fills.forEach((bar, index) => {
-            motion.animate(
-              bar.fill,
-              { transform: ['scaleX(0)', 'scaleX(1)'] },
-              { duration: DURATION.slow, ease: EASE_OUT, delay: index * 0.05 }
-            );
-          });
-        });
-      }
     })
     .catch((error) => {
       renderFailure();

@@ -114,8 +114,7 @@
    hard-coded percentage would.
 
    The bar itself is the shared .meter primitive in
-   components.css — the same one the weekday distribution and
-   the experience spans use. */
+   components.css — the same one the experience spans use. */
 
 .status-progress {
   display: flex;

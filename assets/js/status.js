@@ -7,7 +7,7 @@
    from the two dates in the markup, so it cannot go stale.
    ============================================================ */
 
-import { loadMotion, EASE_OUT, DURATION } from './motion.js';
+import { loadAnime, onEnterOnce, EASE_OUT, DURATION } from './motion.js';
 
 const TIME_ZONE = 'America/Los_Angeles';
 
@@ -80,21 +80,19 @@ export function initProgress() {
   track.setAttribute('aria-valuenow', String(percent));
 
   /* The resting width is set as an inline style up front, so
-     the bar is correct whether or not Motion ever arrives to
+     the bar is correct whether or not Anime.js ever arrives to
      animate it there. */
   fill.style.width = `${percent}%`;
 
-  loadMotion().then((motion) => {
-    if (!motion) return;
+  loadAnime().then((anime) => {
+    if (!anime) return;
 
     /* Grown with scaleX rather than width. The bar is already
        at its true width above, so this only sweeps it into
        view — and it sweeps on the compositor, where animating
        width would re-lay the bar out on every frame. */
-    motion.animate(
-      fill,
-      { transform: ['scaleX(0)', 'scaleX(1)'] },
-      { duration: DURATION.slow, ease: EASE_OUT, delay: 0.2 }
-    );
+    onEnterOnce(track, () => anime.animate(fill, {
+      scaleX: [0, 1], duration: DURATION.slow, ease: EASE_OUT, delay: 150
+    }));
   });
 }

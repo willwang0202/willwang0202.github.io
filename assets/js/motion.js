@@ -1,57 +1,108 @@
-/* ============================================================
-   MOTION — one animation runtime for the whole page
+/* One local Anime.js runtime, with a shared preference and cleanup lifecycle. */
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+const STORAGE_KEY = 'cw-motion-paused';
+const listeners = new Set();
+const active = new Set();
+let paused = false;
+let pending;
 
-   Every animation on the site goes through Motion so that
-   durations and easings come from one place and cannot drift
-   apart. Motion is loaded from a CDN, which means it can fail;
-   every caller must therefore treat it as optional and still
-   produce a correct, readable page without it.
-   ============================================================ */
+try { paused = localStorage.getItem(STORAGE_KEY) === 'true'; } catch { /* Storage is optional. */ }
 
-const MOTION_URL = 'https://cdn.jsdelivr.net/npm/motion@13.1.1/+esm';
+export const EASE_OUT = 'out(4)';
+export const DURATION = { fast: 140, mid: 280, slow: 620 };
+export const motionEnabled = () => !reducedMotion.matches && !paused;
 
-/* If the CDN is slow, the page should stop waiting and show
-   itself rather than hold content back indefinitely. */
-const LOAD_TIMEOUT_MS = 2500;
+export function onMotionChange(listener) {
+  listeners.add(listener);
+  return () => listeners.delete(listener);
+}
 
-export const prefersReducedMotion =
-  window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+function track(animation) {
+  active.add(animation);
+  animation.then(() => active.delete(animation));
+  for (const method of ['cancel', 'revert']) {
+    const original = animation[method].bind(animation);
+    animation[method] = (...args) => { active.delete(animation); return original(...args); };
+  }
+  return animation;
+}
 
-/* Shared timing, in seconds. Every value here is the same
-   number as the matching token in tokens.css — a JS reveal and
-   a CSS hover are the same system, so they cannot be allowed to
-   drift to values that merely look similar. Change one and
-   change the other. */
-export const EASE_OUT = [0.16, 1, 0.3, 1];       /* --ease-out */
-export const DURATION = {
-  fast: 0.14,   /* --dur-fast: 140ms */
-  mid: 0.22,    /* --dur-mid:  220ms */
-  slow: 0.42    /* --dur-slow: 420ms */
-};
+function syncPreference() {
+  const enabled = motionEnabled();
+  document.documentElement.dataset.motion = enabled ? 'on' : 'off';
+  if (!enabled) {
+    // Settle to the real final values, including text counters, before releasing styles.
+    for (const animation of active) {
+      animation.seek(animation.duration);
+      animation.cancel();
+    }
+    active.clear();
+    document.documentElement.classList.remove('intro-pending');
+    document.documentElement.classList.add('reveal-ready');
+  }
+  listeners.forEach((listener) => listener(enabled));
+}
 
-let pending = null;
-
-/**
- * Resolves with the Motion module, or null if it is unavailable.
- * Never rejects: callers branch on null rather than catching.
- */
-export function loadMotion() {
-  if (prefersReducedMotion) return Promise.resolve(null);
-  if (pending) return pending;
-
-  const timeout = new Promise((resolve) => {
-    window.setTimeout(() => resolve(null), LOAD_TIMEOUT_MS);
+export function initMotionPreferences() {
+  const toggle = document.querySelector('[data-motion-toggle]');
+  const replay = document.querySelector('[data-intro-replay]');
+  function reflect() {
+    if (toggle) {
+      toggle.hidden = false;
+      toggle.disabled = reducedMotion.matches;
+      toggle.textContent = reducedMotion.matches ? 'Reduced motion' : motionEnabled() ? 'Motion on' : 'Motion off';
+      toggle.setAttribute('aria-pressed', String(!motionEnabled()));
+      toggle.setAttribute('aria-label', reducedMotion.matches ? 'Reduced motion enabled in system settings' : motionEnabled() ? 'Pause animations' : 'Enable animations');
+    }
+    if (replay) replay.hidden = !motionEnabled();
+  }
+  toggle?.addEventListener('click', () => {
+    paused = !paused;
+    try { localStorage.setItem(STORAGE_KEY, String(paused)); } catch { /* Still works for this visit. */ }
+    syncPreference();
   });
+  onMotionChange(reflect);
+  reducedMotion.addEventListener('change', syncPreference);
+  window.addEventListener('storage', (event) => {
+    if (event.key === STORAGE_KEY || event.key === null) {
+      paused = event.newValue === 'true';
+      syncPreference();
+    }
+  });
+  syncPreference();
+}
 
-  pending = Promise.race([import(MOTION_URL), timeout])
-    .then((mod) => {
-      if (!mod) console.warn('[motion] load timed out; animations disabled');
-      return mod || null;
-    })
-    .catch((error) => {
-      console.warn('[motion] failed to load; animations disabled:', error);
-      return null;
-    });
+/** A failed or slow enhancement must never hold the portfolio back. */
+export function loadAnime() {
+  if (!motionEnabled()) return Promise.resolve(null);
+  if (!pending) {
+    let timer;
+    pending = Promise.race([
+      import('./vendor/anime-4.5.0.esm.min.js'),
+      new Promise((resolve) => { timer = setTimeout(() => resolve(null), 1400); })
+    ]).then((api) => api ? {
+      ...api,
+      animate: (...args) => track(api.animate(...args)),
+      createTimeline: (...args) => track(api.createTimeline(...args))
+    } : null).catch(() => null).finally(() => clearTimeout(timer));
+  }
+  return pending.then((api) => motionEnabled() ? api : null);
+}
 
-  return pending;
+/** Run once when content reaches the viewport; never hijack scrolling. */
+export function onEnterOnce(element, enter, options = {}) {
+  if (!motionEnabled()) return () => {};
+  if (!('IntersectionObserver' in window)) { enter(); return () => {}; }
+  let stopPreference = () => {};
+  const observer = new IntersectionObserver((entries) => {
+    if (entries.some((entry) => entry.isIntersecting)) {
+      observer.disconnect();
+      stopPreference();
+      if (motionEnabled()) enter();
+    }
+  }, { rootMargin: '0px 0px -5% 0px', threshold: 0.1, ...options });
+  const stop = () => { observer.disconnect(); stopPreference(); };
+  stopPreference = onMotionChange((enabled) => { if (!enabled) stop(); });
+  observer.observe(element);
+  return stop;
 }

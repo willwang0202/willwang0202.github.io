@@ -1,0 +1,58 @@
+/* Hallmark · motion refinement · P5 H5 E4 S5 R5 V4
+   UI transforms accompany an axial wireframe projection; existing tokens carry the visual style. */
+.name-line { display: block; overflow: clip; padding-block: 0.035em 0.12em; margin-block: -0.035em -0.12em; }
+.name-word { display: inline-block; }
+.hero-instrument { perspective: 1100px; }
+.instrument-assembly { position: relative; }
+.instrument-plate { position: relative; }
+.instrument-vector { display: block; width: 100%; height: auto; }
+.instrument-orbit { position: absolute; inset: 0; width: 100%; height: 100%; fill: none; stroke: var(--color-line-strong); stroke-width: 0.8; opacity: 0.65; pointer-events: none; }
+.instrument-orbit .orbit-accent { stroke: var(--color-accent); stroke-width: 2; }
+.intro-pending .name-word, .intro-pending [data-intro-item], .intro-pending .instrument-plate { opacity: 0; }
+.hero:focus { outline: none; }
+.button-face { display: inline-flex; align-items: center; justify-content: center; gap: inherit; pointer-events: none; }
+.motion-card { translate: 0 var(--card-lift, 0px); }
+.btn.is-pressed, .hero-social.is-pressed { box-shadow: var(--shadow-inset); }
+
+.motion-controls { display: flex; align-items: center; gap: 20px; }
+.motion-control { font: inherit; letter-spacing: 0.025em; text-transform: uppercase; border: 0; padding: 10px 0; color: var(--fg-subtle); background: none; cursor: pointer; min-height: 36px; white-space: nowrap; }
+.motion-control:hover { color: var(--fg); }
+.motion-control:disabled { cursor: default; }
+[data-motion-toggle]::before { content: ''; display: inline-block; width: 5px; height: 5px; margin-right: 8px; background: var(--color-accent); vertical-align: 1px; }
+[data-motion-toggle][aria-pressed='true']::before { background: var(--color-line-strong); }
+
+.cursor-reticle { position: fixed; z-index: 90; inset: -12px auto auto -12px; width: 24px; height: 24px; border: 1px solid var(--color-line-strong); border-radius: 50%; pointer-events: none; opacity: 0; }
+.cursor-reticle::before, .cursor-reticle::after { content: ''; position: absolute; background: var(--color-accent); }
+.cursor-reticle::before { width: 3px; height: 1px; left: -2px; top: 10px; }
+.cursor-reticle::after { width: 1px; height: 3px; left: 10px; top: -2px; }
+.cursor-reticle.is-link { border-color: var(--color-accent); }
+.click-pulse { position: fixed; z-index: 89; width: 28px; height: 28px; margin: -14px 0 0 -14px; border: 1px solid var(--color-accent); border-radius: 50%; pointer-events: none; }
+
+@media (prefers-reduced-motion: no-preference) {
+  html[data-motion='on'] .btn, html[data-motion='on'] .hero-social { transition: background-color 180ms ease, border-color 180ms ease, box-shadow 240ms ease; }
+  html[data-motion='on'] .btn:active { transform: none; }
+  html[data-motion='on'] .card--link { transition: scale 140ms var(--ease-out), box-shadow 280ms ease, border-color 180ms ease; }
+  html[data-motion='on'] .card--link.is-card-pressed { scale: 0.985; }
+  html[data-motion='on'] .card--link:hover, html[data-motion='on'] .card--link:active { transform: none; }
+  html[data-motion='on'] .btn .icon { transition: translate 240ms var(--ease-out); }
+  html[data-motion='on'] .btn:hover .icon { translate: 2px -1px; }
+  html[data-motion='on'] .site-nav a::before { content: ''; position: absolute; bottom: 5px; left: 8px; right: 8px; height: 1px; background: var(--color-line-strong); transform: scaleX(0); transform-origin: right; transition: transform 240ms var(--ease-out); }
+  html[data-motion='on'] .site-nav a:hover::before { transform: scaleX(1); transform-origin: left; }
+}
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  html[data-motion='on'] .card--link:hover { box-shadow: 0 5px 6px var(--color-shadow-soft), 0 18px 28px -16px var(--color-shadow), inset 0 1px 0 var(--color-white); }
+  .card--link .edge-light { position: absolute; inset: 0 0 auto; height: 1px; pointer-events: none; opacity: 0; background: linear-gradient(90deg, var(--color-clear), var(--color-accent), var(--color-clear)); width: 100px; left: clamp(0px, calc(var(--edge-x, 50%) - 50px), calc(100% - 100px)); transition: opacity 220ms ease; }
+  html[data-motion='on'] .card--link:hover .edge-light { opacity: 0.65; }
+}
+html[data-motion='off'] { scroll-behavior: auto; }
+@media (pointer: coarse) and (prefers-reduced-motion: no-preference) {
+  html[data-motion='on'] .card--link { transition: scale 140ms var(--ease-out), border-color 180ms ease; }
+  html[data-motion='on'] .card--link:active { scale: 0.985; }
+}
+html[data-motion='off'] *, html[data-motion='off'] *::before, html[data-motion='off'] *::after { animation: none !important; transition: none !important; }
+html[data-motion='off'] .btn:active, html[data-motion='off'] .card--link:active, html[data-motion='off'] .card--link:hover, html[data-motion='off'] .card--link:hover .go { transform: none; }
+html[data-motion='off'] .cursor-reticle, html[data-motion='off'] .click-pulse { display: none; }
+@media (prefers-reduced-motion: reduce) {
+  .intro-pending .name-word, .intro-pending [data-intro-item], .intro-pending .instrument-plate, .js:not(.reveal-ready) [data-reveal] { opacity: 1; }
+  .cursor-reticle, .click-pulse { display: none; }
+}

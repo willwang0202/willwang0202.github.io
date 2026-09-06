@@ -8,7 +8,7 @@
    never disagree because there is only one of them.
    ============================================================ */
 
-import { loadMotion, EASE_OUT, DURATION } from './motion.js';
+import { loadAnime, onEnterOnce, EASE_OUT, DURATION } from './motion.js';
 
 const PERCENT = 100;
 const MS_PER_DAY = 86400000;
@@ -252,18 +252,13 @@ export function initSpans() {
 
   /* Same treatment as the degree meter: the resting width is
      already set inline, so the chart is correct whether or not
-     Motion arrives to sweep the fills into view — and the
+     Anime.js arrives to sweep the fills into view — and the
      sweep is a scaleX, which composites, rather than a width
      transition, which would re-lay out four bars a frame. */
-  loadMotion().then((motion) => {
-    if (!motion) return;
-
-    bars.forEach((bar, index) => {
-      motion.animate(
-        bar.fill,
-        { transform: ['scaleX(0)', 'scaleX(1)'] },
-        { duration: DURATION.slow, ease: EASE_OUT, delay: 0.1 + index * 0.06 }
-      );
-    });
+  loadAnime().then((anime) => {
+    if (!anime) return;
+    onEnterOnce(chart, () => anime.animate(bars.map((bar) => bar.fill), {
+      scaleX: [0, 1], duration: DURATION.slow, ease: EASE_OUT, delay: anime.stagger(65)
+    }));
   });
 }

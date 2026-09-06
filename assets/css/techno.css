@@ -144,9 +144,9 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 500; }
 .cap-grid .tag { background: var(--color-white); font-size: 8px; }
 
 /* Timeline and contribution instruments keep their original data behavior. */
-.spans, .weekday { background: var(--color-white); box-shadow: var(--shadow-panel); padding: 24px; }
+.spans { background: var(--color-white); box-shadow: var(--shadow-panel); padding: 24px; }
 .spans { margin-bottom: 36px; }
-.spans::before, .spans::after, .weekday::before, .weekday::after { border-color: var(--color-line-strong); }
+.spans::before, .spans::after { border-color: var(--color-line-strong); }
 .timeline { gap: 0; }
 .entry { padding: 0 0 28px; margin-bottom: 28px; border-bottom: 1px solid var(--color-line); }
 .entry:last-child { border-bottom: 0; padding-bottom: 0; margin-bottom: 0; }
@@ -164,10 +164,6 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 500; }
 .chart-foot { margin-top: 16px; }
 .chart-note { font-size: 11px; }
 .day { border-radius: 1px; }
-.weekday { margin-top: 28px; }
-.weekday-rows { gap: 12px; }
-.weekday .meter { height: 8px; border: none; background: var(--color-inset); }
-.weekday .meter--stepped::after { background-image: repeating-linear-gradient(to right, var(--color-white) 0 2px, var(--color-clear) 2px 5%); }
 
 /* Contact ends in a broad, open invitation. */
 #contact { padding-block: 72px 64px; }
@@ -290,7 +286,7 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 500; }
   .cap-name { font-size: 17px; }
   .cap-desc { font-size: 12px; line-height: 1.65; }
   .cap-grid .tag { font-size: 7px; padding: 4px; overflow-wrap: anywhere; min-width: 0; }
-  .spans, .weekday { padding: 20px 16px; }
+  .spans { padding: 20px 16px; }
   .spans-head .label { font-size: 8px; }
   .entry-role { font-size: 21px; }
   .entry-desc { font-size: 13px; }
