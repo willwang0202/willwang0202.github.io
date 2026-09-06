@@ -1,2 +1,4 @@
 .playwright-mcp/
 .DS_Store
+.playwright-cli/
+output/playwright/

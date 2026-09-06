@@ -1,0 +1,68 @@
+/* Hallmark · macrostructure: Instrument-led portfolio · theme: studied-DNA
+ * source: user-provided images · paper: cool white · accent: vermilion
+ * fonts: Space Grotesk / Instrument Sans / JetBrains Mono */
+:root {
+  --color-paper: oklch(96.5% 0.003 250);
+  --color-white: oklch(99.5% 0.001 250);
+  --color-inset: oklch(93.4% 0.004 250);
+  --color-line: oklch(85.5% 0.006 250);
+  --color-line-strong: oklch(74% 0.007 250);
+  --color-ink: oklch(20% 0.009 250);
+  --color-muted: oklch(44% 0.012 250);
+  --color-subtle: oklch(49% 0.01 250);
+  --color-mark: oklch(61% 0.009 250);
+  --color-accent: oklch(65% 0.218 36);
+  --color-accent-ink: oklch(48% 0.174 35);
+  --color-accent-pale: oklch(94% 0.028 42);
+  --color-shadow: oklch(25% 0.014 250 / 0.11);
+  --color-shadow-soft: oklch(25% 0.014 250 / 0.04);
+  --color-clear: oklch(100% 0 0 / 0);
+  --color-header: oklch(97% 0.003 250 / 0.95);
+  --color-chart-1: oklch(89% 0.006 250);
+  --color-chart-2: oklch(74% 0.01 250);
+  --color-chart-3: oklch(55% 0.016 250);
+  --color-chart-4: oklch(30% 0.02 250);
+  --font-display: 'Space Grotesk', 'Instrument Sans', sans-serif;
+  --font-sans: 'Instrument Sans', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+  --space-section: clamp(64px, 8vw, 112px);
+  --text-display: clamp(4.5rem, 7.5vw, 6.75rem);
+  --text-h2: clamp(2rem, 4vw, 3rem);
+  --text-h3: 1.125rem;
+  --text-label: 0.625rem;
+  --text-mono: 0.6875rem;
+  --radius-panel: 3px;
+  --rule-width: 1px;
+  --ease-in: cubic-bezier(0.7, 0, 0.84, 0);
+  --shadow-panel: 0 2px 2px var(--color-shadow-soft), 0 12px 28px -16px var(--color-shadow), inset 0 1px 0 var(--color-white);
+  --shadow-inset: inset 0 2px 5px var(--color-shadow-soft), 0 1px 0 var(--color-white);
+  --bg: var(--color-paper);
+  --surface: var(--color-white);
+  --surface-2: var(--color-inset);
+  --border: var(--color-line);
+  --border-strong: var(--color-line-strong);
+  --fg: var(--color-ink);
+  --fg-muted: var(--color-muted);
+  --fg-subtle: var(--color-subtle);
+  --fg-faint: var(--color-mark);
+  --live: var(--color-accent);
+  --live-ink: var(--color-accent-ink);
+  --live-bg: var(--color-accent-pale);
+  --chart-1: var(--color-chart-1);
+  --chart-2: var(--color-chart-2);
+  --chart-3: var(--color-chart-3);
+  --chart-4: var(--color-chart-4);
+  --shadow-sm: var(--shadow-panel);
+  --shadow-md: 0 8px 24px var(--color-shadow);
+  --measure: 1280px;
+  --pad-x: clamp(20px, 4vw, 48px);
+  --header-h: 80px;
+  --section-y: var(--space-section);
+}

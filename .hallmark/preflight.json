@@ -1,0 +1,8 @@
+{
+  "date": "2026-09-06",
+  "framework": "vanilla HTML/CSS/ES modules",
+  "fonts": ["Instrument Sans", "JetBrains Mono"],
+  "tokens": "assets/css/tokens.css",
+  "motion": "optional Motion CDN with reduced-motion and failure fallback",
+  "scope": "user-authorized visual overhaul using attached white techno references"
+}

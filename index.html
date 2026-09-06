@@ -16,9 +16,10 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="assets/css/tokens.css">
+  <link rel="stylesheet" href="tokens.css">
   <link rel="stylesheet" href="assets/css/base.css">
   <link rel="stylesheet" href="assets/css/components.css">
   <link rel="stylesheet" href="assets/css/layout.css">
@@ -26,6 +27,7 @@
   <link rel="stylesheet" href="assets/css/sections.css">
   <link rel="stylesheet" href="assets/css/spans.css">
   <link rel="stylesheet" href="assets/css/contributions.css">
+  <link rel="stylesheet" href="assets/css/techno.css">
 
   <script>
     /* Opens the reveal gate in base.css so scroll-in animation
@@ -41,6 +43,7 @@
   </script>
 </head>
 <body>
+<a class="skip-link" href="#top">Skip to content</a>
 
 <!-- Icon sprite. Artwork from Lucide (lucide.dev), ISC licence.
      Defined once and referenced with <use>, so a glyph used in
@@ -78,22 +81,22 @@
 <header class="site-header">
   <div class="header-inner">
     <a class="brand" href="#top">
-      <span class="brand-mark" aria-hidden="true">CW</span>
-      <span class="brand-name">Chen-An Wang</span>
+      <span class="brand-mark" aria-hidden="true">c<span>w</span><i></i></span>
+      <span class="brand-name">CHEN-AN WANG<span class="brand-detail">DEVELOPER / DATA SCIENCE</span></span>
     </a>
 
     <!-- The index on each link is the number printed on the
          section it points at, so the nav and the section heads
          are two halves of one scheme. -->
     <nav class="site-nav" aria-label="Sections">
-      <a href="#expertise"><span aria-hidden="true">01</span>Expertise</a>
-      <a href="#work"><span aria-hidden="true">02</span>Work</a>
+      <a href="#work"><span aria-hidden="true">01</span>Work</a>
+      <a href="#expertise"><span aria-hidden="true">02</span>Expertise</a>
       <a href="#experience"><span aria-hidden="true">03</span>Experience</a>
       <a href="#activity"><span aria-hidden="true">04</span>Activity</a>
     </nav>
 
     <a class="btn btn--primary header-cta" href="#contact">
-      Get in touch
+      Let’s talk
       <svg class="icon" aria-hidden="true"><use href="#i-arrow-right"></use></svg>
     </a>
   </div>
@@ -101,144 +104,34 @@
 
 <main class="shell" id="top">
 
-  <!-- ── HERO ───────────────────────────────────────────────── -->
+  <!-- A decorative instrument accompanies the profile; readouts below are real. -->
   <section class="hero" aria-labelledby="hero-name">
-
-    <div data-reveal>
-      <span class="badge badge--live">
-        <span class="dot" aria-hidden="true"></span>
-        Available for work
-      </span>
-
-      <h1 class="hero-name" id="hero-name">Chen&#8209;An Wang</h1>
-
-      <p class="hero-role">Machine learning &middot; AI tooling &middot; Web systems</p>
-
-      <p class="hero-desc">
-        I build machine learning systems and developer tooling on top of language
-        models, then ship the full-stack applications around them. Currently
-        reading Data Science at UC San Diego.
-      </p>
-
+    <div class="hero-topline"><span>PERSONAL PORTFOLIO</span><span class="hero-edition">ENGINEERING × CURIOSITY <i aria-hidden="true"></i></span></div>
+    <div class="hero-copy" data-reveal>
+      <span class="badge badge--live"><span class="dot" aria-hidden="true"></span>Available for work</span>
+      <h1 class="hero-name" id="hero-name">Chen-An<br>Wang<span class="name-point" aria-hidden="true"></span></h1>
+      <p class="hero-role">Machine learning. AI tooling. Web systems.</p>
+      <p class="hero-desc">I turn complex ideas into working systems. From machine learning and language models to the full-stack applications around them.</p>
       <div class="hero-actions">
-        <a class="btn btn--primary" href="#work">
-          See selected work
-          <svg class="icon" aria-hidden="true"><use href="#i-arrow-right"></use></svg>
-        </a>
-        <a class="btn btn--secondary" href="#contact">
-          <svg class="icon" aria-hidden="true"><use href="#i-mail"></use></svg>
-          Get in touch
-        </a>
+        <a class="btn btn--primary" href="#work">Explore my work<svg class="icon" aria-hidden="true"><use href="#i-arrow-up-right"></use></svg></a>
+        <a class="hero-social" href="https://github.com/willwang0202" target="_blank" rel="noopener" aria-label="Visit my GitHub"><svg class="icon" aria-hidden="true"><use href="#i-github"></use></svg></a>
       </div>
     </div>
-
-    <!-- Status panel. Every row is live or computed: the clock
-         ticks, and the meter is derived from the two dates
-         carried on the track itself. -->
-    <div class="status hero-card" data-reveal>
-      <div class="status-head">
-        <span class="label">Status</span>
-        <span class="badge badge--live">
-          <span class="dot" aria-hidden="true"></span>
-          Available
-        </span>
-      </div>
-
-      <div class="status-rows">
-        <div class="status-row">
-          <svg class="icon" aria-hidden="true"><use href="#i-clock"></use></svg>
-          <span class="label leads">Local time</span>
-          <span class="status-val"><span class="readout" id="local-time">&mdash;</span></span>
-        </div>
-
-        <div class="status-row">
-          <svg class="icon" aria-hidden="true"><use href="#i-pin"></use></svg>
-          <span class="label leads">Based in</span>
-          <span class="status-val">San Diego, CA</span>
-        </div>
-
-        <div class="status-row">
-          <svg class="icon" aria-hidden="true"><use href="#i-cap"></use></svg>
-          <span class="label leads">Studying</span>
-          <span class="status-val">B.S. Data Science</span>
-        </div>
-
-        <div class="status-progress">
-          <div class="progress-head">
-            <span class="label">Degree progress</span>
-            <span class="readout" id="progress-value">&mdash;</span>
-          </div>
-
-          <div class="meter meter--stepped" data-progress
-               data-start="2024-09-01" data-end="2028-06-15"
-               role="progressbar" aria-label="Degree progress"
-               aria-valuemin="0" aria-valuemax="100">
-            <span class="meter-fill" aria-hidden="true"></span>
-          </div>
-
-          <div class="progress-axis">
-            <span>Sep 2024</span>
-            <span>UC San Diego</span>
-            <span>Jun 2028</span>
-          </div>
-        </div>
-      </div>
+    <div class="hero-instrument" aria-hidden="true" data-reveal>
+      <div class="instrument-registration"><span>PROFILE / CW</span><span class="registration-cross">+</span></div>
+      <img src="assets/instrument.svg" width="640" height="640" alt="" fetchpriority="high">
+      <div class="instrument-caption"><span class="signal-lines"></span><span>FROM MODELS TO SYSTEMS</span><span>↗</span></div>
     </div>
+    <div class="hero-bottomline" aria-hidden="true"><span>IDEAS → EXPERIMENTS → REAL-WORLD APPLICATIONS</span><span class="ruler"></span><span>SCROLL TO EXPLORE ↓</span></div>
   </section>
 
-  <!-- ── EXPERTISE ──────────────────────────────────────────── -->
-  <section class="section" id="expertise" aria-labelledby="expertise-title">
-    <header class="section-head">
-      <div class="section-meta">
-        <span class="section-index" aria-hidden="true">01</span>
-        <span class="section-rule" aria-hidden="true"></span>
-        <span class="section-note">6 domains</span>
-      </div>
-      <h2 class="section-title" id="expertise-title">What I work on</h2>
-    </header>
-
-    <div class="cap-grid" data-reveal-group>
-      <article class="card" data-reveal>
-        <span class="icon-tile"><svg class="icon" aria-hidden="true"><use href="#i-brain"></use></svg></span>
-        <h3 class="cap-name">Machine Learning</h3>
-        <p class="cap-desc">Neural networks, model training, optimisation, and deployment pipelines for production systems.</p>
-        <div class="tags"><span class="tag">PyTorch</span><span class="tag">HuggingFace</span><span class="tag">sentence-transformers</span></div>
-      </article>
-
-      <article class="card" data-reveal>
-        <span class="icon-tile"><svg class="icon" aria-hidden="true"><use href="#i-terminal"></use></svg></span>
-        <h3 class="cap-name">AI Tooling</h3>
-        <p class="cap-desc">Developer tools and workflows built on language models, embeddings, and agents.</p>
-        <div class="tags"><span class="tag">LLMs</span><span class="tag">RAG</span><span class="tag">Agents</span></div>
-      </article>
-
-      <article class="card" data-reveal>
-        <span class="icon-tile"><svg class="icon" aria-hidden="true"><use href="#i-chart"></use></svg></span>
-        <h3 class="cap-name">Data Science</h3>
-        <p class="cap-desc">Statistical modelling, data pipelines, and exploratory analysis over large datasets.</p>
-        <div class="tags"><span class="tag">Python</span><span class="tag">pandas</span><span class="tag">NumPy</span><span class="tag">SQL</span></div>
-      </article>
-
-      <article class="card" data-reveal>
-        <span class="icon-tile"><svg class="icon" aria-hidden="true"><use href="#i-code"></use></svg></span>
-        <h3 class="cap-name">Web Development</h3>
-        <p class="cap-desc">Full-stack applications, APIs, and front-end interfaces that hold up in production.</p>
-        <div class="tags"><span class="tag">React</span><span class="tag">Next.js</span><span class="tag">Node.js</span><span class="tag">Supabase</span></div>
-      </article>
-
-      <article class="card" data-reveal>
-        <span class="icon-tile"><svg class="icon" aria-hidden="true"><use href="#i-sparkles"></use></svg></span>
-        <h3 class="cap-name">Creative Coding</h3>
-        <p class="cap-desc">Generative art, interactive visualisation, and audiovisual work built in code.</p>
-        <div class="tags"><span class="tag">p5.js</span><span class="tag">WebAudio</span><span class="tag">GLSL</span></div>
-      </article>
-
-      <article class="card" data-reveal>
-        <span class="icon-tile"><svg class="icon" aria-hidden="true"><use href="#i-waveform"></use></svg></span>
-        <h3 class="cap-name">Audio &amp; Music Tech</h3>
-        <p class="cap-desc">Signal processing, feature extraction, music information retrieval, and real-time audio.</p>
-        <div class="tags"><span class="tag">Essentia</span><span class="tag">librosa</span><span class="tag">DSP</span></div>
-      </article>
+  <section class="profile-readouts" aria-label="Profile at a glance">
+    <div class="profile-readout"><span class="label">Local time / San Diego</span><span class="readout readout-large" id="local-time">Pacific time</span><span class="readout-foot">CALIFORNIA, UNITED STATES</span></div>
+    <div class="profile-readout"><span class="label">Currently studying</span><span class="readout-title">Data Science<span class="readout-plus" aria-hidden="true">↗</span></span><span class="readout-foot">UNIVERSITY OF CALIFORNIA, SAN DIEGO</span></div>
+    <div class="profile-readout degree-readout">
+      <div class="progress-head"><span class="label">Degree timeline</span><span class="readout" id="progress-value">—</span></div>
+      <div class="meter meter--stepped" data-progress data-start="2024-09-01" data-end="2028-06-15" role="progressbar" aria-label="Elapsed degree timeline" aria-valuemin="0" aria-valuemax="100"><span class="meter-fill" aria-hidden="true"></span></div>
+      <div class="progress-axis"><span>SEP 2024</span><span>JUN 2028</span></div>
     </div>
   </section>
 
@@ -246,14 +139,16 @@
   <section class="section" id="work" aria-labelledby="work-title">
     <header class="section-head">
       <div class="section-meta">
-        <span class="section-index" aria-hidden="true">02</span>
+        <span class="section-index" aria-hidden="true">01 / WORK</span>
         <span class="section-rule" aria-hidden="true"></span>
         <span class="section-note">5 projects</span>
       </div>
-      <h2 class="section-title" id="work-title">Selected work</h2>
+      <h2 class="section-title" id="work-title">Selected work<span class="heading-point" aria-hidden="true"> /</span></h2>
     </header>
 
     <article class="feature" data-reveal>
+      <div class="feature-overview">
+      <div class="feature-intro">
       <div class="feature-top">
         <div>
           <!-- Lowercase i is part of the product name. -->
@@ -272,6 +167,16 @@
         game-accurate SFX, and localisation across five languages.
       </p>
 
+      </div>
+      <div class="project-schematic" aria-hidden="true">
+        <div class="schematic-label"><span>iM / SYSTEM ARCHITECTURE</span><span>↗</span></div>
+        <div class="network-map">
+          <svg viewBox="0 0 500 200" fill="none"><path d="M100 100H400M250 30V170M100 30V170M400 30V170" class="network-guide"/><path d="M100 100L180 45H320L400 100 320 155H180Z"/><path d="M100 100L250 100 320 45M250 100L320 155M180 45L250 100 180 155"/><circle cx="250" cy="100" r="48"/><circle cx="250" cy="100" r="60" stroke-dasharray="2 5"/><circle cx="250" cy="100" r="37" class="network-core"/><circle cx="100" cy="100" r="8"/><circle cx="400" cy="100" r="8"/><circle cx="180" cy="45" r="5"/><circle cx="320" cy="45" r="5"/><circle cx="180" cy="155" r="5"/><circle cx="320" cy="155" r="5"/><text x="250" y="109">iM</text></svg>
+          <span class="network-tag network-tag--left">CLIENT</span><span class="network-tag network-tag--right">REALTIME</span>
+        </div>
+        <div class="schematic-foot"><span><i></i> NEXT.JS</span><span>SUPABASE</span><span>POSTGRES</span></div>
+      </div>
+      </div>
       <div class="feature-cols">
         <ul class="feature-list">
           <li><svg class="icon" aria-hidden="true"><use href="#i-check"></use></svg><span>Real-time private messaging on Supabase Realtime with image attachments</span></li>
@@ -360,11 +265,67 @@
     </div>
   </section>
 
+  <!-- ── EXPERTISE ──────────────────────────────────────────── -->
+  <section class="section" id="expertise" aria-labelledby="expertise-title">
+    <header class="section-head">
+      <div class="section-meta">
+        <span class="section-index" aria-hidden="true">02 / EXPERTISE</span>
+        <span class="section-rule" aria-hidden="true"></span>
+        <span class="section-note">6 domains</span>
+      </div>
+      <h2 class="section-title" id="expertise-title">What I work on</h2>
+    </header>
+
+    <div class="cap-grid" data-reveal-group>
+      <article class="card" data-reveal>
+        <span class="icon-tile"><svg class="icon" aria-hidden="true"><use href="#i-brain"></use></svg></span>
+        <h3 class="cap-name">Machine Learning</h3>
+        <p class="cap-desc">Neural networks, model training, optimisation, and deployment pipelines for production systems.</p>
+        <div class="tags"><span class="tag">PyTorch</span><span class="tag">HuggingFace</span><span class="tag">sentence-transformers</span></div>
+      </article>
+
+      <article class="card" data-reveal>
+        <span class="icon-tile"><svg class="icon" aria-hidden="true"><use href="#i-terminal"></use></svg></span>
+        <h3 class="cap-name">AI Tooling</h3>
+        <p class="cap-desc">Developer tools and workflows built on language models, embeddings, and agents.</p>
+        <div class="tags"><span class="tag">LLMs</span><span class="tag">RAG</span><span class="tag">Agents</span></div>
+      </article>
+
+      <article class="card" data-reveal>
+        <span class="icon-tile"><svg class="icon" aria-hidden="true"><use href="#i-chart"></use></svg></span>
+        <h3 class="cap-name">Data Science</h3>
+        <p class="cap-desc">Statistical modelling, data pipelines, and exploratory analysis over large datasets.</p>
+        <div class="tags"><span class="tag">Python</span><span class="tag">pandas</span><span class="tag">NumPy</span><span class="tag">SQL</span></div>
+      </article>
+
+      <article class="card" data-reveal>
+        <span class="icon-tile"><svg class="icon" aria-hidden="true"><use href="#i-code"></use></svg></span>
+        <h3 class="cap-name">Web Development</h3>
+        <p class="cap-desc">Full-stack applications, APIs, and front-end interfaces that hold up in production.</p>
+        <div class="tags"><span class="tag">React</span><span class="tag">Next.js</span><span class="tag">Node.js</span><span class="tag">Supabase</span></div>
+      </article>
+
+      <article class="card" data-reveal>
+        <span class="icon-tile"><svg class="icon" aria-hidden="true"><use href="#i-sparkles"></use></svg></span>
+        <h3 class="cap-name">Creative Coding</h3>
+        <p class="cap-desc">Generative art, interactive visualisation, and audiovisual work built in code.</p>
+        <div class="tags"><span class="tag">p5.js</span><span class="tag">WebAudio</span><span class="tag">GLSL</span></div>
+      </article>
+
+      <article class="card" data-reveal>
+        <span class="icon-tile"><svg class="icon" aria-hidden="true"><use href="#i-waveform"></use></svg></span>
+        <h3 class="cap-name">Audio &amp; Music Tech</h3>
+        <p class="cap-desc">Signal processing, feature extraction, music information retrieval, and real-time audio.</p>
+        <div class="tags"><span class="tag">Essentia</span><span class="tag">librosa</span><span class="tag">DSP</span></div>
+      </article>
+    </div>
+  </section>
+
   <!-- ── EXPERIENCE ─────────────────────────────────────────── -->
   <section class="section" id="experience" aria-labelledby="experience-title">
     <header class="section-head">
       <div class="section-meta">
-        <span class="section-index" aria-hidden="true">03</span>
+        <span class="section-index" aria-hidden="true">03 / EXPERIENCE</span>
         <span class="section-rule" aria-hidden="true"></span>
         <span class="section-note">2023 &rarr; present</span>
       </div>
@@ -427,11 +388,11 @@
   <section class="section" id="activity" aria-labelledby="activity-title">
     <header class="section-head">
       <div class="section-meta">
-        <span class="section-index" aria-hidden="true">04</span>
+        <span class="section-index" aria-hidden="true">04 / ACTIVITY</span>
         <span class="section-rule" aria-hidden="true"></span>
         <span class="section-note">Trailing 12 months</span>
       </div>
-      <h2 class="section-title" id="activity-title">Activity</h2>
+      <h2 class="section-title" id="activity-title">Activity, in the open.</h2>
     </header>
 
     <div data-reveal>
@@ -515,11 +476,12 @@
   <section class="section" id="contact" aria-labelledby="contact-title">
     <header class="section-head">
       <div class="section-meta">
-        <span class="section-index" aria-hidden="true">05</span>
+        <span class="section-index" aria-hidden="true">05 / CONTACT</span>
         <span class="section-rule" aria-hidden="true"></span>
         <span class="section-note">5 links</span>
       </div>
-      <h2 class="section-title" id="contact-title">Get in touch</h2>
+      <h2 class="section-title" id="contact-title">Let’s build<br>something that matters<span class="heading-point">.</span></h2>
+      <p class="contact-intro">Have a project in mind, an interesting problem, or just want to say hello?</p>
     </header>
 
     <div class="contact-grid" data-reveal-group>
@@ -577,7 +539,7 @@
       <a href="https://linkedin.com/in/chen-an-wang-519603333" target="_blank" rel="noopener">LinkedIn</a>
       <a href="mailto:wangchenan2006@gmail.com">Email</a>
     </nav>
-    <span>No analytics, no tracking.</span>
+    <span>BUILT WITH INTENT. NO TRACKING.</span>
   </footer>
 
 </main>
