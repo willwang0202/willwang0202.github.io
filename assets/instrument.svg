@@ -112,9 +112,9 @@
 <path fill="none" d="M565.647 294.181L568.630 293.868" stroke="#52565b" stroke-width=".4" opacity=".65"/>
 <path fill="none" d="M566.661 307.073L569.657 306.916" stroke="#52565b" stroke-width=".4" opacity=".65"/>
 <g fill="#3c4146" font-family="Arial, Helvetica, sans-serif" font-size="7.2" font-weight="600" letter-spacing="1.45">
-<text><textPath xlink:href="#label-a" startOffset="7%">MACHINE LEARNING</textPath></text>
-<text><textPath xlink:href="#label-b" startOffset="8%">AI TOOLING</textPath></text>
-<text><textPath xlink:href="#label-c" startOffset="10%">WEB SYSTEMS</textPath></text>
+<text><textPath xlink:href="#label-a" startOffset="7%">DATA SCIENCE</textPath></text>
+<text><textPath xlink:href="#label-b" startOffset="8%">APPLIED AI</textPath></text>
+<text><textPath xlink:href="#label-c" startOffset="10%">AUTOMATION</textPath></text>
 </g>
 <!-- Shallow inner scale, with a precisely engraved full revolution. -->
 <circle cx="320" cy="320" r="207" stroke="#c4c5c7" stroke-width=".6"/>
