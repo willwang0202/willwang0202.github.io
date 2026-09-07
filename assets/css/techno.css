@@ -287,7 +287,8 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 500; }
   .cap-desc { font-size: 12px; line-height: 1.65; }
   .cap-grid .tag { font-size: 7px; padding: 4px; overflow-wrap: anywhere; min-width: 0; }
   .spans { padding: 20px 16px; }
-  .spans-head .label { font-size: 8px; }
+  .spans-head .label { font-size: 10px; }
+  .site-header { background: var(--color-paper); backdrop-filter: none; }
   .entry-role { font-size: 21px; }
   .entry-desc { font-size: 13px; }
   .entry-date { margin-bottom: 8px; }

@@ -18,10 +18,7 @@ const MS_PER_DAY = 86400000;
    rather than something to render. */
 const MIN_DOMAIN_MS = MS_PER_DAY;
 
-/* Clearance a year label needs from the "now" label before it
-   is dropped. Today lands wherever it lands, so on a narrow
-   screen it will sometimes sit on top of a year — and of the
-   two, today is the reading worth keeping. */
+/* Minimum space between visible axis labels. */
 const MIN_LABEL_GAP_PX = 6;
 
 /* ── Reading the entries ────────────────────────────────────── */
@@ -54,8 +51,10 @@ function readEntry(entry, now) {
 /* ── Geometry ───────────────────────────────────────────────── */
 
 function domainOf(spans) {
+  const firstStart = Math.min(...spans.map((span) => span.start));
+  const firstYear = new Date(firstStart).getFullYear();
   return {
-    from: Math.min(...spans.map((span) => span.start)),
+    from: new Date(firstYear, 0, 1).getTime(),
     to: Math.max(...spans.map((span) => span.end))
   };
 }
@@ -81,7 +80,7 @@ function yearTicks(domain) {
 
 /* ── Render ─────────────────────────────────────────────────── */
 
-function buildRow(span, domain, now) {
+function buildRow(span, domain, now, ticks) {
   const row = document.createElement('div');
   row.className = 'span-row';
 
@@ -100,6 +99,7 @@ function buildRow(span, domain, now) {
 
   const rail = document.createElement('div');
   rail.className = 'span-rail';
+  rail.appendChild(buildGrid(ticks, domain, now));
 
   const meter = document.createElement('div');
   meter.className = 'meter';
@@ -107,7 +107,7 @@ function buildRow(span, domain, now) {
   meter.style.inlineSize = `${positionIn(domain, span.end) - positionIn(domain, span.start)}%`;
 
   /* The fill is the part that has already happened. For a role
-     that ended, that is all of it; for the degree, it stops at
+     that ended, that is all of it; for a current role, it stops at
      today and the rest of the track stands for the part still
      scheduled. */
   const elapsed = Math.min(span.end, now);
@@ -142,6 +142,8 @@ function buildGrid(ticks, domain, now) {
     grid.appendChild(line);
   });
 
+  if (now < domain.from || now > domain.to) return grid;
+
   const nowLine = document.createElement('span');
   nowLine.className = 'spans-tick';
   nowLine.setAttribute('data-now', '');
@@ -158,9 +160,11 @@ function buildAxis(ticks, domain, now) {
   ticks.forEach((tick) => {
     const label = document.createElement('span');
     label.style.insetInlineStart = `${positionIn(domain, tick.time)}%`;
-    label.textContent = `'${String(tick.year).slice(2)}`;
+    label.textContent = String(tick.year);
     axis.appendChild(label);
   });
+
+  if (now < domain.from || now > domain.to) return axis;
 
   const nowLabel = document.createElement('span');
   nowLabel.setAttribute('data-now', '');
@@ -171,29 +175,21 @@ function buildAxis(ticks, domain, now) {
   return axis;
 }
 
-/* Drops any year label that has run into the "now" label. The
-   collision is measured rather than guessed at a breakpoint,
-   because where today falls on the axis depends on the dates,
-   not on the viewport — a threshold that worked this year would
-   quietly stop working next year.
-
-   Only the label goes; the year's gridline stays, so the axis
-   still divides into years and only the redundant name of one
-   of them is lost. */
+/* Keep labels inside the plot and omit any that collide after resize. */
 function fitAxis(axis) {
-  const nowLabel = axis.querySelector('[data-now]');
-  if (!nowLabel) return;
+  const width = axis.getBoundingClientRect().width;
+  if (!width) return;
 
-  const years = Array.from(axis.querySelectorAll('span:not([data-now])'));
-  years.forEach((year) => { year.hidden = false; });
-
-  const nowBox = nowLabel.getBoundingClientRect();
-  if (!nowBox.width) return;
-
-  years.forEach((year) => {
-    const box = year.getBoundingClientRect();
-    const clearance = Math.max(nowBox.left, box.left) - Math.min(nowBox.right, box.right);
-    if (clearance < MIN_LABEL_GAP_PX) year.hidden = true;
+  let previousRight = -Infinity;
+  axis.querySelectorAll('span').forEach((label) => {
+    label.hidden = false;
+    const labelWidth = label.getBoundingClientRect().width;
+    if (!labelWidth) return;
+    const position = parseFloat(label.style.insetInlineStart) / PERCENT * width;
+    const left = Math.max(0, Math.min(width - labelWidth, position - labelWidth / 2));
+    label.style.translate = `${left - position}px 0`;
+    label.hidden = left < previousRight + MIN_LABEL_GAP_PX;
+    if (!label.hidden) previousRight = left + labelWidth;
   });
 }
 
@@ -221,14 +217,15 @@ export function initSpans() {
     return;
   }
 
-  const ticks = yearTicks(domain);
+  const ticks = [
+    { year: new Date(domain.from).getFullYear(), time: domain.from },
+    ...yearTicks(domain)
+  ];
   const body = document.createElement('div');
   body.className = 'spans-body';
 
-  body.appendChild(buildGrid(ticks, domain, now));
-
   const bars = spans.map((span) => {
-    const built = buildRow(span, domain, now);
+    const built = buildRow(span, domain, now, ticks);
     body.appendChild(built.row);
     return built;
   });
