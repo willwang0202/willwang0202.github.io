@@ -77,12 +77,14 @@ function buildDayCell(day) {
   cell.setAttribute('data-level', day.level);
 
   const date = new Date(`${day.date}T00:00:00`);
-  const noun = day.count === 1 ? 'commit' : 'commits';
+  const noun = day.count === 1 ? 'contribution' : 'contributions';
 
   const tip = document.createElement('span');
   tip.className = 'day-tip';
   tip.textContent = `${day.count} ${noun} · ${MONTHS[date.getMonth()]} ${date.getDate()}`;
   cell.appendChild(tip);
+  cell.title = tip.textContent;
+  cell.setAttribute('aria-label', tip.textContent);
 
   return cell;
 }
@@ -178,10 +180,10 @@ export function initContributions() {
       if (el) el.textContent = '—';
     });
 
-    setNote('No signal from the contribution feed — the chart is unavailable right now', 'error');
+    setNote('Activity is unavailable right now. View the full history on GitHub above.', 'error');
   }
 
-  fetch(FEED_URL)
+  fetch(FEED_URL, { signal: AbortSignal.timeout(10000) })
     .then((response) => {
       if (!response.ok) throw new Error(`Feed responded ${response.status}`);
       return response.json();
@@ -195,7 +197,7 @@ export function initContributions() {
       renderGrid(gridEl, weeks);
       renderStats(days);
 
-      setNote('Live from the GitHub contribution feed — hover a cell for its day');
+      setNote('Live from GitHub · Hover a dot for daily contributions');
     })
     .catch((error) => {
       renderFailure();

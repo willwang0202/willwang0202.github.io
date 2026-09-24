@@ -1,43 +1,35 @@
-/* ============================================================
-   NAV — marks the section currently being read
-
-   Uses a band across the middle of the viewport so exactly one
-   section can own the highlight at a time.
-   ============================================================ */
-
-const READING_BAND = '-45% 0px -45% 0px';
-
+/* Highlight the section at the reading position beneath the sticky header. */
 export function initNav() {
   const links = Array.from(document.querySelectorAll('.site-nav a[href^="#"]'));
-  if (!links.length || !('IntersectionObserver' in window)) return;
+  const sections = links.map((link) => ({
+    link,
+    section: document.getElementById(link.getAttribute('href').slice(1))
+  })).filter(({ section }) => section);
+  if (!sections.length) return;
 
-  const linkBySection = new Map();
+  const header = document.querySelector('.site-header');
+  let scheduled = false;
 
-  links.forEach((link) => {
-    const section = document.getElementById(link.getAttribute('href').slice(1));
-    if (section) linkBySection.set(section, link);
-  });
-
-  if (!linkBySection.size) return;
-
-  const hero = document.querySelector('.hero');
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (!entry.isIntersecting) return;
-
-      if (entry.target === hero) {
-        links.forEach((link) => link.removeAttribute('aria-current'));
-        return;
+  function update() {
+    scheduled = false;
+    const readingLine = Math.max((header?.offsetHeight || 0) + 24, window.innerHeight * 0.35);
+    for (const { link, section } of sections) {
+      const bounds = section.getBoundingClientRect();
+      if (bounds.top <= readingLine && bounds.bottom > readingLine) {
+        link.setAttribute('aria-current', 'location');
+      } else {
+        link.removeAttribute('aria-current');
       }
+    }
+  }
 
-      const active = linkBySection.get(entry.target);
-      if (!active) return;
+  function scheduleUpdate() {
+    if (scheduled) return;
+    scheduled = true;
+    requestAnimationFrame(update);
+  }
 
-      links.forEach((link) => link.removeAttribute('aria-current'));
-      active.setAttribute('aria-current', 'true');
-    });
-  }, { rootMargin: READING_BAND });
-
-  linkBySection.forEach((_link, section) => observer.observe(section));
-  if (hero) observer.observe(hero);
+  window.addEventListener('scroll', scheduleUpdate, { passive: true });
+  window.addEventListener('resize', scheduleUpdate);
+  update();
 }
